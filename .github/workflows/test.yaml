@@ -17,7 +17,7 @@ on:
     paths:
       - "scripts/**"
       - "tests/**"
-      - "sources.yaml"
+      - "sources/**"
       - "schemas/sources.schema.json"
       - "pyproject.toml"
       - "requirements*.txt"
@@ -76,7 +76,7 @@ jobs:
         run: ruff format --check scripts/ tests/
 
   validate-sources:
-    name: Validate sources.yaml
+    name: Validate sources
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -90,25 +90,27 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml jsonschema
 
-      - name: Validate sources.yaml against schema
+      - name: Validate sources against schema
         run: |
           python -c "
           import json
-          import yaml
-          import jsonschema
           import sys
+          sys.path.insert(0, 'scripts')
+          from extract import load_sources
+          from pathlib import Path
+          import jsonschema
 
           # Load schema
           with open('schemas/sources.schema.json') as f:
               schema = json.load(f)
 
-          # Load sources
-          with open('sources.yaml') as f:
-              sources = yaml.safe_load(f)
+          # Load sources from directory structure
+          sources = load_sources(Path('sources'))
+          config = {'sources': sources}
 
           # Validate
           validator = jsonschema.Draft202012Validator(schema)
-          errors = list(validator.iter_errors(sources))
+          errors = list(validator.iter_errors(config))
 
           if errors:
               print(f'Found {len(errors)} validation errors:')
@@ -117,5 +119,5 @@ jobs:
                   print(f'    Path: {list(error.absolute_path)}')
               sys.exit(1)
           else:
-              print(f'sources.yaml is valid ({len(sources[\"sources\"])} sources)')
+              print(f'sources/ is valid ({len(sources)} sources)')
           "
