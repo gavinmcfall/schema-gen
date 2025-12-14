@@ -159,7 +159,7 @@ def main():
         else:
             skipped.append(f"{name} (unknown type: {source_type})")
 
-    print(f"\nMigration complete:")
+    print("\nMigration complete:")
     print(f"  Helm sources:      {helm_count}")
     print(f"  Kustomize sources: {kustomize_count}")
     print(f"  GitHub sources:    {github_count}")

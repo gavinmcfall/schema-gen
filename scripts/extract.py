@@ -24,7 +24,6 @@ from pathlib import Path
 
 import requests
 import yaml
-
 from common import (
     SafeLoaderWithTags,
     crd_to_jsonschema,

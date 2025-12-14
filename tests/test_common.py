@@ -17,7 +17,6 @@ from common import (
     save_schema,
     write_schema,
 )
-
 from extract import (
     get_source_by_name,
     load_sources,

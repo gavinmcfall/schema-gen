@@ -15,7 +15,6 @@ Usage:
 import re
 import subprocess
 import sys
-from pathlib import Path
 
 
 def get_changed_files(old_commit: str, new_commit: str) -> list[str]:
