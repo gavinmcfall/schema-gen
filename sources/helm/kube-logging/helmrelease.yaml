@@ -1,0 +1,3 @@
+repository: https://kube-logging.github.io/helm-charts
+chart: logging-operator
+version: 4.2.3

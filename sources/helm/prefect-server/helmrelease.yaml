@@ -1,0 +1,3 @@
+repository: https://prefecthq.github.io/prefect-helm
+chart: prefect-server
+version: 2025.12.11201923

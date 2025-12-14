@@ -1,0 +1,3 @@
+repository: https://charts.loft.sh
+chart: vcluster
+version: 0.21.1

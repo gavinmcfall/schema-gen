@@ -1,0 +1,3 @@
+repository: https://charts.redpanda.com
+chart: operator
+version: 25.3.1

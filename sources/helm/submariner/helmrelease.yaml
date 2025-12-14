@@ -1,0 +1,3 @@
+repository: https://submariner-io.github.io/submariner-charts/charts
+chart: submariner-operator
+version: 0.18.1

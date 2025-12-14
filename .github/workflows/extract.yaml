@@ -6,14 +6,14 @@ on:
     branches:
       - main
     paths:
-      - sources.yaml
+      - sources/**
       - scripts/**
       - .github/workflows/extract.yaml
   pull_request:
     branches:
       - main
     paths:
-      - sources.yaml
+      - sources/**
   workflow_dispatch:
     inputs:
       source:
@@ -55,22 +55,13 @@ jobs:
         run: |
           if [[ "${{ github.event.inputs.full_rebuild }}" == "true" ]]; then
             echo "Full rebuild requested"
-            SOURCES=$(python -c "
-          import yaml
-          with open('sources.yaml') as f:
-              data = yaml.safe_load(f)
-          sources = [s['name'] for s in data['sources']]
-          print(','.join(sources))
-          ")
+            # List all sources from directory structure
+            SOURCES=$(find sources -mindepth 2 -maxdepth 2 -type d | sed 's|sources/[^/]*/||' | sort -u | tr '\n' ',' | sed 's/,$//')
           elif [[ -n "${{ github.event.inputs.source }}" ]]; then
             SOURCES="${{ github.event.inputs.source }}"
           else
-            # Detect which sources changed in sources.yaml
-            if git diff --name-only ${{ github.event.before || 'HEAD~1' }} HEAD | grep -q "sources.yaml"; then
-              SOURCES=$(python scripts/detect_changes.py ${{ github.event.before || 'HEAD~1' }} HEAD)
-            else
-              SOURCES=""
-            fi
+            # Detect which sources changed in sources/ directory
+            SOURCES=$(python scripts/detect_changes.py ${{ github.event.before || 'HEAD~1' }} HEAD)
           fi
 
           echo "sources=$SOURCES" >> $GITHUB_OUTPUT
@@ -113,6 +104,7 @@ jobs:
         run: |
           python scripts/extract.py \
             --source "${{ matrix.source }}" \
+            --sources-dir sources \
             --output schemas/
 
       - name: Upload schemas artifact

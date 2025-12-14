@@ -1,0 +1,6 @@
+# renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
+repository: kubernetes-sigs/gateway-api
+version: v1.2.1
+assets:
+- standard-install.yaml
+- experimental-install.yaml

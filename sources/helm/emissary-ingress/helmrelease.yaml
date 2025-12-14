@@ -1,0 +1,3 @@
+repository: https://app.getambassador.io
+chart: emissary-ingress
+version: 8.9.1

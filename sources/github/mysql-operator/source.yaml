@@ -1,0 +1,5 @@
+# renovate: datasource=github-releases depName=mysql/mysql-operator
+repository: mysql/mysql-operator
+version: 9.5.0-2.2.6
+assets:
+- deploy/deploy-crds.yaml

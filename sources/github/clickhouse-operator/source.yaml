@@ -1,0 +1,5 @@
+# renovate: datasource=github-releases depName=Altinity/clickhouse-operator
+repository: Altinity/clickhouse-operator
+version: 0.24.2
+assets:
+- deploy/operator/clickhouse-operator-install-bundle.yaml

@@ -1,0 +1,3 @@
+repository: https://helm.goharbor.io
+chart: harbor
+version: 1.16.1

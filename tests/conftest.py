@@ -107,44 +107,82 @@ def sample_multi_crd_file(temp_dir, sample_crd_v1, sample_crd_v1beta1):
 
 
 @pytest.fixture
-def sample_sources_config():
-    """Sample sources.yaml configuration."""
-    return {
-        "sources": [
-            {
-                "name": "test-helm",
-                "type": "helm",
-                "registry": "https://charts.example.io",
-                "chart": "test-chart",
-                "version": "1.0.0",
-            },
-            {
-                "name": "test-github",
-                "type": "github",
-                "repo": "example/test-repo",
-                "version": "v1.0.0",
-                "crd_path": "config/crds",
-            },
-            {
-                "name": "test-github-assets",
-                "type": "github",
-                "repo": "example/test-repo",
-                "version": "v1.0.0",
-                "assets": ["crds/crd1.yaml", "crds/crd2.yaml"],
-            },
-            {
-                "name": "test-url",
-                "type": "url",
-                "url": "https://example.com/releases/{version}/crds.yaml",
-                "version": "v1.0.0",
-            },
-        ]
-    }
+def sample_sources_dir(temp_dir):
+    """Create sample sources directory structure."""
+    sources_dir = temp_dir / "sources"
+
+    # Helm source
+    helm_dir = sources_dir / "helm" / "test-helm"
+    helm_dir.mkdir(parents=True)
+    (helm_dir / "helmrelease.yaml").write_text(yaml.dump({
+        "repository": "https://charts.example.io",
+        "chart": "test-chart",
+        "version": "1.0.0",
+    }))
+
+    # Kustomize source (github with crd_path)
+    kustomize_dir = sources_dir / "kustomize" / "test-kustomize"
+    kustomize_dir.mkdir(parents=True)
+    (kustomize_dir / "kustomization.yaml").write_text(yaml.dump({
+        "apiVersion": "kustomize.config.k8s.io/v1beta1",
+        "kind": "Kustomization",
+        "resources": ["https://github.com/example/test-repo//config/crds?ref=v1.0.0"],
+    }))
+
+    # GitHub source (with assets)
+    github_dir = sources_dir / "github" / "test-github-assets"
+    github_dir.mkdir(parents=True)
+    with open(github_dir / "source.yaml", "w") as f:
+        f.write("# renovate: datasource=github-releases depName=example/test-repo\n")
+        yaml.dump({
+            "repository": "example/test-repo",
+            "version": "v1.0.0",
+            "assets": ["crds/crd1.yaml", "crds/crd2.yaml"],
+        }, f)
+
+    # URL source
+    url_dir = sources_dir / "url" / "test-url"
+    url_dir.mkdir(parents=True)
+    with open(url_dir / "source.yaml", "w") as f:
+        f.write("# renovate: datasource=github-releases depName=example/test-repo\n")
+        yaml.dump({
+            "url": "https://example.com/releases/{version}/crds.yaml",
+            "version": "v1.0.0",
+        }, f)
+
+    return sources_dir
 
 
+# Legacy fixtures for backward compatibility with old tests
 @pytest.fixture
-def sample_sources_file(temp_dir, sample_sources_config):
-    """Write sample sources config to file."""
-    sources_file = temp_dir / "sources.yaml"
-    sources_file.write_text(yaml.dump(sample_sources_config))
-    return sources_file
+def sample_sources_config():
+    """Sample sources configuration (list format for direct use)."""
+    return [
+        {
+            "name": "test-helm",
+            "type": "helm",
+            "registry": "https://charts.example.io",
+            "chart": "test-chart",
+            "version": "1.0.0",
+        },
+        {
+            "name": "test-kustomize",
+            "type": "github",
+            "repo": "example/test-repo",
+            "version": "v1.0.0",
+            "crd_path": "config/crds",
+        },
+        {
+            "name": "test-github-assets",
+            "type": "github",
+            "repo": "example/test-repo",
+            "version": "v1.0.0",
+            "assets": ["crds/crd1.yaml", "crds/crd2.yaml"],
+        },
+        {
+            "name": "test-url",
+            "type": "url",
+            "url": "https://example.com/releases/{version}/crds.yaml",
+            "version": "v1.0.0",
+        },
+    ]

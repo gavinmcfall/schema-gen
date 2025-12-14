@@ -1,0 +1,3 @@
+# renovate: datasource=github-releases depName=kubevirt/containerized-data-importer
+url: https://github.com/kubevirt/containerized-data-importer/releases/download/{version}/cdi-operator.yaml
+version: v1.61.0

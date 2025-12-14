@@ -1,0 +1,5 @@
+# renovate: datasource=github-releases depName=mongodb/mongodb-kubernetes-operator
+repository: mongodb/mongodb-kubernetes-operator
+version: v0.11.0
+assets:
+- config/crd/bases/mongodbcommunity.mongodb.com_mongodbcommunity.yaml

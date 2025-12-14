@@ -1,0 +1,7 @@
+repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+chart: opentelemetry-collector
+version: 0.115.0
+values:
+  image:
+    repository: otel/opentelemetry-collector-contrib
+  mode: deployment

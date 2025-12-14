@@ -1,0 +1,7 @@
+repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+chart: opentelemetry-operator
+version: 0.75.1
+values:
+  manager:
+    collectorImage:
+      repository: otel/opentelemetry-collector-contrib

@@ -1,0 +1,3 @@
+repository: https://charts.gitlab.io
+chart: gitlab-operator
+version: 1.6.1

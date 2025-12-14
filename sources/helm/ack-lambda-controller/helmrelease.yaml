@@ -1,0 +1,3 @@
+repository: oci://public.ecr.aws/aws-controllers-k8s
+chart: lambda-chart
+version: 1.5.4

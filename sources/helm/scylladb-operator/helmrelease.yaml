@@ -1,0 +1,3 @@
+repository: https://scylla-operator-charts.storage.googleapis.com/stable
+chart: scylla-operator
+version: 1.14.0

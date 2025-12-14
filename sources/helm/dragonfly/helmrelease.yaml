@@ -1,0 +1,3 @@
+repository: https://dragonflyoss.github.io/helm-charts
+chart: dragonfly
+version: 1.2.1

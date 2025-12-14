@@ -1,0 +1,3 @@
+repository: https://falcosecurity.github.io/charts
+chart: falco
+version: 4.18.0

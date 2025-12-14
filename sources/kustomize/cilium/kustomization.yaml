@@ -1,0 +1,4 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- https://github.com/cilium/cilium//pkg/k8s/apis/cilium.io/client/crds?ref=v1.17.0

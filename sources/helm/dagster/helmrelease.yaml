@@ -1,0 +1,3 @@
+repository: https://dagster-io.github.io/helm
+chart: dagster
+version: 1.9.10

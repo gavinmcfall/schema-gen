@@ -1,0 +1,3 @@
+repository: https://charts.apiseven.com
+chart: apisix
+version: 2.10.0

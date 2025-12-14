@@ -2,26 +2,46 @@
 """
 Detect which sources changed between two git commits.
 
+Works with the directory-based source structure:
+- sources/helm/{name}/helmrelease.yaml
+- sources/kustomize/{name}/kustomization.yaml
+- sources/github/{name}/source.yaml
+- sources/url/{name}/source.yaml
+
 Usage:
     python detect_changes.py HEAD~1 HEAD
 """
 
+import re
 import subprocess
 import sys
+from pathlib import Path
 
-import yaml
 
-
-def get_file_at_commit(commit: str, filepath: str) -> str | None:
-    """Get file contents at a specific commit."""
+def get_changed_files(old_commit: str, new_commit: str) -> list[str]:
+    """Get list of files changed between two commits."""
     result = subprocess.run(
-        ["git", "show", f"{commit}:{filepath}"],
+        ["git", "diff", "--name-only", old_commit, new_commit],
         capture_output=True,
         text=True,
     )
     if result.returncode != 0:
-        return None
-    return result.stdout
+        return []
+    return result.stdout.strip().split("\n") if result.stdout.strip() else []
+
+
+def extract_source_name(filepath: str) -> str | None:
+    """Extract source name from a sources/ file path."""
+    # Match patterns like:
+    # sources/helm/flux/helmrelease.yaml -> flux
+    # sources/kustomize/cilium/kustomization.yaml -> cilium
+    # sources/github/gateway-api/source.yaml -> gateway-api
+    # sources/url/hierarchical-namespaces/source.yaml -> hierarchical-namespaces
+
+    match = re.match(r"sources/(helm|kustomize|github|url)/([^/]+)/", filepath)
+    if match:
+        return match.group(2)
+    return None
 
 
 def main():
@@ -32,39 +52,19 @@ def main():
     old_commit = sys.argv[1]
     new_commit = sys.argv[2]
 
-    # Get sources.yaml at both commits
-    old_content = get_file_at_commit(old_commit, "sources.yaml")
-    new_content = get_file_at_commit(new_commit, "sources.yaml")
+    # Get changed files
+    changed_files = get_changed_files(old_commit, new_commit)
 
-    if new_content is None:
-        print("", end="")
-        sys.exit(0)
+    # Extract unique source names from changed files
+    changed_sources = set()
+    for filepath in changed_files:
+        if filepath.startswith("sources/"):
+            source_name = extract_source_name(filepath)
+            if source_name:
+                changed_sources.add(source_name)
 
-    new_sources = yaml.safe_load(new_content)
-
-    # If old doesn't exist, all sources are new
-    if old_content is None:
-        sources = [s["name"] for s in new_sources.get("sources", [])]
-        print(",".join(sources), end="")
-        sys.exit(0)
-
-    old_sources = yaml.safe_load(old_content)
-
-    # Build lookup of old sources by name
-    old_by_name = {s["name"]: s for s in old_sources.get("sources", [])}
-
-    # Find changed/new sources
-    changed = []
-    for source in new_sources.get("sources", []):
-        name = source["name"]
-        if name not in old_by_name:
-            # New source
-            changed.append(name)
-        elif source != old_by_name[name]:
-            # Changed source (version bump, etc.)
-            changed.append(name)
-
-    print(",".join(changed), end="")
+    # Output comma-separated list
+    print(",".join(sorted(changed_sources)), end="")
 
 
 if __name__ == "__main__":

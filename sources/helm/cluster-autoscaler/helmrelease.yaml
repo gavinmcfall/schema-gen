@@ -1,0 +1,3 @@
+repository: https://kubernetes.github.io/autoscaler
+chart: cluster-autoscaler
+version: 9.43.2

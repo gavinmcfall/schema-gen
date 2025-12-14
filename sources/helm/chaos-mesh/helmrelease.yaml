@@ -1,0 +1,3 @@
+repository: https://charts.chaos-mesh.org
+chart: chaos-mesh
+version: 2.7.0

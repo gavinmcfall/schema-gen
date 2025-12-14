@@ -1,0 +1,3 @@
+repository: https://kubeflow.github.io/spark-operator
+chart: spark-operator
+version: 2.1.0

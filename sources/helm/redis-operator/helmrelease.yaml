@@ -1,0 +1,3 @@
+repository: https://ot-container-kit.github.io/helm-charts
+chart: redis-operator
+version: 0.18.2

@@ -1,0 +1,6 @@
+repository: https://charts.zitadel.com
+chart: zitadel
+version: 8.10.0
+values:
+  zitadel:
+    masterkey: dummy-key-for-schema-extraction-only

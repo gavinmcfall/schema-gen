@@ -153,13 +153,18 @@ class TestSourcesSchemaValidation:
         errors = list(validator.iter_errors(config))
         assert len(errors) > 0
 
-    def test_actual_sources_yaml_is_valid(self, validator):
-        """Test that the actual sources.yaml file is valid."""
-        import yaml
+    def test_actual_sources_are_valid(self, validator):
+        """Test that sources loaded from the sources directory are valid."""
+        import sys
 
-        sources_path = Path(__file__).parent.parent / "sources.yaml"
-        with open(sources_path) as f:
-            config = yaml.safe_load(f)
+        sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+        from extract import load_sources
+
+        sources_dir = Path(__file__).parent.parent / "sources"
+        sources = load_sources(sources_dir)
+
+        # Wrap in config format expected by schema
+        config = {"sources": sources}
 
         errors = list(validator.iter_errors(config))
 
@@ -168,4 +173,4 @@ class TestSourcesSchemaValidation:
             print(f"Validation error: {error.message}")
             print(f"  Path: {list(error.absolute_path)}")
 
-        assert len(errors) == 0, f"sources.yaml has {len(errors)} validation errors"
+        assert len(errors) == 0, f"sources has {len(errors)} validation errors"

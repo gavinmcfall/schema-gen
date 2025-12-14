@@ -1,0 +1,3 @@
+repository: https://charts.jetstack.io
+chart: trust-manager
+version: 0.16.0

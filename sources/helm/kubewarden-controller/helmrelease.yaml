@@ -1,0 +1,3 @@
+repository: https://charts.kubewarden.io
+chart: kubewarden-controller
+version: 5.9.0

@@ -1,0 +1,3 @@
+# renovate: datasource=github-releases depName=kubernetes-retired/hierarchical-namespaces
+url: https://github.com/kubernetes-retired/hierarchical-namespaces/releases/download/{version}/default.yaml
+version: v1.1.0

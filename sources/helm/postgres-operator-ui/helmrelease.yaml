@@ -1,0 +1,3 @@
+repository: https://opensource.zalando.com/postgres-operator/charts/postgres-operator-ui
+chart: postgres-operator-ui
+version: 1.13.0

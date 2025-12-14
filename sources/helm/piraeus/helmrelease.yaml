@@ -1,0 +1,3 @@
+repository: https://piraeus.io/helm-charts
+chart: piraeus-ha-controller
+version: 1.3.1

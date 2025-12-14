@@ -1,0 +1,3 @@
+repository: https://helm.liqo.io
+chart: liqo
+version: v1.0.1

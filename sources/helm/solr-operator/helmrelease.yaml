@@ -1,0 +1,3 @@
+repository: https://solr.apache.org/charts
+chart: solr-operator
+version: 0.9.0

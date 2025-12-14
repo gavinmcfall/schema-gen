@@ -1,0 +1,3 @@
+repository: https://storage.googleapis.com/seldon-charts
+chart: seldon-core-operator
+version: 1.17.1

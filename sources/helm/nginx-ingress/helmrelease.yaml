@@ -1,0 +1,3 @@
+repository: https://helm.nginx.com/stable
+chart: nginx-ingress
+version: 2.1.0

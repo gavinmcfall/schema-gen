@@ -1,0 +1,5 @@
+# renovate: datasource=github-releases depName=siderolabs/talos
+repository: siderolabs/talos
+version: v1.9.1
+assets:
+- pkg/machinery/config/schemas/config.schema.json

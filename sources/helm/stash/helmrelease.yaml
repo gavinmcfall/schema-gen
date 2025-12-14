@@ -1,0 +1,3 @@
+repository: https://charts.appscode.com/stable
+chart: stash
+version: v2024.12.18

@@ -1,0 +1,7 @@
+# renovate: datasource=github-releases depName=kubernetes-csi/external-snapshotter
+repository: kubernetes-csi/external-snapshotter
+version: v8.2.0
+assets:
+- client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
+- client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
+- client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml

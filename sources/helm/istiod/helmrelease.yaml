@@ -1,0 +1,3 @@
+repository: https://istio-release.storage.googleapis.com/charts
+chart: istiod
+version: 1.24.2

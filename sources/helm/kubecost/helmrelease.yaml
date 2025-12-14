@@ -1,0 +1,3 @@
+repository: https://kubecost.github.io/cost-analyzer
+chart: cost-analyzer
+version: 2.5.2

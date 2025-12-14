@@ -1,0 +1,3 @@
+repository: https://open-policy-agent.github.io/gatekeeper/charts
+chart: gatekeeper
+version: 3.18.2

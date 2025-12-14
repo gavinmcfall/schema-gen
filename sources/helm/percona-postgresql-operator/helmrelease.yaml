@@ -1,0 +1,3 @@
+repository: https://percona.github.io/percona-helm-charts
+chart: pg-operator
+version: 2.8.0

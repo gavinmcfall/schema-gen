@@ -12,37 +12,73 @@ from common import (
     compute_schema_hash,
     convert_openapi_to_jsonschema,
     crd_to_jsonschema,
-    get_source_by_name,
     load_schema,
-    load_sources,
     parse_crds_from_files,
     save_schema,
     write_schema,
 )
 
+from extract import (
+    get_source_by_name,
+    load_sources,
+)
+
 
 class TestSourceLoading:
-    """Tests for source configuration loading."""
+    """Tests for source directory loading."""
 
-    def test_load_sources(self, sample_sources_file):
-        """Test loading sources from YAML file."""
-        sources = load_sources(str(sample_sources_file))
+    def test_load_sources_from_directory(self, sample_sources_dir):
+        """Test loading sources from directory structure."""
+        sources = load_sources(sample_sources_dir)
 
-        assert "sources" in sources
-        assert len(sources["sources"]) == 4
+        # Should find all 4 sources (helm, kustomize, github, url)
+        assert len(sources) == 4
 
-    def test_get_source_by_name_found(self, sample_sources_file):
-        """Test finding a source by name."""
-        sources = load_sources(str(sample_sources_file))
+    def test_load_sources_includes_helm(self, sample_sources_dir):
+        """Test that helm sources are loaded correctly."""
+        sources = load_sources(sample_sources_dir)
         source = get_source_by_name(sources, "test-helm")
 
         assert source is not None
-        assert source["name"] == "test-helm"
         assert source["type"] == "helm"
+        assert source["registry"] == "https://charts.example.io"
+        assert source["chart"] == "test-chart"
+        assert source["version"] == "1.0.0"
 
-    def test_get_source_by_name_not_found(self, sample_sources_file):
+    def test_load_sources_includes_kustomize(self, sample_sources_dir):
+        """Test that kustomize sources are loaded correctly."""
+        sources = load_sources(sample_sources_dir)
+        source = get_source_by_name(sources, "test-kustomize")
+
+        assert source is not None
+        assert source["type"] == "github"
+        assert source["repo"] == "example/test-repo"
+        assert source["crd_path"] == "config/crds"
+        assert source["version"] == "v1.0.0"
+
+    def test_load_sources_includes_github(self, sample_sources_dir):
+        """Test that github sources are loaded correctly."""
+        sources = load_sources(sample_sources_dir)
+        source = get_source_by_name(sources, "test-github-assets")
+
+        assert source is not None
+        assert source["type"] == "github"
+        assert source["repo"] == "example/test-repo"
+        assert "assets" in source
+        assert len(source["assets"]) == 2
+
+    def test_load_sources_includes_url(self, sample_sources_dir):
+        """Test that url sources are loaded correctly."""
+        sources = load_sources(sample_sources_dir)
+        source = get_source_by_name(sources, "test-url")
+
+        assert source is not None
+        assert source["type"] == "url"
+        assert "{version}" in source["url"]
+
+    def test_get_source_by_name_not_found(self, sample_sources_dir):
         """Test searching for non-existent source."""
-        sources = load_sources(str(sample_sources_file))
+        sources = load_sources(sample_sources_dir)
         source = get_source_by_name(sources, "non-existent")
 
         assert source is None

@@ -1,0 +1,3 @@
+repository: https://kyverno.github.io/kyverno
+chart: kyverno-policies
+version: 3.3.3

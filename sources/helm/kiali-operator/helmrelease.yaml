@@ -1,0 +1,3 @@
+repository: https://kiali.org/helm-charts
+chart: kiali-operator
+version: 2.2.0

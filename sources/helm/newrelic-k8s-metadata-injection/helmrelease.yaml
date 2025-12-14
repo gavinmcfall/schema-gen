@@ -1,0 +1,3 @@
+repository: https://helm-charts.newrelic.com
+chart: nri-metadata-injection
+version: 2.2.1

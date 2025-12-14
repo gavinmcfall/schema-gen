@@ -1,0 +1,6 @@
+# renovate: datasource=github-releases depName=keycloak/keycloak-k8s-resources
+repository: keycloak/keycloak-k8s-resources
+version: 26.4.7
+assets:
+- kubernetes/keycloaks.k8s.keycloak.org-v1.yml
+- kubernetes/keycloakrealmimports.k8s.keycloak.org-v1.yml

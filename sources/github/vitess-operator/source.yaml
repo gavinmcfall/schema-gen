@@ -1,0 +1,9 @@
+# renovate: datasource=github-releases depName=planetscale/vitess-operator
+repository: planetscale/vitess-operator
+version: v2.14.0
+assets:
+- deploy/crds/planetscale.com_etcdlockservers.yaml
+- deploy/crds/planetscale.com_vitesskeyspaces.yaml
+- deploy/crds/planetscale.com_vitessshards.yaml
+- deploy/crds/planetscale.com_vitessclusters.yaml
+- deploy/crds/planetscale.com_vitesscells.yaml

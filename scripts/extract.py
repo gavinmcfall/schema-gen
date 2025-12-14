@@ -5,37 +5,133 @@ CRD Schema Extractor
 Extracts CRDs from various sources (Helm charts, GitHub releases, URLs)
 and converts them to JSON schemas for IDE validation.
 
+Sources are organized in directories:
+- sources/helm/{name}/helmrelease.yaml
+- sources/kustomize/{name}/kustomization.yaml
+- sources/github/{name}/source.yaml
+- sources/url/{name}/source.yaml
+
 Usage:
     python extract.py --source flux --output schemas/
     python extract.py --all --output schemas/
 """
 
 import argparse
+import re
 import sys
 import tempfile
 from pathlib import Path
 
 import requests
+import yaml
+
 from common import (
     SafeLoaderWithTags,
     crd_to_jsonschema,
-    get_source_by_name,
-    load_sources,
     parse_crds_from_files,
-    run_command,
     write_schema,
 )
 
 
+def load_sources(sources_dir: Path) -> list[dict]:
+    """Load all sources from the directory structure."""
+    sources = []
+
+    # Load Helm sources
+    helm_dir = sources_dir / "helm"
+    if helm_dir.exists():
+        for source_dir in sorted(helm_dir.iterdir()):
+            if not source_dir.is_dir():
+                continue
+            helmrelease = source_dir / "helmrelease.yaml"
+            if helmrelease.exists():
+                with open(helmrelease) as f:
+                    data = yaml.safe_load(f)
+                sources.append({
+                    "name": source_dir.name,
+                    "type": "helm",
+                    "registry": data["repository"],
+                    "chart": data["chart"],
+                    "version": str(data["version"]),
+                    "values": data.get("values", {}),
+                })
+
+    # Load Kustomize sources (GitHub with crd_path)
+    kustomize_dir = sources_dir / "kustomize"
+    if kustomize_dir.exists():
+        for source_dir in sorted(kustomize_dir.iterdir()):
+            if not source_dir.is_dir():
+                continue
+            kustomization = source_dir / "kustomization.yaml"
+            if kustomization.exists():
+                with open(kustomization) as f:
+                    data = yaml.safe_load(f)
+                # Parse the resource URL
+                # Format: https://github.com/owner/repo//path?ref=version
+                resource = data.get("resources", [None])[0]
+                if resource:
+                    match = re.match(
+                        r"https://github\.com/([^/]+/[^/]+)//(.+)\?ref=(.+)",
+                        resource
+                    )
+                    if match:
+                        sources.append({
+                            "name": source_dir.name,
+                            "type": "github",
+                            "repo": match.group(1),
+                            "crd_path": match.group(2),
+                            "version": match.group(3),
+                        })
+
+    # Load GitHub sources (with assets)
+    github_dir = sources_dir / "github"
+    if github_dir.exists():
+        for source_dir in sorted(github_dir.iterdir()):
+            if not source_dir.is_dir():
+                continue
+            source_file = source_dir / "source.yaml"
+            if source_file.exists():
+                with open(source_file) as f:
+                    data = yaml.safe_load(f)
+                sources.append({
+                    "name": source_dir.name,
+                    "type": "github",
+                    "repo": data["repository"],
+                    "version": str(data["version"]),
+                    "assets": data.get("assets", []),
+                })
+
+    # Load URL sources
+    url_dir = sources_dir / "url"
+    if url_dir.exists():
+        for source_dir in sorted(url_dir.iterdir()):
+            if not source_dir.is_dir():
+                continue
+            source_file = source_dir / "source.yaml"
+            if source_file.exists():
+                with open(source_file) as f:
+                    data = yaml.safe_load(f)
+                sources.append({
+                    "name": source_dir.name,
+                    "type": "url",
+                    "url": data["url"],
+                    "version": str(data["version"]),
+                })
+
+    return sources
+
+
+def get_source_by_name(sources: list[dict], name: str) -> dict | None:
+    """Find a source by name."""
+    for source in sources:
+        if source["name"] == name:
+            return source
+    return None
+
+
 def extract_helm_crds(source: dict, work_dir: Path) -> list[Path]:
-    """Extract CRDs from a Helm chart using helm template.
-
-    This renders the chart with helm template and filters for CRDs,
-    which handles charts that have CRDs in templates/ as Helm templates.
-    """
+    """Extract CRDs from a Helm chart using helm template."""
     import subprocess
-
-    import yaml as pyyaml
 
     registry = source["registry"]
     chart = source["chart"]
@@ -58,7 +154,7 @@ def extract_helm_crds(source: dict, work_dir: Path) -> list[Path]:
     # Add values if specified
     if values:
         values_file = work_dir / "values.yaml"
-        values_file.write_text(pyyaml.dump(values))
+        values_file.write_text(yaml.dump(values))
         cmd.extend(["--values", str(values_file)])
 
     print(f"  Running: {' '.join(cmd)}")
@@ -76,13 +172,12 @@ def extract_helm_crds(source: dict, work_dir: Path) -> list[Path]:
         return []
 
     # Parse the rendered output and filter for CRDs
-    # Use SafeLoaderWithTags to handle special YAML tags like tag:yaml.org,2002:value
     crd_docs = []
     try:
-        for doc in pyyaml.load_all(rendered, Loader=SafeLoaderWithTags):
+        for doc in yaml.load_all(rendered, Loader=SafeLoaderWithTags):
             if doc and doc.get("kind") == "CustomResourceDefinition":
                 crd_docs.append(doc)
-    except pyyaml.YAMLError as e:
+    except yaml.YAMLError as e:
         print(f"  Error parsing helm template output: {e}")
         return []
 
@@ -93,7 +188,7 @@ def extract_helm_crds(source: dict, work_dir: Path) -> list[Path]:
     # Write CRDs to a single file
     crd_file = work_dir / "crds.yaml"
     with open(crd_file, "w") as f:
-        pyyaml.dump_all(crd_docs, f)
+        yaml.dump_all(crd_docs, f)
 
     print(f"  Found {len(crd_docs)} CRDs")
     return [crd_file]
@@ -106,7 +201,7 @@ def extract_github_crds(source: dict, work_dir: Path) -> list[Path]:
     repo = source["repo"]
     version = source["version"]
     assets = source.get("assets", [])
-    crd_path = source.get("crd_path")  # Directory to discover CRDs from
+    crd_path = source.get("crd_path")
 
     crd_files = []
 
@@ -151,11 +246,7 @@ def extract_github_crds(source: dict, work_dir: Path) -> list[Path]:
 
 
 def discover_github_yaml_files(repo: str, version: str, path: str, headers: dict) -> list[str]:
-    """
-    Recursively discover all YAML files in a GitHub directory.
-
-    Uses GitHub API to list directory contents and find all .yaml/.yml files.
-    """
+    """Recursively discover all YAML files in a GitHub directory."""
     yaml_files = []
     path = path.rstrip("/")
 
@@ -170,7 +261,6 @@ def discover_github_yaml_files(repo: str, version: str, path: str, headers: dict
             if item["type"] == "file" and (item["name"].endswith(".yaml") or item["name"].endswith(".yml")):
                 yaml_files.append(item["path"])
             elif item["type"] == "dir":
-                # Recursively scan subdirectories
                 yaml_files.extend(discover_github_yaml_files(repo, version, item["path"], headers))
 
     except requests.RequestException as e:
@@ -251,21 +341,28 @@ def main():
     parser.add_argument("--source", help="Specific source to extract")
     parser.add_argument("--all", action="store_true", help="Extract all sources")
     parser.add_argument("--output", default="schemas", help="Output directory")
-    parser.add_argument("--sources-file", default="sources.yaml", help="Sources config file")
+    parser.add_argument("--sources-dir", default="sources", help="Sources directory")
 
     args = parser.parse_args()
 
     if not args.source and not args.all:
         parser.error("Either --source or --all must be specified")
 
-    sources = load_sources(args.sources_file)
+    sources_dir = Path(args.sources_dir)
+    if not sources_dir.exists():
+        print(f"Sources directory not found: {sources_dir}")
+        sys.exit(1)
+
+    sources = load_sources(sources_dir)
+    print(f"Loaded {len(sources)} sources")
+
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     total_schemas = 0
 
     if args.all:
-        for source in sources.get("sources", []):
+        for source in sources:
             total_schemas += extract_source(source, output_dir)
     else:
         source = get_source_by_name(sources, args.source)

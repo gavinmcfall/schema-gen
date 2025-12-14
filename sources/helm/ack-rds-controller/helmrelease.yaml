@@ -1,0 +1,3 @@
+repository: oci://public.ecr.aws/aws-controllers-k8s
+chart: rds-chart
+version: 1.4.10

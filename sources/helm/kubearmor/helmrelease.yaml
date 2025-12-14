@@ -1,0 +1,3 @@
+repository: https://kubearmor.github.io/charts
+chart: kubearmor
+version: v1.6.5

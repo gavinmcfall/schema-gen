@@ -1,0 +1,3 @@
+repository: https://charts.cockroachdb.com
+chart: cockroachdb
+version: 19.0.1

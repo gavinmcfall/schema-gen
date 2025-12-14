@@ -1,0 +1,3 @@
+repository: https://charts.dexidp.io
+chart: dex
+version: 0.19.1

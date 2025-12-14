@@ -1,0 +1,3 @@
+repository: oci://ghcr.io/dragonflydb/dragonfly-operator/helm
+chart: dragonfly-operator
+version: v1.3.1

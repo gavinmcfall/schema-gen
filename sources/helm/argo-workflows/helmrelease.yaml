@@ -1,0 +1,3 @@
+repository: https://argoproj.github.io/argo-helm
+chart: argo-workflows
+version: 0.45.6

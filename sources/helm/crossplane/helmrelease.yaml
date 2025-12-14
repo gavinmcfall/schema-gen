@@ -1,0 +1,3 @@
+repository: https://charts.crossplane.io/stable
+chart: crossplane
+version: 1.19.0

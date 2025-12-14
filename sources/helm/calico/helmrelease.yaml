@@ -1,0 +1,3 @@
+repository: https://docs.tigera.io/calico/charts
+chart: tigera-operator
+version: 3.29.1

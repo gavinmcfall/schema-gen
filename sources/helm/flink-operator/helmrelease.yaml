@@ -1,0 +1,3 @@
+repository: https://downloads.apache.org/flink/flink-kubernetes-operator-1.10.0
+chart: flink-kubernetes-operator
+version: 1.10.0

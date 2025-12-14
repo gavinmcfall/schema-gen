@@ -1,0 +1,5 @@
+# renovate: datasource=github-releases depName=kubevirt/kubevirt
+repository: kubevirt/kubevirt
+version: v1.4.0
+assets:
+- api/openapi-spec/swagger.json

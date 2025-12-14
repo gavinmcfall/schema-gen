@@ -1,0 +1,5 @@
+# renovate: datasource=github-releases depName=k8ssandra/cass-operator
+repository: k8ssandra/cass-operator
+version: v1.23.1
+assets:
+- config/crd/bases/cassandra.datastax.com_cassandradatacenters.yaml

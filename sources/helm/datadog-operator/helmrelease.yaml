@@ -1,0 +1,3 @@
+repository: https://helm.datadoghq.com
+chart: datadog-operator
+version: 2.15.2

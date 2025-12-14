@@ -1,0 +1,3 @@
+repository: https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
+chart: azure-service-operator
+version: 2.11.0

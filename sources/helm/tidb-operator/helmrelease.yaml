@@ -1,0 +1,3 @@
+repository: https://charts.pingcap.org
+chart: tidb-operator
+version: 1.6.1
