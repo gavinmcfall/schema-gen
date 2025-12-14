@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/dapr.io/v1alpha1/component.json",
+  "title": "Component",
+  "description": "Component is the Schema for the components API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "dapr",
+    "sourceVersion": "1.14.4",
+    "extractedAt": "2025-12-14T02:28:54.163464+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "auth": {
+      "description": "Auth represents authentication details for the component.",
+      "properties": {
+        "secretStore": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "secretStore"
+      ],
+      "type": "object"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "scopes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "spec": {
+      "description": "ComponentSpec is the spec for a component.",
+      "properties": {
+        "ignoreErrors": {
+          "type": "boolean"
+        },
+        "initTimeout": {
+          "type": "string"
+        },
+        "metadata": {
+          "items": {
+            "description": "NameValuePair is a name/value pair.",
+            "properties": {
+              "envRef": {
+                "description": "EnvRef is the name of an environmental variable to read the value from.",
+                "type": "string"
+              },
+              "name": {
+                "description": "Name of the property.",
+                "type": "string"
+              },
+              "secretKeyRef": {
+                "description": "SecretKeyRef is the reference of a value in a secret store component.",
+                "properties": {
+                  "key": {
+                    "description": "Field in the secret.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "Secret name.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "value": {
+                "description": "Value of the property, in plaintext."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "type": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "metadata",
+        "type",
+        "version"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/networking.liqo.io/v1beta1/wggatewayclienttemplate.json",
+  "title": "WgGatewayClientTemplate",
+  "description": "WgGatewayClientTemplate is the Schema for the wggatewayclienttemplates API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.916512+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "WgGatewayClientTemplateSpec defines the desired state of WgGatewayClientTemplate.",
+      "properties": {
+        "objectKind": {
+          "description": "ObjectKind specifies the kind of the object.",
+          "properties": {
+            "apiVersion": {
+              "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+              "type": "string"
+            },
+            "kind": {
+              "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "template": {
+          "description": "Template specifies the template of the client.",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

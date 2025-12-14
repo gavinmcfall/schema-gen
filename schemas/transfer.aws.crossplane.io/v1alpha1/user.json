@@ -1,0 +1,545 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/transfer.aws.crossplane.io/v1alpha1/user.json",
+  "title": "User",
+  "description": "User is the Schema for the users API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.493482+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "UserSpec defines the desired state of User",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "UserParameters defines the desired state of User",
+          "properties": {
+            "homeDirectory": {
+              "description": "The landing directory (folder) for a user when they log in to the server\nusing the client.\n\n\nA HomeDirectory example is /bucket_name/home/mydirectory.",
+              "type": "string"
+            },
+            "homeDirectoryMappings": {
+              "description": "Logical directory mappings that specify what Amazon S3 or Amazon EFS paths\nand keys should be visible to your user and how you want to make them visible.\nYou must specify the Entry and Target pair, where Entry shows how the path\nis made visible and Target is the actual Amazon S3 or Amazon EFS path. If\nyou only specify a target, it is displayed as is. You also must ensure that\nyour Identity and Access Management (IAM) role provides access to paths in\nTarget. This value can be set only when HomeDirectoryType is set to LOGICAL.\n\n\nThe following is an Entry and Target pair example.\n\n\n[ { \"Entry\": \"/directory1\", \"Target\": \"/bucket_name/home/mydirectory\" } ]\n\n\nIn most cases, you can use this value instead of the session policy to lock\nyour user down to the designated home directory (\"chroot\"). To do this, you\ncan set Entry to / and set Target to the value the user should see for their\nhome directory when they log in.\n\n\nThe following is an Entry and Target pair example for chroot.\n\n\n[ { \"Entry\": \"/\", \"Target\": \"/bucket_name/home/mydirectory\" } ]",
+              "items": {
+                "properties": {
+                  "entry": {
+                    "type": "string"
+                  },
+                  "target": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "homeDirectoryType": {
+              "description": "The type of landing directory (folder) that you want your users' home directory\nto be when they log in to the server. If you set it to PATH, the user will\nsee the absolute Amazon S3 bucket or EFS paths as is in their file transfer\nprotocol clients. If you set it LOGICAL, you need to provide mappings in\nthe HomeDirectoryMappings for how you want to make Amazon S3 or Amazon EFS\npaths visible to your users.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "A session policy for your user so that you can use the same Identity and\nAccess Management (IAM) role across multiple users. This policy scopes down\na user's access to portions of their Amazon S3 bucket. Variables that you\ncan use inside this policy include ${Transfer:UserName}, ${Transfer:HomeDirectory},\nand ${Transfer:HomeBucket}.\n\n\nThis policy applies only when the domain of ServerId is Amazon S3. Amazon\nEFS does not use session policies.\n\n\nFor session policies, Transfer Family stores the policy as a JSON blob, instead\nof the Amazon Resource Name (ARN) of the policy. You save the policy as a\nJSON blob and pass it in the Policy argument.\n\n\nFor an example of a session policy, see Example session policy (https://docs.aws.amazon.com/transfer/latest/userguide/session-policy.html).\n\n\nFor more information, see AssumeRole (https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)\nin the Amazon Web Services Security Token Service API Reference.",
+              "type": "string"
+            },
+            "posixProfile": {
+              "description": "Specifies the full POSIX identity, including user ID (Uid), group ID (Gid),\nand any secondary groups IDs (SecondaryGids), that controls your users' access\nto your Amazon EFS file systems. The POSIX permissions that are set on files\nand directories in Amazon EFS determine the level of access your users get\nwhen transferring files into and out of your Amazon EFS file systems.",
+              "properties": {
+                "gid": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "secondaryGids": {
+                  "items": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "uid": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "region": {
+              "description": "Region is which region the User will be created.",
+              "type": "string"
+            },
+            "role": {
+              "description": "The IAM role that controls your users' access to your Amazon S3 bucket. The\npolicies attached to this role will determine the level of access you want\nto provide your users when transferring files into and out of your Amazon\nS3 bucket or buckets. The IAM role should also contain a trust relationship\nthat allows the server to access your resources when servicing your users'\ntransfer requests.",
+              "type": "string"
+            },
+            "roleRef": {
+              "description": "RoleRef is a reference to a IAM role.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "roleSelector": {
+              "description": "RoleSelector selects references to a IAM role.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "serverID": {
+              "description": "A system-assigned unique identifier for a server instance. This is the specific\nserver that you added your user to.",
+              "type": "string"
+            },
+            "serverIDRef": {
+              "description": "ServerIDRef is a reference to an server instance.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "serverIDSelector": {
+              "description": "ServerIDSelector selects references to an server instance.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "sshPublicKeyBody": {
+              "description": "The public portion of the Secure Shell (SSH) key used to authenticate the\nuser to the server.\n\n\nThe three standard SSH public key format elements are <key type>, <body base64>,\nand an optional <comment>, with spaces between each element.\n\n\nTransfer Family accepts RSA, ECDSA, and ED25519 keys.\n\n\n   * For RSA keys, the key type is ssh-rsa.\n\n\n   * For ED25519 keys, the key type is ssh-ed25519.\n\n\n   * For ECDSA keys, the key type is either ecdsa-sha2-nistp256, ecdsa-sha2-nistp384,\n   or ecdsa-sha2-nistp521, depending on the size of the key you generated.\n\n\nDeprecated: This property is deprecated in favor of SSHPublicKeys.\nChanges here will not be reflected in the external resource.",
+              "type": "string"
+            },
+            "sshPublicKeys": {
+              "description": "SSHPublicKeys that should be added to the server.",
+              "items": {
+                "properties": {
+                  "body": {
+                    "description": "Body is the public portion of the Secure Shell (SSH) key used to authenticate the\nuser to the server.\n\n\nThe three standard SSH public key format elements are <key type>, <body base64>,\nand an optional <comment>, with spaces between each element.\n\n\nTransfer Family accepts RSA, ECDSA, and ED25519 keys.\n\n\n   * For RSA keys, the key type is ssh-rsa.\n\n\n   * For ED25519 keys, the key type is ssh-ed25519.\n\n\n   * For ECDSA keys, the key type is either ecdsa-sha2-nistp256, ecdsa-sha2-nistp384,\n   or ecdsa-sha2-nistp521, depending on the size of the key you generated.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "tags": {
+              "description": "Key-value pairs that can be used to group and search for users. Tags are\nmetadata attached to users for any purpose.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "UserStatus defines the observed state of User.",
+      "properties": {
+        "atProvider": {
+          "description": "UserObservation defines the observed state of User",
+          "properties": {
+            "arn": {
+              "description": "Specifies the unique Amazon Resource Name (ARN) for the user that was requested\nto be described.",
+              "type": "string"
+            },
+            "serverID": {
+              "description": "The identifier of the server that the user is attached to.",
+              "type": "string"
+            },
+            "sshPublicKeys": {
+              "description": "Specifies the public key portion of the Secure Shell (SSH) keys stored for\nthe described user.",
+              "items": {
+                "properties": {
+                  "dateImported": {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "sshPublicKeyBody": {
+                    "type": "string"
+                  },
+                  "sshPublicKeyID": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "userName": {
+              "description": "A unique string that identifies a Transfer Family user.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/sources.schema.json",
+  "title": "CRD Sources Configuration",
+  "description": "Configuration file for k8s-schemas.io CRD source definitions",
+  "type": "object",
+  "required": ["sources"],
+  "properties": {
+    "sources": {
+      "type": "array",
+      "description": "List of CRD sources to extract schemas from",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/helmSource" },
+          { "$ref": "#/$defs/githubSource" },
+          { "$ref": "#/$defs/urlSource" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "helmSource": {
+      "type": "object",
+      "description": "Helm chart source containing CRDs",
+      "required": ["name", "type", "registry", "chart", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique identifier for this source",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "type": {
+          "const": "helm",
+          "description": "Source type"
+        },
+        "registry": {
+          "type": "string",
+          "description": "Helm registry URL (OCI oci:// or HTTP https://)",
+          "pattern": "^(oci://|https?://).+"
+        },
+        "chart": {
+          "type": "string",
+          "description": "Helm chart name"
+        },
+        "version": {
+          "type": "string",
+          "description": "Chart version to extract"
+        },
+        "values": {
+          "type": "object",
+          "description": "Helm values to enable conditional CRDs",
+          "additionalProperties": true
+        }
+      }
+    },
+    "githubSource": {
+      "type": "object",
+      "description": "GitHub repository source containing CRDs",
+      "required": ["name", "type", "repo", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique identifier for this source",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "type": {
+          "const": "github",
+          "description": "Source type"
+        },
+        "repo": {
+          "type": "string",
+          "description": "GitHub repository (owner/repo)",
+          "pattern": "^[a-zA-Z0-9-]+/[a-zA-Z0-9._-]+$"
+        },
+        "version": {
+          "type": "string",
+          "description": "Git tag or release version"
+        },
+        "crd_path": {
+          "type": "string",
+          "description": "Directory path to recursively discover CRD files from"
+        },
+        "assets": {
+          "type": "array",
+          "description": "Specific file paths or release assets to fetch",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "urlSource": {
+      "type": "object",
+      "description": "Direct URL source for CRD manifests",
+      "required": ["name", "type", "url", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique identifier for this source",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "type": {
+          "const": "url",
+          "description": "Source type"
+        },
+        "url": {
+          "type": "string",
+          "description": "URL to fetch CRD manifest from. Use {version} as placeholder.",
+          "format": "uri"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version string to substitute in URL"
+        }
+      }
+    }
+  }
+}

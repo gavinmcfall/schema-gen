@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/cilium.io/v2/ciliumidentity.json",
+  "title": "CiliumIdentity",
+  "description": "CiliumIdentity is the Schema for the ciliumidentitys API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "cilium",
+    "sourceVersion": "v1.17.0",
+    "extractedAt": "2025-12-14T02:17:47.988689+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "security-labels": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "SecurityLabels is the source-of-truth set of labels for this identity.",
+      "type": "object"
+    }
+  },
+  "required": [
+    "metadata",
+    "security-labels"
+  ]
+}

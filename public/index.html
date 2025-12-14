@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kubernetes CRD JSON Schemas</title>
+  <meta name="description" content="Community-maintained registry of Kubernetes CRD JSON schemas for IDE validation and autocomplete.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☸️</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --bg-hover: #30363d;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --accent: #58a6ff;
+      --accent-hover: #79c0ff;
+      --accent-subtle: rgba(56, 139, 253, 0.15);
+      --border: #30363d;
+      --success: #3fb950;
+      --warning: #d29922;
+      --gradient-start: #58a6ff;
+      --gradient-end: #a371f7;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 2.5rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      font-size: 3.5rem;
+      margin-bottom: 0.75rem;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Usage Card */
+    .usage-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .usage-card h2 {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+
+    .code-block {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 0.875rem 1rem;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .code-block code {
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .code-block .comment { color: var(--text-muted); }
+    .code-block .string { color: var(--success); }
+
+    .copy-btn {
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.15s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-subtle);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .copy-btn.copied {
+      background: rgba(63, 185, 80, 0.15);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    /* Search */
+    .search-container {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 2.75rem;
+      font-size: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-subtle);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--bg-tertiary);
+      border: none;
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .search-clear.visible {
+      opacity: 1;
+    }
+
+    .search-clear:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    /* Stats */
+    .stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.875rem 1.25rem;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    /* Results info */
+    .results-info {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 0.25rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.25rem;
+    }
+
+    .view-toggle button {
+      background: none;
+      border: none;
+      padding: 0.375rem 0.625rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      transition: all 0.15s;
+    }
+
+    .view-toggle button:hover {
+      color: var(--text-primary);
+    }
+
+    .view-toggle button.active {
+      background: var(--accent-subtle);
+      color: var(--accent);
+    }
+
+    /* Schema Grid */
+    .schemas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1rem;
+    }
+
+    .schemas-grid.list-view {
+      grid-template-columns: 1fr;
+    }
+
+    /* Group Card */
+    .group-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+
+    .group-card:hover {
+      border-color: var(--text-muted);
+    }
+
+    .group-card.highlight {
+      border-color: var(--accent);
+    }
+
+    .group-header {
+      padding: 0.875rem 1rem;
+      background: var(--bg-tertiary);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .group-header:hover {
+      background: var(--bg-hover);
+    }
+
+    .group-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .group-name {
+      font-weight: 600;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.875rem;
+      color: var(--accent);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .group-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .group-count {
+      background: var(--bg-primary);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .chevron {
+      color: var(--text-muted);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .group-card.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Schema List */
+    .schemas-list {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease-out;
+    }
+
+    .group-card.open .schemas-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .schema-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    .schema-item:last-child {
+      border-bottom: none;
+    }
+
+    .schema-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .schema-item.matched {
+      background: var(--accent-subtle);
+    }
+
+    .schema-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+
+    .schema-kind {
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+    }
+
+    .schema-version {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: var(--bg-primary);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .schema-actions {
+      display: flex;
+      gap: 0.25rem;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .schema-item:hover .schema-actions {
+      opacity: 1;
+    }
+
+    .schema-btn {
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.7rem;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .schema-btn:hover {
+      background: var(--accent-subtle);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Loading & Empty States */
+    .loading, .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-secondary);
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    footer a:hover {
+      color: var(--accent);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+
+    .toast.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      header {
+        padding: 1.5rem 0;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .logo {
+        font-size: 2.5rem;
+      }
+
+      .schemas-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        gap: 0.5rem;
+      }
+
+      .stat {
+        padding: 0.625rem 0.875rem;
+      }
+
+      .stat-value {
+        font-size: 1.25rem;
+      }
+
+      .code-block {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+
+      .code-block code {
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">☸️</div>
+      <h1>k8s-schemas</h1>
+      <p class="subtitle">Community-maintained JSON schemas for Kubernetes CRDs. Get autocomplete and validation in your IDE.</p>
+    </header>
+
+    <div class="usage-card">
+      <h2>Quick Start</h2>
+      <div class="code-block">
+        <code><span class="comment"># yaml-language-server: </span><span class="string">$schema=https://k8s-schemas.nerdz.cloud/{group}/{version}/{kind}.json</span></code>
+        <button class="copy-btn" onclick="copyUsage(this)">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+          Copy
+        </button>
+      </div>
+    </div>
+
+    <div class="search-container">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>
+      <input type="text" class="search-input" id="search" placeholder="Search schemas... (e.g., helmrelease, certificate, gateway)" autocomplete="off">
+      <button class="search-clear" id="search-clear" onclick="clearSearch()">Clear</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value" id="schema-count">-</div>
+        <div class="stat-label">Schemas</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="group-count">-</div>
+        <div class="stat-label">API Groups</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="source-count">-</div>
+        <div class="stat-label">Sources</div>
+      </div>
+    </div>
+
+    <div class="results-info">
+      <span id="results-text">Loading schemas...</span>
+      <div class="view-toggle">
+        <button class="active" onclick="setView('grid')" title="Grid view">Grid</button>
+        <button onclick="setView('list')" title="List view">List</button>
+      </div>
+    </div>
+
+    <div class="schemas-grid" id="schemas-grid">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading schema index...</p>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-links">
+        <a href="https://github.com/gavinmcfall/schema-gen" target="_blank">GitHub</a>
+        <span>•</span>
+        <a href="https://github.com/gavinmcfall/schema-gen/issues" target="_blank">Report Issue</a>
+        <span>•</span>
+        <span id="generated-at">-</span>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // State
+    let schemaData = null;
+    let currentView = 'grid';
+    let searchQuery = '';
+    let openGroups = new Set();
+
+    // DOM elements
+    const grid = document.getElementById('schemas-grid');
+    const searchInput = document.getElementById('search');
+    const searchClear = document.getElementById('search-clear');
+    const resultsText = document.getElementById('results-text');
+
+    // Initialize
+    async function init() {
+      // Check URL for initial search query
+      const params = new URLSearchParams(window.location.search);
+      const initialQuery = params.get('q') || '';
+      if (initialQuery) {
+        searchInput.value = initialQuery;
+        searchQuery = initialQuery.toLowerCase();
+        searchClear.classList.add('visible');
+      }
+
+      // Load schema index
+      try {
+        const response = await fetch('/schemas-index.json');
+        if (!response.ok) throw new Error('Failed to load index');
+        schemaData = await response.json();
+        updateStats();
+        render();
+      } catch (error) {
+        console.error('Failed to load schema index:', error);
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">⚠️</div>
+            <p>Failed to load schema index</p>
+            <p style="font-size: 0.8rem; margin-top: 0.5rem;">Try refreshing the page</p>
+          </div>
+        `;
+      }
+    }
+
+    // Update stats display
+    function updateStats() {
+      document.getElementById('schema-count').textContent = schemaData.stats.totalSchemas.toLocaleString();
+      document.getElementById('group-count').textContent = schemaData.stats.totalGroups.toLocaleString();
+      document.getElementById('source-count').textContent = schemaData.stats.totalSources.toLocaleString();
+
+      const date = new Date(schemaData.generatedAt);
+      document.getElementById('generated-at').textContent = `Updated ${date.toLocaleDateString()}`;
+    }
+
+    // Render the schema grid
+    function render() {
+      const groups = schemaData.groups;
+      const query = searchQuery;
+      let matchCount = 0;
+      let visibleGroups = 0;
+
+      let html = '';
+
+      for (const [groupName, versions] of Object.entries(groups)) {
+        const groupMatches = !query || groupName.toLowerCase().includes(query);
+        let schemas = [];
+        let hasMatchingSchema = false;
+
+        // Collect all schemas from all versions
+        for (const [version, kinds] of Object.entries(versions)) {
+          for (const schema of kinds) {
+            const schemaMatches = !query ||
+              schema.kind.toLowerCase().includes(query) ||
+              (schema.source && schema.source.toLowerCase().includes(query));
+
+            if (!query || groupMatches || schemaMatches) {
+              schemas.push({
+                ...schema,
+                version,
+                matched: schemaMatches && query && !groupMatches
+              });
+              if (schemaMatches) hasMatchingSchema = true;
+            }
+          }
+        }
+
+        // Skip if no matches
+        if (query && !groupMatches && !hasMatchingSchema) continue;
+
+        matchCount += schemas.length;
+        visibleGroups++;
+
+        // Determine if group should be open
+        const isOpen = openGroups.has(groupName) || (query && hasMatchingSchema);
+        const isHighlight = query && groupMatches;
+
+        html += `
+          <div class="group-card ${isOpen ? 'open' : ''} ${isHighlight ? 'highlight' : ''}" data-group="${groupName}">
+            <div class="group-header" onclick="toggleGroup('${groupName}')">
+              <div class="group-info">
+                <span class="group-name">${escapeHtml(groupName)}</span>
+              </div>
+              <div class="group-meta">
+                <span class="group-count">${schemas.length}</span>
+                <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"/></svg>
+              </div>
+            </div>
+            <div class="schemas-list">
+              ${schemas.map(s => `
+                <div class="schema-item ${s.matched ? 'matched' : ''}">
+                  <div class="schema-info">
+                    <span class="schema-kind">${escapeHtml(s.kind)}</span>
+                    <span class="schema-version">${escapeHtml(s.version)}</span>
+                  </div>
+                  <div class="schema-actions">
+                    <button class="schema-btn" onclick="copySchemaUrl('${groupName}', '${s.version}', '${s.kind}', event)">Copy URL</button>
+                    <a class="schema-btn" href="/${groupName}/${s.version}/${s.kind}.json" target="_blank">View</a>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (visibleGroups === 0) {
+        html = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <p>No schemas found for "${escapeHtml(query)}"</p>
+            <p style="font-size: 0.8rem; margin-top: 0.5rem;">Try a different search term</p>
+          </div>
+        `;
+      }
+
+      grid.innerHTML = html;
+
+      // Update results text
+      if (query) {
+        resultsText.textContent = `${matchCount.toLocaleString()} schemas in ${visibleGroups} groups matching "${query}"`;
+      } else {
+        resultsText.textContent = `${schemaData.stats.totalSchemas.toLocaleString()} schemas in ${schemaData.stats.totalGroups} groups`;
+      }
+    }
+
+    // Toggle group expansion
+    function toggleGroup(groupName) {
+      if (openGroups.has(groupName)) {
+        openGroups.delete(groupName);
+      } else {
+        openGroups.add(groupName);
+      }
+
+      const card = document.querySelector(`[data-group="${groupName}"]`);
+      if (card) {
+        card.classList.toggle('open');
+      }
+    }
+
+    // Search handling
+    let searchDebounce;
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(() => {
+        searchQuery = e.target.value.toLowerCase();
+        searchClear.classList.toggle('visible', searchQuery.length > 0);
+
+        // Update URL
+        const url = new URL(window.location);
+        if (searchQuery) {
+          url.searchParams.set('q', e.target.value);
+        } else {
+          url.searchParams.delete('q');
+        }
+        window.history.replaceState({}, '', url);
+
+        // Re-render (don't clear openGroups, let render() handle search-based opening)
+        if (schemaData) render();
+      }, 150);
+    });
+
+    function clearSearch() {
+      searchInput.value = '';
+      searchQuery = '';
+      searchClear.classList.remove('visible');
+
+      // Clear URL param
+      const url = new URL(window.location);
+      url.searchParams.delete('q');
+      window.history.replaceState({}, '', url);
+
+      // Close all groups that were opened by search
+      openGroups.clear();
+
+      if (schemaData) render();
+      searchInput.focus();
+    }
+
+    // View toggle
+    function setView(view) {
+      currentView = view;
+      grid.classList.toggle('list-view', view === 'list');
+
+      document.querySelectorAll('.view-toggle button').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === view);
+      });
+    }
+
+    // Copy functions
+    function copyUsage(btn) {
+      const text = '# yaml-language-server: $schema=https://k8s-schemas.nerdz.cloud/{group}/{version}/{kind}.json';
+      navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg> Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg> Copy';
+        }, 2000);
+      });
+    }
+
+    function copySchemaUrl(group, version, kind, event) {
+      event.stopPropagation();
+      const url = `https://k8s-schemas.nerdz.cloud/${group}/${version}/${kind}.json`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast(`Copied: ${kind}`);
+      });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 2000);
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Focus search on /
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+      // Clear search on Escape
+      if (e.key === 'Escape' && document.activeElement === searchInput) {
+        clearSearch();
+        searchInput.blur();
+      }
+    });
+
+    // Utility
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Start
+    init();
+  </script>
+</body>
+</html>

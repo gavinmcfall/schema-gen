@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/argoproj.io/v1alpha1/sensor.json",
+  "title": "Sensor",
+  "description": "Sensor is the Schema for the sensors API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "argo-events",
+    "sourceVersion": "2.4.12",
+    "extractedAt": "2025-12-14T02:17:13.427066+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "type": "object"
+    },
+    "status": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "metadata",
+    "spec"
+  ]
+}

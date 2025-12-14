@@ -1,0 +1,1470 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/kafka.aws.crossplane.io/v1alpha1/cluster.json",
+  "title": "Cluster",
+  "description": "Cluster is the Schema for the clusters API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.447228+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ClusterSpec defines the desired state of Cluster",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "ClusterParameters defines the desired state of Cluster",
+          "properties": {
+            "brokerNodeGroupInfo": {
+              "description": "Information about the brokers",
+              "properties": {
+                "clientSubnetRefs": {
+                  "description": "ClientSubnetRefs is a list of references to Subnets used to set\nthe ClientSubnets.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "clientSubnetSelector": {
+                  "description": "ClientSubnetSelector selects references to Subnets used\nto set the ClientSubnets.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "clientSubnets": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "connectivityInfo": {
+                  "description": "ConnectivityInfo Information about the broker access configuration.",
+                  "properties": {
+                    "publicAccess": {
+                      "description": "Broker public access control.",
+                      "properties": {
+                        "type": {
+                          "description": "Type of the public access control.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "vpcConnectivity": {
+                      "description": "Broker VPC connectivity access control.",
+                      "properties": {
+                        "clientAuthentication": {
+                          "properties": {
+                            "sasl": {
+                              "properties": {
+                                "iam": {
+                                  "properties": {
+                                    "enabled": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "scram": {
+                                  "properties": {
+                                    "enabled": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "tls": {
+                              "properties": {
+                                "enabled": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "instanceType": {
+                  "type": "string"
+                },
+                "securityGroupRefs": {
+                  "description": "SecurityGroupRefs is a list of references to SecurityGroups used to set\nthe SecurityGroups.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "securityGroupSelector": {
+                  "description": "SecurityGroupSelector selects references to SecurityGroup used\nto set the SecurityGroups.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "securityGroups": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "storageInfo": {
+                  "description": "Contains information about storage volumes attached to MSK broker nodes.",
+                  "properties": {
+                    "ebsStorageInfo": {
+                      "description": "Contains information about the EBS storage volumes attached to Apache Kafka\nbroker nodes.",
+                      "properties": {
+                        "provisionedThroughput": {
+                          "description": "Contains information about provisioned throughput for EBS storage volumes\nattached to kafka broker nodes.",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            },
+                            "volumeThroughput": {
+                              "format": "int64",
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "volumeSize": {
+                          "format": "int64",
+                          "type": "integer"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "clientAuthentication": {
+              "description": "Includes all client authentication related information.",
+              "properties": {
+                "sasl": {
+                  "properties": {
+                    "iam": {
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "scram": {
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "tls": {
+                  "description": "Details for client authentication using TLS.",
+                  "properties": {
+                    "certificateAuthorityARNList": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "unauthenticated": {
+                  "description": "Contains information about unauthenticated traffic to the cluster.",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "clusterName": {
+              "description": "The name of the cluster.",
+              "type": "string"
+            },
+            "clusterPolicy": {
+              "description": "ClusterPolicy of the MSK cluster.",
+              "properties": {
+                "id": {
+                  "description": "ID is the policy's optional identifier",
+                  "type": "string"
+                },
+                "statements": {
+                  "description": "Statements is the list of statement this policy applies\neither jsonStatements or statements must be specified in the policy",
+                  "items": {
+                    "description": "ResourcePolicyStatement defines an individual statement within the\nResourcePolicyBody",
+                    "properties": {
+                      "action": {
+                        "description": "Each element of the PolicyAction array describes the specific\naction or actions that will be allowed or denied with this PolicyStatement.",
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "condition": {
+                        "description": "Condition specifies where conditions for policy are in effect.\nhttps://docs.aws.amazon.com/Amazonresource/latest/dev/amazon-resource-policy-keys.html",
+                        "items": {
+                          "description": "Condition represents a set of condition pairs for a resource policy",
+                          "properties": {
+                            "conditions": {
+                              "description": "Conditions represents each of the key/value pairs for the operator key",
+                              "items": {
+                                "description": "ConditionPair represents one condition inside of the set of conditions for\na resource policy",
+                                "properties": {
+                                  "booleanValue": {
+                                    "description": "ConditionBooleanValue is the expected boolean value of the key from the parent condition",
+                                    "type": "boolean"
+                                  },
+                                  "dateValue": {
+                                    "description": "ConditionDateValue is the expected string value of the key from the parent condition. The\ndate value must be in ISO 8601 format. The time is always midnight UTC.",
+                                    "format": "date-time",
+                                    "type": "string"
+                                  },
+                                  "key": {
+                                    "description": "ConditionKey is the key condition being applied to the parent condition",
+                                    "type": "string"
+                                  },
+                                  "listValue": {
+                                    "description": "ConditionListValue is the list value of the key from the parent condition",
+                                    "items": {
+                                      "type": "string"
+                                    },
+                                    "type": "array"
+                                  },
+                                  "numericValue": {
+                                    "description": "ConditionNumericValue is the expected string value of the key from the parent condition",
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "stringValue": {
+                                    "description": "ConditionStringValue is the expected string value of the key from the parent condition",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "operatorKey": {
+                              "description": "OperatorKey matches the condition key and value in the policy against values in the request context",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "conditions",
+                            "operatorKey"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "effect": {
+                        "description": "The effect is required and specifies whether the statement results\nin an allow or an explicit deny. Valid values for Effect are Allow and Deny.",
+                        "enum": [
+                          "Allow",
+                          "Deny"
+                        ],
+                        "type": "string"
+                      },
+                      "notAction": {
+                        "description": "Each element of the NotPolicyAction array will allow the property to match\nall but the listed actions.",
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "notPrincipal": {
+                        "description": "Used with the resource policy to specify the users which are not included\nin this policy",
+                        "properties": {
+                          "allowAnon": {
+                            "description": "This flag indicates if the policy should be made available\nto all anonymous users.",
+                            "type": "boolean"
+                          },
+                          "awsPrincipals": {
+                            "description": "This list contains the all of the AWS IAM users which are affected\nby the policy statement.",
+                            "items": {
+                              "description": "AWSPrincipal wraps the potential values a policy\nprincipal can take. Only one of the values should be set.",
+                              "properties": {
+                                "awsAccountId": {
+                                  "description": "AWSAccountID identifies an AWS account as the principal",
+                                  "type": "string"
+                                },
+                                "iamRoleArn": {
+                                  "description": "IAMRoleARN contains the ARN of an IAM role",
+                                  "type": "string"
+                                },
+                                "iamRoleArnRef": {
+                                  "description": "IAMRoleARNRef contains the reference to an IAMRole",
+                                  "properties": {
+                                    "name": {
+                                      "description": "Name of the referenced object.",
+                                      "type": "string"
+                                    },
+                                    "policy": {
+                                      "description": "Policies for referencing.",
+                                      "properties": {
+                                        "resolution": {
+                                          "default": "Required",
+                                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                          "enum": [
+                                            "Required",
+                                            "Optional"
+                                          ],
+                                          "type": "string"
+                                        },
+                                        "resolve": {
+                                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                          "enum": [
+                                            "Always",
+                                            "IfNotPresent"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "type": "object"
+                                    }
+                                  },
+                                  "required": [
+                                    "name"
+                                  ],
+                                  "type": "object"
+                                },
+                                "iamRoleArnSelector": {
+                                  "description": "IAMRoleARNSelector queries for an IAM role to retrieve its userName",
+                                  "properties": {
+                                    "matchControllerRef": {
+                                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                      "type": "boolean"
+                                    },
+                                    "matchLabels": {
+                                      "additionalProperties": {
+                                        "type": "string"
+                                      },
+                                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                                      "type": "object"
+                                    },
+                                    "policy": {
+                                      "description": "Policies for selection.",
+                                      "properties": {
+                                        "resolution": {
+                                          "default": "Required",
+                                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                          "enum": [
+                                            "Required",
+                                            "Optional"
+                                          ],
+                                          "type": "string"
+                                        },
+                                        "resolve": {
+                                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                          "enum": [
+                                            "Always",
+                                            "IfNotPresent"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "type": "object"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "iamUserArn": {
+                                  "description": "UserARN contains the ARN of an IAM user",
+                                  "type": "string"
+                                },
+                                "iamUserArnRef": {
+                                  "description": "UserARNRef contains the reference to an User",
+                                  "properties": {
+                                    "name": {
+                                      "description": "Name of the referenced object.",
+                                      "type": "string"
+                                    },
+                                    "policy": {
+                                      "description": "Policies for referencing.",
+                                      "properties": {
+                                        "resolution": {
+                                          "default": "Required",
+                                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                          "enum": [
+                                            "Required",
+                                            "Optional"
+                                          ],
+                                          "type": "string"
+                                        },
+                                        "resolve": {
+                                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                          "enum": [
+                                            "Always",
+                                            "IfNotPresent"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "type": "object"
+                                    }
+                                  },
+                                  "required": [
+                                    "name"
+                                  ],
+                                  "type": "object"
+                                },
+                                "iamUserArnSelector": {
+                                  "description": "UserARNSelector queries for an User to retrieve its userName",
+                                  "properties": {
+                                    "matchControllerRef": {
+                                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                      "type": "boolean"
+                                    },
+                                    "matchLabels": {
+                                      "additionalProperties": {
+                                        "type": "string"
+                                      },
+                                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                                      "type": "object"
+                                    },
+                                    "policy": {
+                                      "description": "Policies for selection.",
+                                      "properties": {
+                                        "resolution": {
+                                          "default": "Required",
+                                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                          "enum": [
+                                            "Required",
+                                            "Optional"
+                                          ],
+                                          "type": "string"
+                                        },
+                                        "resolve": {
+                                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                          "enum": [
+                                            "Always",
+                                            "IfNotPresent"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "type": "object"
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "federated": {
+                            "description": "This string contains the identifier for any federated web identity\nprovider.",
+                            "type": "string"
+                          },
+                          "service": {
+                            "description": "Service define the services which can have access to this resource",
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "notResource": {
+                        "description": "This will explicitly match all resource paths except the ones\nspecified in this array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "principal": {
+                        "description": "Used with the resource policy to specify the principal that is allowed\nor denied access to a resource.",
+                        "properties": {
+                          "allowAnon": {
+                            "description": "This flag indicates if the policy should be made available\nto all anonymous users.",
+                            "type": "boolean"
+                          },
+                          "awsPrincipals": {
+                            "description": "This list contains the all of the AWS IAM users which are affected\nby the policy statement.",
+                            "items": {
+                              "description": "AWSPrincipal wraps the potential values a policy\nprincipal can take. Only one of the values should be set.",
+                              "properties": {
+                                "awsAccountId": {
+                                  "description": "AWSAccountID identifies an AWS account as the principal",
+                                  "type": "string"
+                                },
+                                "iamRoleArn": {
+                                  "description": "IAMRoleARN contains the ARN of an IAM role",
+                                  "type": "string"
+                                },
+                                "iamRoleArnRef": {
+                                  "description": "IAMRoleARNRef contains the reference to an IAMRole",
+                                  "properties": {
+                                    "name": {
+                                      "description": "Name of the referenced object.",
+                                      "type": "string"
+                                    },
+                                    "policy": {
+                                      "description": "Policies for referencing.",
+                                      "properties": {
+                                        "resolution": {
+                                          "default": "Required",
+                                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                          "enum": [
+                                            "Required",
+                                            "Optional"
+                                          ],
+                                          "type": "string"
+                                        },
+                                        "resolve": {
+                                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                          "enum": [
+                                            "Always",
+                                            "IfNotPresent"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "type": "object"
+                                    }
+                                  },
+                                  "required": [
+                                    "name"
+                                  ],
+                                  "type": "object"
+                                },
+                                "iamRoleArnSelector": {
+                                  "description": "IAMRoleARNSelector queries for an IAM role to retrieve its userName",
+                                  "properties": {
+                                    "matchControllerRef": {
+                                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                      "type": "boolean"
+                                    },
+                                    "matchLabels": {
+                                      "additionalProperties": {
+                                        "type": "string"
+                                      },
+                                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                                      "type": "object"
+                                    },
+                                    "policy": {
+                                      "description": "Policies for selection.",
+                                      "properties": {
+                                        "resolution": {
+                                          "default": "Required",
+                                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                          "enum": [
+                                            "Required",
+                                            "Optional"
+                                          ],
+                                          "type": "string"
+                                        },
+                                        "resolve": {
+                                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                          "enum": [
+                                            "Always",
+                                            "IfNotPresent"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "type": "object"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "iamUserArn": {
+                                  "description": "UserARN contains the ARN of an IAM user",
+                                  "type": "string"
+                                },
+                                "iamUserArnRef": {
+                                  "description": "UserARNRef contains the reference to an User",
+                                  "properties": {
+                                    "name": {
+                                      "description": "Name of the referenced object.",
+                                      "type": "string"
+                                    },
+                                    "policy": {
+                                      "description": "Policies for referencing.",
+                                      "properties": {
+                                        "resolution": {
+                                          "default": "Required",
+                                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                          "enum": [
+                                            "Required",
+                                            "Optional"
+                                          ],
+                                          "type": "string"
+                                        },
+                                        "resolve": {
+                                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                          "enum": [
+                                            "Always",
+                                            "IfNotPresent"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "type": "object"
+                                    }
+                                  },
+                                  "required": [
+                                    "name"
+                                  ],
+                                  "type": "object"
+                                },
+                                "iamUserArnSelector": {
+                                  "description": "UserARNSelector queries for an User to retrieve its userName",
+                                  "properties": {
+                                    "matchControllerRef": {
+                                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                      "type": "boolean"
+                                    },
+                                    "matchLabels": {
+                                      "additionalProperties": {
+                                        "type": "string"
+                                      },
+                                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                                      "type": "object"
+                                    },
+                                    "policy": {
+                                      "description": "Policies for selection.",
+                                      "properties": {
+                                        "resolution": {
+                                          "default": "Required",
+                                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                          "enum": [
+                                            "Required",
+                                            "Optional"
+                                          ],
+                                          "type": "string"
+                                        },
+                                        "resolve": {
+                                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                          "enum": [
+                                            "Always",
+                                            "IfNotPresent"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "type": "object"
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "federated": {
+                            "description": "This string contains the identifier for any federated web identity\nprovider.",
+                            "type": "string"
+                          },
+                          "service": {
+                            "description": "Service define the services which can have access to this resource",
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "resource": {
+                        "description": "The paths on which this resource will apply",
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "sid": {
+                        "description": "Optional identifier for this statement, must be unique within the\npolicy if provided.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "effect"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "version": {
+                  "default": "2012-10-17",
+                  "description": "Version is the current IAM policy version",
+                  "enum": [
+                    "2012-10-17",
+                    "2008-10-17"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "version"
+              ],
+              "type": "object"
+            },
+            "configurationInfo": {
+              "description": "Represents the configuration that you want MSK to use for the cluster.",
+              "properties": {
+                "arn": {
+                  "description": "ARN of the configuration to use.",
+                  "type": "string"
+                },
+                "arnRef": {
+                  "description": "ARNRef is a reference to a Kafka Configuration used to set ARN.",
+                  "properties": {
+                    "name": {
+                      "description": "Name of the referenced object.",
+                      "type": "string"
+                    },
+                    "policy": {
+                      "description": "Policies for referencing.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                },
+                "arnSelector": {
+                  "description": "ARNSelector selects a reference to a Kafka Configuration used to set ARN.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "revision": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "encryptionInfo": {
+              "description": "Includes all encryption-related information.",
+              "properties": {
+                "encryptionAtRest": {
+                  "description": "The data-volume encryption details.",
+                  "properties": {
+                    "dataVolumeKMSKeyID": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "encryptionInTransit": {
+                  "description": "The settings for encrypting data in transit.",
+                  "properties": {
+                    "clientBroker": {
+                      "description": "Client-broker encryption in transit setting.",
+                      "type": "string"
+                    },
+                    "inCluster": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "enhancedMonitoring": {
+              "description": "Specifies the level of monitoring for the MSK cluster. The possible values\nare DEFAULT, PER_BROKER, PER_TOPIC_PER_BROKER, and PER_TOPIC_PER_PARTITION.",
+              "type": "string"
+            },
+            "kafkaVersion": {
+              "description": "The version of Apache Kafka.",
+              "type": "string"
+            },
+            "loggingInfo": {
+              "description": "LoggingInfo details.",
+              "properties": {
+                "brokerLogs": {
+                  "description": "The broker logs configuration for this MSK cluster.",
+                  "properties": {
+                    "cloudWatchLogs": {
+                      "description": "Details of the CloudWatch Logs destination for broker logs.",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "logGroup": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "firehose": {
+                      "description": "Firehose details for BrokerLogs.",
+                      "properties": {
+                        "deliveryStream": {
+                          "type": "string"
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "s3": {
+                      "description": "The details of the Amazon S3 destination for broker logs.",
+                      "properties": {
+                        "bucket": {
+                          "type": "string"
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "prefix": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "numberOfBrokerNodes": {
+              "description": "The number of Apache Kafka broker nodes in the Amazon MSK cluster.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "openMonitoring": {
+              "description": "The settings for open monitoring.",
+              "properties": {
+                "prometheus": {
+                  "description": "Prometheus settings.",
+                  "properties": {
+                    "jmxExporter": {
+                      "description": "Indicates whether you want to enable or disable the JMX Exporter.",
+                      "properties": {
+                        "enabledInBroker": {
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "nodeExporter": {
+                      "description": "Indicates whether you want to enable or disable the Node Exporter.",
+                      "properties": {
+                        "enabledInBroker": {
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "region": {
+              "description": "Region is which region the Cluster will be created.",
+              "type": "string"
+            },
+            "storageMode": {
+              "description": "This controls storage mode for supported storage tiers.",
+              "type": "string"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Create tags when creating the cluster.",
+              "type": "object"
+            }
+          },
+          "required": [
+            "clusterName",
+            "kafkaVersion",
+            "numberOfBrokerNodes",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "ClusterStatus defines the observed state of Cluster.",
+      "properties": {
+        "atProvider": {
+          "description": "ClusterObservation defines the observed state of Cluster",
+          "properties": {
+            "brokerNodeGroupInfo": {
+              "description": "Information about the brokers.",
+              "properties": {
+                "brokerAZDistribution": {
+                  "description": "The distribution of broker nodes across Availability Zones. By default, broker\nnodes are distributed among the Availability Zones of your Region. Currently,\nthe only supported value is DEFAULT. You can either specify this value explicitly\nor leave it out.",
+                  "type": "string"
+                },
+                "clientSubnets": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "connectivityInfo": {
+                  "description": "Information about the broker access configuration.",
+                  "properties": {
+                    "publicAccess": {
+                      "description": "Broker public access control.",
+                      "properties": {
+                        "type_": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "vpcConnectivity": {
+                      "description": "Broker VPC connectivity access control.",
+                      "properties": {
+                        "clientAuthentication": {
+                          "properties": {
+                            "sasl": {
+                              "properties": {
+                                "iam": {
+                                  "properties": {
+                                    "enabled": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "scram": {
+                                  "properties": {
+                                    "enabled": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "tls": {
+                              "properties": {
+                                "enabled": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "instanceType": {
+                  "type": "string"
+                },
+                "securityGroups": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "storageInfo": {
+                  "description": "Contains information about storage volumes attached to MSK broker nodes.",
+                  "properties": {
+                    "ebsStorageInfo": {
+                      "description": "Contains information about the EBS storage volumes attached to Apache Kafka\nbroker nodes.",
+                      "properties": {
+                        "provisionedThroughput": {
+                          "description": "Contains information about provisioned throughput for EBS storage volumes\nattached to kafka broker nodes.",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            },
+                            "volumeThroughput": {
+                              "format": "int64",
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "volumeSize": {
+                          "format": "int64",
+                          "type": "integer"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "zoneIDs": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "clusterARN": {
+              "description": "The Amazon Resource Name (ARN) of the cluster.",
+              "type": "string"
+            },
+            "clusterPolicyVersion": {
+              "description": "Cluster policy version.",
+              "type": "string"
+            },
+            "state": {
+              "description": "The state of the cluster. The possible states are ACTIVE, CREATING, DELETING,\nFAILED, HEALING, MAINTENANCE, REBOOTING_BROKER, and UPDATING.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

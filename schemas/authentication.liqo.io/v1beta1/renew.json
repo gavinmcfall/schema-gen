@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/authentication.liqo.io/v1beta1/renew.json",
+  "title": "Renew",
+  "description": "Renew is the Schema for the renews API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.899901+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "RenewSpec defines the desired state of Renew.",
+      "properties": {
+        "consumerClusterID": {
+          "description": "ConsumerClusterID is the id of the consumer cluster.",
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+          "type": "string"
+        },
+        "csr": {
+          "description": "CSR is the Certificate Signing Request of the tenant cluster.",
+          "format": "byte",
+          "type": "string"
+        },
+        "identityType": {
+          "description": "IdentityType is the type of the identity.",
+          "type": "string"
+        },
+        "publicKey": {
+          "description": "PublicKey is the public key of the tenant cluster.",
+          "format": "byte",
+          "type": "string"
+        },
+        "resourceSliceRef": {
+          "description": "ResoruceSliceRef is the reference to the resource slice.",
+          "properties": {
+            "name": {
+              "default": "",
+              "description": "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "RenewStatus defines the observed state of Renew.",
+      "properties": {
+        "authParams": {
+          "description": "AuthParams contains the authentication parameters for the consumer cluster.",
+          "properties": {
+            "apiServer": {
+              "type": "string"
+            },
+            "awsConfig": {
+              "description": "AwsConfig contains the AWS configuration and access key for the Liqo user and the current EKS cluster.",
+              "properties": {
+                "awsAccessKeyID": {
+                  "type": "string"
+                },
+                "awsClusterName": {
+                  "type": "string"
+                },
+                "awsRegion": {
+                  "type": "string"
+                },
+                "awsSecretAccessKey": {
+                  "type": "string"
+                },
+                "awsUserArn": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "awsAccessKeyID",
+                "awsClusterName",
+                "awsRegion",
+                "awsSecretAccessKey",
+                "awsUserArn"
+              ],
+              "type": "object"
+            },
+            "ca": {
+              "format": "byte",
+              "type": "string"
+            },
+            "proxyURL": {
+              "type": "string"
+            },
+            "signedCRT": {
+              "format": "byte",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

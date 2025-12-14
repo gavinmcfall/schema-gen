@@ -1,0 +1,520 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/elbv2.aws.crossplane.io/v1alpha1/targetgroup.json",
+  "title": "TargetGroup",
+  "description": "TargetGroup is the Schema for the targetgroups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.425488+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "TargetGroupSpec defines the desired state of TargetGroup",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "TargetGroupParameters defines the desired state of TargetGroup",
+          "properties": {
+            "healthCheckEnabled": {
+              "description": "Indicates whether health checks are enabled. If the target type is lambda,\nhealth checks are disabled by default but can be enabled. If the target type\nis instance, ip, or alb, health checks are always enabled and cannot be disabled.",
+              "type": "boolean"
+            },
+            "healthCheckIntervalSeconds": {
+              "description": "The approximate amount of time, in seconds, between health checks of an individual\ntarget. The range is 5-300. If the target group protocol is TCP, TLS, UDP,\nTCP_UDP, HTTP or HTTPS, the default is 30 seconds. If the target group protocol\nis GENEVE, the default is 10 seconds. If the target type is lambda, the default\nis 35 seconds.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "healthCheckPath": {
+              "description": "[HTTP/HTTPS health checks] The destination for health checks on the targets.\n\n\n[HTTP1 or HTTP2 protocol version] The ping path. The default is /.\n\n\n[GRPC protocol version] The path of a custom health check method with the\nformat /package.service/method. The default is /Amazon Web Services.ALB/healthcheck.",
+              "type": "string"
+            },
+            "healthCheckPort": {
+              "description": "The port the load balancer uses when performing health checks on targets.\nIf the protocol is HTTP, HTTPS, TCP, TLS, UDP, or TCP_UDP, the default is\ntraffic-port, which is the port on which each target receives traffic from\nthe load balancer. If the protocol is GENEVE, the default is port 80.",
+              "type": "string"
+            },
+            "healthCheckProtocol": {
+              "description": "The protocol the load balancer uses when performing health checks on targets.\nFor Application Load Balancers, the default is HTTP. For Network Load Balancers\nand Gateway Load Balancers, the default is TCP. The TCP protocol is not supported\nfor health checks if the protocol of the target group is HTTP or HTTPS. The\nGENEVE, TLS, UDP, and TCP_UDP protocols are not supported for health checks.",
+              "type": "string"
+            },
+            "healthCheckTimeoutSeconds": {
+              "description": "The amount of time, in seconds, during which no response from a target means\na failed health check. The range is 2\u2013120 seconds. For target groups with\na protocol of HTTP, the default is 6 seconds. For target groups with a protocol\nof TCP, TLS or HTTPS, the default is 10 seconds. For target groups with a\nprotocol of GENEVE, the default is 5 seconds. If the target type is lambda,\nthe default is 30 seconds.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "healthyThresholdCount": {
+              "description": "The number of consecutive health check successes required before considering\na target healthy. The range is 2-10. If the target group protocol is TCP,\nTCP_UDP, UDP, TLS, HTTP or HTTPS, the default is 5. For target groups with\na protocol of GENEVE, the default is 5. If the target type is lambda, the\ndefault is 5.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "ipAddressType": {
+              "description": "The type of IP address used for this target group. The possible values are\nipv4 and ipv6. This is an optional parameter. If not specified, the IP address\ntype defaults to ipv4.",
+              "type": "string"
+            },
+            "matcher": {
+              "description": "[HTTP/HTTPS health checks] The HTTP or gRPC codes to use when checking for\na successful response from a target. For target groups with a protocol of\nTCP, TCP_UDP, UDP or TLS the range is 200-599. For target groups with a protocol\nof HTTP or HTTPS, the range is 200-499. For target groups with a protocol\nof GENEVE, the range is 200-399.",
+              "properties": {
+                "grpcCode": {
+                  "type": "string"
+                },
+                "httpCode": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "The name of the target group.\n\n\nThis name must be unique per region per account, can have a maximum of 32\ncharacters, must contain only alphanumeric characters or hyphens, and must\nnot begin or end with a hyphen.",
+              "type": "string"
+            },
+            "port": {
+              "description": "The port on which the targets receive traffic. This port is used unless you\nspecify a port override when registering the target. If the target is a Lambda\nfunction, this parameter does not apply. If the protocol is GENEVE, the supported\nport is 6081.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "protocol": {
+              "description": "The protocol to use for routing traffic to the targets. For Application Load\nBalancers, the supported protocols are HTTP and HTTPS. For Network Load Balancers,\nthe supported protocols are TCP, TLS, UDP, or TCP_UDP. For Gateway Load Balancers,\nthe supported protocol is GENEVE. A TCP_UDP listener must be associated with\na TCP_UDP target group. If the target is a Lambda function, this parameter\ndoes not apply.",
+              "type": "string"
+            },
+            "protocolVersion": {
+              "description": "[HTTP/HTTPS protocol] The protocol version. Specify GRPC to send requests\nto targets using gRPC. Specify HTTP2 to send requests to targets using HTTP/2.\nThe default is HTTP1, which sends requests to targets using HTTP/1.1.",
+              "type": "string"
+            },
+            "region": {
+              "description": "Region is which region the TargetGroup will be created.",
+              "type": "string"
+            },
+            "tags": {
+              "description": "The tags to assign to the target group.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "targetType": {
+              "description": "The type of target that you must specify when registering targets with this\ntarget group. You can't specify targets for a target group using more than\none target type.\n\n\n   * instance - Register targets by instance ID. This is the default value.\n\n\n   * ip - Register targets by IP address. You can specify IP addresses from\n   the subnets of the virtual private cloud (VPC) for the target group, the\n   RFC 1918 range (10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16), and the\n   RFC 6598 range (100.64.0.0/10). You can't specify publicly routable IP\n   addresses.\n\n\n   * lambda - Register a single Lambda function as a target.\n\n\n   * alb - Register a single Application Load Balancer as a target.",
+              "type": "string"
+            },
+            "unhealthyThresholdCount": {
+              "description": "The number of consecutive health check failures required before considering\na target unhealthy. The range is 2-10. If the target group protocol is TCP,\nTCP_UDP, UDP, TLS, HTTP or HTTPS, the default is 2. For target groups with\na protocol of GENEVE, the default is 2. If the target type is lambda, the\ndefault is 5.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "vpcID": {
+              "description": "The identifier of the virtual private cloud (VPC). If the target is a Lambda\nfunction, this parameter does not apply. Otherwise, this parameter is required.",
+              "type": "string"
+            },
+            "vpcIdRef": {
+              "description": "Reference to VPC for VPCID",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "vpcIdSelector": {
+              "description": "Selector for references to VPC for VPCID",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "TargetGroupStatus defines the observed state of TargetGroup.",
+      "properties": {
+        "atProvider": {
+          "description": "TargetGroupObservation defines the observed state of TargetGroup",
+          "properties": {
+            "targetGroups": {
+              "description": "Information about the target group.",
+              "items": {
+                "properties": {
+                  "healthCheckEnabled": {
+                    "type": "boolean"
+                  },
+                  "healthCheckIntervalSeconds": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "healthCheckPath": {
+                    "type": "string"
+                  },
+                  "healthCheckPort": {
+                    "type": "string"
+                  },
+                  "healthCheckProtocol": {
+                    "type": "string"
+                  },
+                  "healthCheckTimeoutSeconds": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "healthyThresholdCount": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "ipAddressType": {
+                    "type": "string"
+                  },
+                  "loadBalancerARNs": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "matcher": {
+                    "description": "The codes to use when checking for a successful response from a target. If\nthe protocol version is gRPC, these are gRPC codes. Otherwise, these are\nHTTP codes.",
+                    "properties": {
+                      "grpcCode": {
+                        "type": "string"
+                      },
+                      "httpCode": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "port": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "protocol": {
+                    "type": "string"
+                  },
+                  "protocolVersion": {
+                    "type": "string"
+                  },
+                  "targetGroupARN": {
+                    "type": "string"
+                  },
+                  "targetGroupName": {
+                    "type": "string"
+                  },
+                  "targetType": {
+                    "type": "string"
+                  },
+                  "unhealthyThresholdCount": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "vpcID": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/policy.linkerd.io/v1alpha1/networkauthentication.json",
+  "title": "NetworkAuthentication",
+  "description": "NetworkAuthentication is the Schema for the networkauthentications API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "linkerd-crds",
+    "sourceVersion": "2025.12.2",
+    "extractedAt": "2025-12-14T02:18:13.692231+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "description": "NetworkAuthentication defines a list of authenticated client networks to be referenced by an `AuthorizationPolicy`. If a client connection originates from ANY of the of the provided networks, the connection is considered authenticated.",
+      "properties": {
+        "networks": {
+          "items": {
+            "properties": {
+              "cidr": {
+                "description": "The CIDR of the network to be authorized.",
+                "type": "string"
+              },
+              "except": {
+                "description": "A list of IP networks/addresses not to be included in the above `cidr`.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "cidr"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "networks"
+      ],
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "policy.linkerd.io/v1alpha1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "NetworkAuthentication"
+      ]
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

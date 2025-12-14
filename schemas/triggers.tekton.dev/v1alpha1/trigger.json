@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/triggers.tekton.dev/v1alpha1/trigger.json",
+  "title": "Trigger",
+  "description": "Trigger is the Schema for the triggers API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "tekton-triggers",
+    "sourceVersion": "v0.34.0",
+    "extractedAt": "2025-12-14T02:24:51.115876+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "triggers.tekton.dev/v1alpha1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "Trigger"
+      ]
+    }
+  }
+}

@@ -1,0 +1,919 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/docdb.aws.crossplane.io/v1alpha1/dbcluster.json",
+  "title": "DBCluster",
+  "description": "DBCluster is the Schema for the dbclusters API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.385970+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "DBClusterSpec defines the desired state of DBCluster",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "DBClusterParameters defines the desired state of DBCluster",
+          "properties": {
+            "allowMajorVersionUpgrade": {
+              "description": "A value that indicates whether major version upgrades are allowed.\n\n\nConstraints: You must allow major version upgrades when specifying a value\nfor the EngineVersion parameter that is a different major version than the\nDB cluster's current version.",
+              "type": "boolean"
+            },
+            "applyImmediately": {
+              "description": "A value that specifies whether the changes in this request and any pending\nchanges are asynchronously applied as soon as possible, regardless of the\nPreferredMaintenanceWindow setting for the cluster. If this parameter is\nset to false, changes to the cluster are applied during the next maintenance\nwindow.\n\n\nThe ApplyImmediately parameter affects only the NewDBClusterIdentifier and\nMasterUserPassword values. If you set this parameter value to false, the\nchanges to the NewDBClusterIdentifier and MasterUserPassword values are applied\nduring the next maintenance window. All other changes are applied immediately,\nregardless of the value of the ApplyImmediately parameter.\n\n\nDefault: false",
+              "type": "boolean"
+            },
+            "autogeneratePassword": {
+              "description": "AutogeneratePassword indicates whether the controller should generate\na random password for the master user if one is not provided via\nMasterUserPasswordSecretRef.\n\n\nIf a password is generated, it will\nbe stored as a secret at the location specified by MasterUserPasswordSecretRef.",
+              "type": "boolean"
+            },
+            "availabilityZones": {
+              "description": "A list of Amazon EC2 Availability Zones that instances in the cluster can\nbe created in.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "backupRetentionPeriod": {
+              "description": "The number of days for which automated backups are retained. You must specify\na minimum value of 1.\n\n\nDefault: 1\n\n\nConstraints:\n\n\n   * Must be a value from 1 to 35.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "dbClusterParameterGroupName": {
+              "description": "The name of the cluster parameter group to associate with this cluster.",
+              "type": "string"
+            },
+            "dbClusterParameterGroupNameRef": {
+              "description": "A Reference to a named object.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "dbClusterParameterGroupNameSelector": {
+              "description": "A Selector selects an object.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "dbSubnetGroupName": {
+              "description": "A subnet group to associate with this cluster.\n\n\nConstraints: Must match the name of an existing DBSubnetGroup. Must not be\ndefault.\n\n\nExample: mySubnetgroup",
+              "type": "string"
+            },
+            "dbSubnetGroupNameRef": {
+              "description": "A Reference to a named object.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "dbSubnetGroupNameSelector": {
+              "description": "A Selector selects an object.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "deletionProtection": {
+              "description": "Specifies whether this cluster can be deleted. If DeletionProtection is enabled,\nthe cluster cannot be deleted unless it is modified and DeletionProtection\nis disabled. DeletionProtection protects clusters from being accidentally\ndeleted.",
+              "type": "boolean"
+            },
+            "destinationRegion": {
+              "description": "DestinationRegion is used for presigning the request to a given region.",
+              "type": "string"
+            },
+            "enableCloudwatchLogsExports": {
+              "description": "A list of log types that need to be enabled for exporting to Amazon CloudWatch\nLogs. You can enable audit logs or profiler logs. For more information, see\nAuditing Amazon DocumentDB Events (https://docs.aws.amazon.com/documentdb/latest/developerguide/event-auditing.html)\nand Profiling Amazon DocumentDB Operations (https://docs.aws.amazon.com/documentdb/latest/developerguide/profiling.html).",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "engine": {
+              "description": "The name of the database engine to be used for this cluster.\n\n\nValid values: docdb",
+              "type": "string"
+            },
+            "engineVersion": {
+              "description": "The version number of the database engine to use. The --engine-version will\ndefault to the latest major engine version. For production workloads, we\nrecommend explicitly declaring this parameter with the intended major engine\nversion.",
+              "type": "string"
+            },
+            "finalDBSnapshotIdentifier": {
+              "description": "The cluster snapshot identifier of the new cluster snapshot created when\nSkipFinalSnapshot is set to false.\n\n\nSpecifying this parameter and also setting the SkipFinalShapshot parameter\nto true results in an error.\n\n\nConstraints:\n\n\n   * Must be from 1 to 255 letters, numbers, or hyphens.\n\n\n   * The first character must be a letter.\n\n\n   * Cannot end with a hyphen or contain two consecutive hyphens.",
+              "type": "string"
+            },
+            "globalClusterIdentifier": {
+              "description": "The cluster identifier of the new global cluster.",
+              "type": "string"
+            },
+            "kmsKeyID": {
+              "description": "The KMS key identifier for an encrypted cluster.\n\n\nThe KMS key identifier is the Amazon Resource Name (ARN) for the KMS encryption\nkey. If you are creating a cluster using the same Amazon Web Services account\nthat owns the KMS encryption key that is used to encrypt the new cluster,\nyou can use the KMS key alias instead of the ARN for the KMS encryption key.\n\n\nIf an encryption key is not specified in KmsKeyId:\n\n\n   * If the StorageEncrypted parameter is true, Amazon DocumentDB uses your\n   default encryption key.\n\n\nKMS creates the default encryption key for your Amazon Web Services account.\nYour Amazon Web Services account has a different default encryption key for\neach Amazon Web Services Regions.",
+              "type": "string"
+            },
+            "kmsKeyIDRef": {
+              "description": "TODO(haarchri): when resource is bumped to beta we will convert this field to kmsKeyIdRef",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "kmsKeyIDSelector": {
+              "description": "TODO(haarchri): when resource is bumped to beta we will convert this field to kmsKeyIdSelector",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "masterUserPasswordSecretRef": {
+              "description": "MasterUserPasswordSecretRef references the secret that contains the password for the master database user. This password can contain any\nprintable ASCII character except forward slash (/), double quote (\"), or\nthe \"at\" symbol (@).\n\n\nConstraints: Must contain from 8 to 100 characters.",
+              "properties": {
+                "key": {
+                  "description": "The key to select.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Name of the secret.",
+                  "type": "string"
+                },
+                "namespace": {
+                  "description": "Namespace of the secret.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "name",
+                "namespace"
+              ],
+              "type": "object"
+            },
+            "masterUsername": {
+              "description": "The name of the master user for the cluster.\n\n\nConstraints:\n\n\n   * Must be from 1 to 63 letters or numbers.\n\n\n   * The first character must be a letter.\n\n\n   * Cannot be a reserved word for the chosen database engine.",
+              "type": "string"
+            },
+            "port": {
+              "description": "The port number on which the instances in the cluster accept connections.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "preSignedURL": {
+              "description": "Not currently supported.",
+              "type": "string"
+            },
+            "preferredBackupWindow": {
+              "description": "The daily time range during which automated backups are created if automated\nbackups are enabled using the BackupRetentionPeriod parameter.\n\n\nThe default is a 30-minute window selected at random from an 8-hour block\nof time for each Amazon Web Services Region.\n\n\nConstraints:\n\n\n   * Must be in the format hh24:mi-hh24:mi.\n\n\n   * Must be in Universal Coordinated Time (UTC).\n\n\n   * Must not conflict with the preferred maintenance window.\n\n\n   * Must be at least 30 minutes.",
+              "type": "string"
+            },
+            "preferredMaintenanceWindow": {
+              "description": "The weekly time range during which system maintenance can occur, in Universal\nCoordinated Time (UTC).\n\n\nFormat: ddd:hh24:mi-ddd:hh24:mi\n\n\nThe default is a 30-minute window selected at random from an 8-hour block\nof time for each Amazon Web Services Region, occurring on a random day of\nthe week.\n\n\nValid days: Mon, Tue, Wed, Thu, Fri, Sat, Sun\n\n\nConstraints: Minimum 30-minute window.",
+              "type": "string"
+            },
+            "region": {
+              "description": "Region is which region the DBCluster will be created.",
+              "type": "string"
+            },
+            "restoreFrom": {
+              "description": "RestoreFrom specifies the details of the backup to restore when creating a new DBCluster.",
+              "properties": {
+                "pointInTime": {
+                  "description": "PointInTime specifies the details of the point in time restore.",
+                  "properties": {
+                    "restoreTime": {
+                      "description": "RestoreTime is the date and time (UTC) to restore from.\nMust be before the latest restorable time for the DB instance.\nCan't be specified if the useLatestRestorableTime parameter is enabled.\nExample: 2011-09-07T23:45:00Z",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "restoreType": {
+                      "description": "The type of restore to be performed. You can specify one of the following\nvalues:\n\n\n   * full-copy - The new DB cluster is restored as a full copy of the source\n   DB cluster.\n\n\n   * copy-on-write - The new DB cluster is restored as a clone of the source\n   DB cluster.\n\n\nConstraints: You can't specify copy-on-write if the engine version of the\nsource DB cluster is earlier than 1.11.\n\n\nIf you don't specify a RestoreType value, then the new DB cluster is restored\nas a full copy of the source DB cluster.\n\n\nValid for: Aurora DB clusters and Multi-AZ DB clusters",
+                      "enum": [
+                        "full-copy",
+                        "copy-on-write"
+                      ],
+                      "type": "string"
+                    },
+                    "sourceDBClusterIdentifier": {
+                      "description": "SourceDBClusterIdentifier specifies the identifier of the source DB cluster from which to restore. Constraints:\nMust match the identifier of an existing DB instance.",
+                      "type": "string"
+                    },
+                    "useLatestRestorableTime": {
+                      "description": "UseLatestRestorableTime indicates that the DB instance is restored from the latest backup\nCan't be specified if the restoreTime parameter is provided.",
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "snapshot": {
+                  "description": "Snapshot specifies the details of the snapshot to restore from.",
+                  "properties": {
+                    "snapshotIdentifier": {
+                      "description": "SnapshotIdentifier is the identifier of the snapshot to restore.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "snapshotIdentifier"
+                  ],
+                  "type": "object"
+                },
+                "source": {
+                  "description": "Source is the type of the backup to restore when creating a new  DBCluster or DBInstance.\nSnapshot and PointInTime are supported.",
+                  "enum": [
+                    "Snapshot",
+                    "PointInTime"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source"
+              ],
+              "type": "object"
+            },
+            "skipFinalSnapshot": {
+              "description": "Determines whether a final cluster snapshot is created before the cluster\nis deleted. If true is specified, no cluster snapshot is created. If false\nis specified, a cluster snapshot is created before the DB cluster is deleted.\n\n\nIf SkipFinalSnapshot is false, you must specify a FinalDBSnapshotIdentifier\nparameter.\n\n\nDefault: false",
+              "type": "boolean"
+            },
+            "sourceRegion": {
+              "description": "SourceRegion is the source region where the resource exists. This is not\nsent over the wire and is only used for presigning. This value should always\nhave the same region as the source ARN.",
+              "type": "string"
+            },
+            "storageEncrypted": {
+              "description": "Specifies whether the cluster is encrypted.",
+              "type": "boolean"
+            },
+            "tags": {
+              "description": "The tags to be assigned to the cluster.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "vpcSecurityGroupIDs": {
+              "description": "A list of EC2 VPC security groups to associate with this cluster.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "vpcSecurityGroupIDsRefs": {
+              "description": "TODO(haarchri): when resource is bumped to beta we will convert this field to vpcSecurityGroupIdRefs",
+              "items": {
+                "description": "A Reference to a named object.",
+                "properties": {
+                  "name": {
+                    "description": "Name of the referenced object.",
+                    "type": "string"
+                  },
+                  "policy": {
+                    "description": "Policies for referencing.",
+                    "properties": {
+                      "resolution": {
+                        "default": "Required",
+                        "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                        "enum": [
+                          "Required",
+                          "Optional"
+                        ],
+                        "type": "string"
+                      },
+                      "resolve": {
+                        "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                        "enum": [
+                          "Always",
+                          "IfNotPresent"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "vpcSecurityGroupIDsSelector": {
+              "description": "TODO(haarchri): when resource is bumped to beta we will convert this field to vpcSecurityGroupIdSelector",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "engine",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "DBClusterStatus defines the observed state of DBCluster.",
+      "properties": {
+        "atProvider": {
+          "description": "DBClusterObservation defines the observed state of DBCluster",
+          "properties": {
+            "associatedRoles": {
+              "description": "Provides a list of the Identity and Access Management (IAM) roles that are\nassociated with the cluster. (IAM) roles that are associated with a cluster\ngrant permission for the cluster to access other Amazon Web Services services\non your behalf.",
+              "items": {
+                "properties": {
+                  "roleARN": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "cloneGroupID": {
+              "description": "Identifies the clone group to which the DB cluster is associated.",
+              "type": "string"
+            },
+            "clusterCreateTime": {
+              "description": "Specifies the time when the cluster was created, in Universal Coordinated\nTime (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "dbClusterARN": {
+              "description": "The Amazon Resource Name (ARN) for the cluster.",
+              "type": "string"
+            },
+            "dbClusterIdentifier": {
+              "description": "Contains a user-supplied cluster identifier. This identifier is the unique\nkey that identifies a cluster.",
+              "type": "string"
+            },
+            "dbClusterMembers": {
+              "description": "Provides the list of instances that make up the cluster.",
+              "items": {
+                "properties": {
+                  "dbClusterParameterGroupStatus": {
+                    "type": "string"
+                  },
+                  "dbInstanceIdentifier": {
+                    "type": "string"
+                  },
+                  "isClusterWriter": {
+                    "type": "boolean"
+                  },
+                  "promotionTier": {
+                    "format": "int64",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "dbClusterParameterGroup": {
+              "description": "Specifies the name of the cluster parameter group for the cluster.",
+              "type": "string"
+            },
+            "dbClusterResourceID": {
+              "description": "The Amazon Web Services Region-unique, immutable identifier for the cluster.\nThis identifier is found in CloudTrail log entries whenever the KMS key for\nthe cluster is accessed.",
+              "type": "string"
+            },
+            "dbSubnetGroup": {
+              "description": "Specifies information on the subnet group that is associated with the cluster,\nincluding the name, description, and subnets in the subnet group.",
+              "type": "string"
+            },
+            "earliestRestorableTime": {
+              "description": "The earliest time to which a database can be restored with point-in-time\nrestore.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "enabledCloudwatchLogsExports": {
+              "description": "A list of log types that this cluster is configured to export to Amazon CloudWatch\nLogs.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "endpoint": {
+              "description": "Specifies the connection endpoint for the primary instance of the cluster.",
+              "type": "string"
+            },
+            "engineVersion": {
+              "description": "Indicates the database engine version.",
+              "type": "string"
+            },
+            "hostedZoneID": {
+              "description": "Specifies the ID that Amazon Route 53 assigns when you create a hosted zone.",
+              "type": "string"
+            },
+            "latestRestorableTime": {
+              "description": "Specifies the latest time to which a database can be restored with point-in-time\nrestore.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "multiAZ": {
+              "description": "Specifies whether the cluster has instances in multiple Availability Zones.",
+              "type": "boolean"
+            },
+            "percentProgress": {
+              "description": "Specifies the progress of the operation as a percentage.",
+              "type": "string"
+            },
+            "readReplicaIdentifiers": {
+              "description": "Contains one or more identifiers of the secondary clusters that are associated\nwith this cluster.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "readerEndpoint": {
+              "description": "The reader endpoint for the cluster. The reader endpoint for a cluster load\nbalances connections across the Amazon DocumentDB replicas that are available\nin a cluster. As clients request new connections to the reader endpoint,\nAmazon DocumentDB distributes the connection requests among the Amazon DocumentDB\nreplicas in the cluster. This functionality can help balance your read workload\nacross multiple Amazon DocumentDB replicas in your cluster.\n\n\nIf a failover occurs, and the Amazon DocumentDB replica that you are connected\nto is promoted to be the primary instance, your connection is dropped. To\ncontinue sending your read workload to other Amazon DocumentDB replicas in\nthe cluster, you can then reconnect to the reader endpoint.",
+              "type": "string"
+            },
+            "replicationSourceIdentifier": {
+              "description": "Contains the identifier of the source cluster if this cluster is a secondary\ncluster.",
+              "type": "string"
+            },
+            "status": {
+              "description": "Specifies the current state of this cluster.",
+              "type": "string"
+            },
+            "vpcSecurityGroups": {
+              "description": "Provides a list of virtual private cloud (VPC) security groups that the cluster\nbelongs to.",
+              "items": {
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  },
+                  "vpcSecurityGroupID": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

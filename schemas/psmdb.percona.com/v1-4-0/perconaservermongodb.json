@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/psmdb.percona.com/v1-4-0/perconaservermongodb.json",
+  "title": "PerconaServerMongoDB",
+  "description": "PerconaServerMongoDB is the Schema for the perconaservermongodbs API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "percona-server-mongodb-operator",
+    "sourceVersion": "1.19.1",
+    "extractedAt": "2025-12-14T02:20:32.394374+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "type": "object"
+    },
+    "status": {
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "psmdb.percona.com/v1-4-0"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "PerconaServerMongoDB"
+      ]
+    }
+  }
+}

@@ -1,0 +1,411 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/batch.aws.crossplane.io/v1alpha1/jobqueue.json",
+  "title": "JobQueue",
+  "description": "JobQueue is the Schema for the jobqueues API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.365980+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "JobQueueSpec defines the desired state of JobQueue",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "JobQueueParameters defines the desired state of JobQueue",
+          "properties": {
+            "computeEnvironmentOrder": {
+              "description": "The set of compute environments mapped to a job queue and their order relative\nto each other. The job scheduler uses this parameter to determine which compute\nenvironment should run a specific job. Compute environments must be in the\nVALID state before you can associate them with a job queue. You can associate\nup to three compute environments with a job queue. All of the compute environments\nmust be either EC2 (EC2 or SPOT) or Fargate (FARGATE or FARGATE_SPOT); EC2\nand Fargate compute environments can't be mixed.\n\n\nAll compute environments that are associated with a job queue must share\nthe same architecture. Batch doesn't support mixing compute environment architecture\ntypes in a single job queue.\n\n\nComputeEnvironmentOrder is a required field",
+              "items": {
+                "description": "CustomComputeEnvironmentOrder includes custom additional fields for ComputeEnvironmentOrder",
+                "properties": {
+                  "computeEnvironment": {
+                    "description": "The Amazon Resource Name (ARN) of the compute environment.\n\n\nComputeEnvironment is a required field",
+                    "type": "string"
+                  },
+                  "computeEnvironmentRef": {
+                    "description": "ComputeEnvironmentRef is a reference to ComputeEnvironment used to set\nthe ComputeEnvironment.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "computeEnvironmentSelector": {
+                    "description": "ComputeEnvironmentsSelector selects a reference to ComputeEnvironment used\nto set the ComputeEnvironment.",
+                    "properties": {
+                      "matchControllerRef": {
+                        "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                        "type": "boolean"
+                      },
+                      "matchLabels": {
+                        "additionalProperties": {
+                          "type": "string"
+                        },
+                        "description": "MatchLabels ensures an object with matching labels is selected.",
+                        "type": "object"
+                      },
+                      "policy": {
+                        "description": "Policies for selection.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "order": {
+                    "description": "The order of the compute environment. Compute environments are tried in ascending\norder. For example, if two compute environments are associated with a job\nqueue, the compute environment with a lower order integer value is tried\nfor job placement first.\n\n\nOrder is a required field",
+                    "format": "int64",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "order"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "desiredState": {
+              "description": "Custom parameter to control the state of the job queue. The valid values are ENABLED or DISABLED.\n\n\nThe state of the job queue. If the job queue state is ENABLED, it is able to accept jobs.\nIf the job queue state is DISABLED, new jobs can't be added to the queue, but jobs already in the queue can finish.",
+              "enum": [
+                "ENABLED",
+                "DISABLED"
+              ],
+              "type": "string"
+            },
+            "priority": {
+              "description": "The priority of the job queue. Job queues with a higher priority (or a higher\ninteger value for the priority parameter) are evaluated first when associated\nwith the same compute environment. Priority is determined in descending order.\nFor example, a job queue with a priority value of 10 is given scheduling\npreference over a job queue with a priority value of 1. All of the compute\nenvironments must be either EC2 (EC2 or SPOT) or Fargate (FARGATE or FARGATE_SPOT);\nEC2 and Fargate compute environments can't be mixed.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "region": {
+              "description": "Region is which region the JobQueue will be created.",
+              "type": "string"
+            },
+            "schedulingPolicyARN": {
+              "description": "The Amazon Resource Name (ARN) of the fair share scheduling policy. If this\nparameter is specified, the job queue uses a fair share scheduling policy.\nIf this parameter isn't specified, the job queue uses a first in, first out\n(FIFO) scheduling policy. After a job queue is created, you can replace but\ncan't remove the fair share scheduling policy. The format is aws:Partition:batch:Region:Account:scheduling-policy/Name\n. An example is aws:aws:batch:us-west-2:123456789012:scheduling-policy/MySchedulingPolicy.",
+              "type": "string"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The tags that you apply to the job queue to help you categorize and organize\nyour resources. Each tag consists of a key and an optional value. For more\ninformation, see Tagging your Batch resources (https://docs.aws.amazon.com/batch/latest/userguide/using-tags.html)\nin Batch User Guide.",
+              "type": "object"
+            }
+          },
+          "required": [
+            "computeEnvironmentOrder",
+            "priority",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "JobQueueStatus defines the observed state of JobQueue.",
+      "properties": {
+        "atProvider": {
+          "description": "JobQueueObservation defines the observed state of JobQueue",
+          "properties": {
+            "jobQueueARN": {
+              "description": "The Amazon Resource Name (ARN) of the job queue.",
+              "type": "string"
+            },
+            "jobQueueName": {
+              "description": "The name of the job queue.",
+              "type": "string"
+            },
+            "state": {
+              "description": "Describes the ability of the queue to accept new jobs. If the job queue state\nis ENABLED, it can accept jobs. If the job queue state is DISABLED, new jobs\ncan't be added to the queue, but jobs already in the queue can finish.",
+              "type": "string"
+            },
+            "status": {
+              "description": "The status of the job queue (for example, CREATING or VALID).",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/stackgres.io/v1/sgpostgresconfig.json",
+  "title": "SGPostgresConfig",
+  "description": "SGPostgresConfig is the Schema for the sgpostgresconfigs API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "stackgres",
+    "sourceVersion": "1.18.2",
+    "extractedAt": "2025-12-14T02:28:30.447526+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "metadata": {
+      "properties": {
+        "name": {
+          "description": "Name of the Postgres Configuration. The configuration may be referenced by zero or more SGClusters, and if so it would be referenced by its name. Following [Kubernetes naming conventions](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/identifiers.md), it must be an rfc1035/rfc1123 subdomain, that is, up to 253 characters consisting of one or more lowercase labels separated by `.`. Where each label is an alphanumeric (a-z, and 0-9) string, with the `-` character allowed anywhere except the first or last character.\n\nThe name must be unique across all Postgres configurations in the same namespace.\n",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "postgresVersion": {
+          "description": "The **major** Postgres version the configuration is for. Postgres major versions contain one number starting with version 10 (`10`, `11`, `12`, etc), and two numbers separated by a dot for previous versions (`9.6`, `9.5`, etc).\n\nNote that Postgres maintains full compatibility across minor versions, and hence a configuration for a given major version will work for any minor version of that same major version.\n\nCheck [StackGres component versions](https://stackgres.io/doc/latest/intro/versions) to see the Postgres versions supported by this version of StackGres.\n",
+          "type": "string"
+        },
+        "postgresql.conf": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "The `postgresql.conf` parameters the configuration contains, represented as an object where the keys are valid names for the `postgresql.conf` configuration file parameters of the given `postgresVersion`. You may check [postgresqlco.nf](https://postgresqlco.nf) as a reference on how to tune and find the valid parameters for a given major version.\n",
+          "type": "object"
+        }
+      },
+      "required": [
+        "postgresVersion",
+        "postgresql.conf"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "defaultParameters": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "The `postgresql.conf` default parameters which are used if not set.\n",
+          "type": "object"
+        }
+      },
+      "required": [
+        "defaultParameters"
+      ],
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "stackgres.io/v1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "SGPostgresConfig"
+      ]
+    }
+  },
+  "required": [
+    "metadata",
+    "spec"
+  ]
+}

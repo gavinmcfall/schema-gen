@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/networking.liqo.io/v1beta1/internalfabric.json",
+  "title": "InternalFabric",
+  "description": "InternalFabric is the Schema for the internalfabrics API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.904314+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "InternalFabricSpec defines the desired state of InternalFabric.",
+      "properties": {
+        "gatewayIP": {
+          "description": "GatewayIP is the IP of the gateway pod.",
+          "format": "ipv4",
+          "type": "string"
+        },
+        "interface": {
+          "description": "Interface contains the information about network interfaces.",
+          "properties": {
+            "gateway": {
+              "description": "Gateway contains the information about the gateway interface.",
+              "properties": {
+                "ip": {
+                  "description": "IP is the IP of the interface added to the gateway.",
+                  "format": "ipv4",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ip"
+              ],
+              "type": "object"
+            },
+            "node": {
+              "description": "Node contains the information about the node interface.\nThe node interface is created on every node to connect them to the gateway related with the internalfabric.",
+              "properties": {
+                "name": {
+                  "description": "Name is the name of the interface added to the nodes.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "gateway",
+            "node"
+          ],
+          "type": "object"
+        },
+        "mtu": {
+          "description": "MTU is the MTU of the internal fabric.",
+          "type": "integer"
+        },
+        "remoteCIDRs": {
+          "description": "RemoteCIDRs is the list of remote CIDRs to be routed through the gateway.",
+          "items": {
+            "description": "CIDR defines a syntax validated CIDR.",
+            "format": "cidr",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "gatewayIP",
+        "interface"
+      ],
+      "type": "object"
+    }
+  }
+}

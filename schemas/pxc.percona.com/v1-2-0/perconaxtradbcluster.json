@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/pxc.percona.com/v1-2-0/perconaxtradbcluster.json",
+  "title": "PerconaXtraDBCluster",
+  "description": "PerconaXtraDBCluster is the Schema for the perconaxtradbclusters API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "percona-xtradb-cluster-operator",
+    "sourceVersion": "1.16.1",
+    "extractedAt": "2025-12-14T02:20:28.778109+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "type": "object"
+    },
+    "status": {
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "pxc.percona.com/v1-2-0"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "PerconaXtraDBCluster"
+      ]
+    }
+  }
+}

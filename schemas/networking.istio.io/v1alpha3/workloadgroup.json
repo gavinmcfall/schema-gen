@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/networking.istio.io/v1alpha3/workloadgroup.json",
+  "title": "WorkloadGroup",
+  "description": "WorkloadGroup is the Schema for the workloadgroups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "istio-base",
+    "sourceVersion": "1.24.2",
+    "extractedAt": "2025-12-14T02:18:07.464618+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "description": "Describes a collection of workload instances. See more details at: https://istio.io/docs/reference/config/networking/workload-group.html",
+      "properties": {
+        "metadata": {
+          "description": "Metadata that will be used for all corresponding `WorkloadEntries`.",
+          "properties": {
+            "annotations": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "maxProperties": 256,
+              "type": "object"
+            },
+            "labels": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "maxProperties": 256,
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "probe": {
+          "description": "`ReadinessProbe` describes the configuration the user must provide for healthchecking on their workload.",
+          "oneOf": [
+            {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "httpGet"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "tcpSocket"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "exec"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "required": [
+                "httpGet"
+              ]
+            },
+            {
+              "required": [
+                "tcpSocket"
+              ]
+            },
+            {
+              "required": [
+                "exec"
+              ]
+            }
+          ],
+          "properties": {
+            "exec": {
+              "description": "Health is determined by how the command that is executed exited.",
+              "properties": {
+                "command": {
+                  "description": "Command to run.",
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "type": "object"
+            },
+            "failureThreshold": {
+              "description": "Minimum consecutive failures for the probe to be considered failed after having succeeded.",
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "httpGet": {
+              "description": "`httpGet` is performed to a given endpoint and the status/able to connect determines health.",
+              "properties": {
+                "host": {
+                  "description": "Host name to connect to, defaults to the pod IP.",
+                  "type": "string"
+                },
+                "httpHeaders": {
+                  "description": "Headers the proxy will pass on to make the request.",
+                  "items": {
+                    "properties": {
+                      "name": {
+                        "pattern": "^[-_A-Za-z0-9]+$",
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "path": {
+                  "description": "Path to access on the HTTP server.",
+                  "type": "string"
+                },
+                "port": {
+                  "description": "Port on which the endpoint lives.",
+                  "maximum": 4294967295,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "scheme": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "port"
+              ],
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "description": "Number of seconds after the container has started before readiness probes are initiated.",
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "description": "How often (in seconds) to perform the probe.",
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "successThreshold": {
+              "description": "Minimum consecutive successes for the probe to be considered successful after having failed.",
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "tcpSocket": {
+              "description": "Health is determined by if the proxy is able to connect.",
+              "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "port": {
+                  "maximum": 4294967295,
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "port"
+              ],
+              "type": "object"
+            },
+            "timeoutSeconds": {
+              "description": "Number of seconds after which the probe times out.",
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "template": {
+          "description": "Template to be used for the generation of `WorkloadEntry` resources that belong to this `WorkloadGroup`.",
+          "properties": {
+            "address": {
+              "description": "Address associated with the network endpoint without the port.",
+              "maxLength": 256,
+              "type": "string"
+            },
+            "labels": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "One or more labels associated with the endpoint.",
+              "maxProperties": 256,
+              "type": "object"
+            },
+            "locality": {
+              "description": "The locality associated with the endpoint.",
+              "maxLength": 2048,
+              "type": "string"
+            },
+            "network": {
+              "description": "Network enables Istio to group endpoints resident in the same L3 domain/network.",
+              "maxLength": 2048,
+              "type": "string"
+            },
+            "ports": {
+              "additionalProperties": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "description": "Set of ports associated with the endpoint.",
+              "maxProperties": 128,
+              "type": "object"
+            },
+            "serviceAccount": {
+              "description": "The service account associated with the workload if a sidecar is present in the workload.",
+              "maxLength": 253,
+              "type": "string"
+            },
+            "weight": {
+              "description": "The load balancing weight associated with the endpoint.",
+              "maximum": 4294967295,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "template"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "conditions": {
+          "description": "Current service state of the resource.",
+          "items": {
+            "properties": {
+              "lastProbeTime": {
+                "description": "Last time we probed the condition.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "lastTransitionTime": {
+                "description": "Last time the condition transitioned from one status to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "Human-readable message indicating details about last transition.",
+                "type": "string"
+              },
+              "reason": {
+                "description": "Unique, one-word, CamelCase reason for the condition's last transition.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status is the status of the condition.",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type is the type of the condition.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Resource Generation to which the Reconciled Condition refers."
+        },
+        "validationMessages": {
+          "description": "Includes any errors or warnings detected by Istio's analyzers.",
+          "items": {
+            "properties": {
+              "documentationUrl": {
+                "description": "A url pointing to the Istio documentation for this specific error type.",
+                "type": "string"
+              },
+              "level": {
+                "description": "Represents how severe a message is.\n\nValid Options: UNKNOWN, ERROR, WARNING, INFO",
+                "enum": [
+                  "UNKNOWN",
+                  "ERROR",
+                  "WARNING",
+                  "INFO"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "properties": {
+                  "code": {
+                    "description": "A 7 character code matching `^IST[0-9]{4}$` intended to uniquely identify the message type.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "A human-readable name for the message type.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "networking.istio.io/v1alpha3"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "WorkloadGroup"
+      ]
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

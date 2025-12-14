@@ -1,0 +1,1195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/opensearchservice.aws.crossplane.io/v1alpha1/domain.json",
+  "title": "Domain",
+  "description": "Domain is the Schema for the domains API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.463015+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "DomainSpec defines the desired state of Domain",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "DomainParameters defines the desired state of Domain",
+          "properties": {
+            "accessPolicies": {
+              "description": "Identity and Access Management (IAM) policy document specifying the access\npolicies for the new domain.",
+              "type": "string"
+            },
+            "advancedOptions": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Key-value pairs to specify advanced configuration options. The following\nkey-value pairs are supported:\n\n\n   * \"rest.action.multi.allow_explicit_index\": \"true\" | \"false\" - Note the\n   use of a string rather than a boolean. Specifies whether explicit references\n   to indexes are allowed inside the body of HTTP requests. If you want to\n   configure access policies for domain sub-resources, such as specific indexes\n   and domain APIs, you must disable this property. Default is true.\n\n\n   * \"indices.fielddata.cache.size\": \"80\" - Note the use of a string rather\n   than a boolean. Specifies the percentage of heap space allocated to field\n   data. Default is unbounded.\n\n\n   * \"indices.query.bool.max_clause_count\": \"1024\" - Note the use of a string\n   rather than a boolean. Specifies the maximum number of clauses allowed\n   in a Lucene boolean query. Default is 1,024. Queries with more than the\n   permitted number of clauses result in a TooManyClauses error.\n\n\n   * \"override_main_response_version\": \"true\" | \"false\" - Note the use of\n   a string rather than a boolean. Specifies whether the domain reports its\n   version as 7.10 to allow Elasticsearch OSS clients and plugins to continue\n   working with it. Default is false when creating a domain and true when\n   upgrading a domain.\n\n\nFor more information, see Advanced cluster parameters (https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html#createdomain-configure-advanced-options).",
+              "type": "object"
+            },
+            "advancedSecurityOptions": {
+              "description": "Options for fine-grained access control.",
+              "properties": {
+                "anonymousAuthEnabled": {
+                  "type": "boolean"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "internalUserDatabaseEnabled": {
+                  "type": "boolean"
+                },
+                "masterUserOptions": {
+                  "description": "Credentials for the master user for a domain.",
+                  "properties": {
+                    "masterUserARN": {
+                      "description": "The Amazon Resource Name (ARN) of the domain. See Identifiers for IAM Entities\n(https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html) in Using AWS\nIdentity and Access Management for more information.",
+                      "type": "string"
+                    },
+                    "masterUserName": {
+                      "type": "string"
+                    },
+                    "masterUserPassword": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "sAMLOptions": {
+                  "description": "The SAML authentication configuration for an Amazon OpenSearch Service domain.",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "idp": {
+                      "description": "The SAML identity povider information.",
+                      "properties": {
+                        "entityID": {
+                          "type": "string"
+                        },
+                        "metadataContent": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "masterBackendRole": {
+                      "type": "string"
+                    },
+                    "masterUserName": {
+                      "type": "string"
+                    },
+                    "rolesKey": {
+                      "type": "string"
+                    },
+                    "sessionTimeoutMinutes": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "subjectKey": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "autoTuneOptions": {
+              "description": "Options for Auto-Tune.",
+              "properties": {
+                "desiredState": {
+                  "description": "The Auto-Tune desired state. Valid values are ENABLED and DISABLED.",
+                  "type": "string"
+                },
+                "maintenanceSchedules": {
+                  "items": {
+                    "properties": {
+                      "cronExpressionForRecurrence": {
+                        "type": "string"
+                      },
+                      "duration": {
+                        "description": "The duration of a maintenance schedule. For more information, see Auto-Tune\nfor Amazon OpenSearch Service (https://docs.aws.amazon.com/opensearch-service/latest/developerguide/auto-tune.html).",
+                        "properties": {
+                          "unit": {
+                            "description": "The unit of a maintenance schedule duration. Valid value is HOUR.",
+                            "type": "string"
+                          },
+                          "value": {
+                            "description": "Integer that specifies the value of a maintenance schedule duration.",
+                            "format": "int64",
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "startAt": {
+                        "format": "date-time",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "useOffPeakWindow": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "clusterConfig": {
+              "description": "Container for the cluster configuration of a domain.",
+              "properties": {
+                "coldStorageOptions": {
+                  "description": "Container for the parameters required to enable cold storage for an OpenSearch\nService domain. For more information, see Cold storage for Amazon OpenSearch\nService (https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cold-storage.html).",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "dedicatedMasterCount": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "dedicatedMasterEnabled": {
+                  "type": "boolean"
+                },
+                "dedicatedMasterType": {
+                  "type": "string"
+                },
+                "instanceCount": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "instanceType": {
+                  "type": "string"
+                },
+                "multiAZWithStandbyEnabled": {
+                  "type": "boolean"
+                },
+                "warmCount": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "warmEnabled": {
+                  "type": "boolean"
+                },
+                "warmType": {
+                  "type": "string"
+                },
+                "zoneAwarenessConfig": {
+                  "description": "The zone awareness configuration for an Amazon OpenSearch Service domain.",
+                  "properties": {
+                    "availabilityZoneCount": {
+                      "format": "int64",
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                },
+                "zoneAwarenessEnabled": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "cognitoOptions": {
+              "description": "Key-value pairs to configure Amazon Cognito authentication. For more information,\nsee Configuring Amazon Cognito authentication for OpenSearch Dashboards (https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cognito-auth.html).",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "identityPoolID": {
+                  "type": "string"
+                },
+                "roleARN": {
+                  "type": "string"
+                },
+                "userPoolID": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "domainEndpointOptions": {
+              "description": "Additional options for the domain endpoint, such as whether to require HTTPS\nfor all traffic.",
+              "properties": {
+                "customEndpoint": {
+                  "type": "string"
+                },
+                "customEndpointCertificateARN": {
+                  "description": "The Amazon Resource Name (ARN) of the domain. See Identifiers for IAM Entities\n(https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html) in Using AWS\nIdentity and Access Management for more information.",
+                  "type": "string"
+                },
+                "customEndpointEnabled": {
+                  "type": "boolean"
+                },
+                "enforceHTTPS": {
+                  "type": "boolean"
+                },
+                "tlsSecurityPolicy": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "ebsOptions": {
+              "description": "Container for the parameters required to enable EBS-based storage for an\nOpenSearch Service domain.",
+              "properties": {
+                "ebsEnabled": {
+                  "type": "boolean"
+                },
+                "iops": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "throughput": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "volumeSize": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "volumeType": {
+                  "description": "The type of EBS volume that a domain uses. For more information, see Configuring\nEBS-based storage (https://docs.aws.amazon.com/opensearch-service/latest/developerguide/opensearch-createupdatedomains.html#opensearch-createdomain-configure-ebs).",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "encryptionAtRestOptions": {
+              "description": "Options for encryption of data at rest.",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "kmsKeyId": {
+                  "type": "string"
+                },
+                "kmsKeyIdRef": {
+                  "description": "KMSKeyIDRef is a reference to a KMS Key used to set KMSKeyID.",
+                  "properties": {
+                    "name": {
+                      "description": "Name of the referenced object.",
+                      "type": "string"
+                    },
+                    "policy": {
+                      "description": "Policies for referencing.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                },
+                "kmsKeyIdSelector": {
+                  "description": "KMSKeyIDSelector selects a reference to a KMS Key used to set KMSKeyID.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "engineVersion": {
+              "description": "String of format Elasticsearch_X.Y or OpenSearch_X.Y to specify the engine\nversion for the OpenSearch Service domain. For example, OpenSearch_1.0 or\nElasticsearch_7.9. For more information, see Creating and managing Amazon\nOpenSearch Service domains (https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html#createdomains).",
+              "type": "string"
+            },
+            "logPublishingOptions": {
+              "additionalProperties": {
+                "properties": {
+                  "cloudWatchLogsLogGroupARN": {
+                    "description": "ARN of the Cloudwatch log group to publish logs to.",
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
+              "description": "Key-value pairs to configure log publishing.",
+              "type": "object"
+            },
+            "nodeToNodeEncryptionOptions": {
+              "description": "Enables node-to-node encryption.",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "offPeakWindowOptions": {
+              "description": "Specifies a daily 10-hour time block during which OpenSearch Service can\nperform configuration changes on the domain, including service software updates\nand Auto-Tune enhancements that require a blue/green deployment. If no options\nare specified, the default start time of 10:00 P.M. local time (for the Region\nthat the domain is created in) is used.",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "offPeakWindow": {
+                  "description": "A custom 10-hour, low-traffic window during which OpenSearch Service can\nperform mandatory configuration changes on the domain. These actions can\ninclude scheduled service software updates and blue/green Auto-Tune enhancements.\nOpenSearch Service will schedule these actions during the window that you\nspecify.\n\n\nIf you don't specify a window start time, it defaults to 10:00 P.M. local\ntime.\n\n\nFor more information, see Defining off-peak maintenance windows for Amazon\nOpenSearch Service (https://docs.aws.amazon.com/opensearch-service/latest/developerguide/off-peak.html).",
+                  "properties": {
+                    "windowStartTime": {
+                      "description": "The desired start time for an off-peak maintenance window (https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_OffPeakWindow.html).",
+                      "properties": {
+                        "hours": {
+                          "format": "int64",
+                          "type": "integer"
+                        },
+                        "minutes": {
+                          "format": "int64",
+                          "type": "integer"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "region": {
+              "description": "Region is which region the Domain will be created.",
+              "type": "string"
+            },
+            "snapshotOptions": {
+              "properties": {
+                "automatedSnapshotStartHour": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "softwareUpdateOptions": {
+              "description": "Software update options for the domain.",
+              "properties": {
+                "autoSoftwareUpdateEnabled": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "tags": {
+              "description": "List of tags to add to the domain upon creation.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "description": "A string between 1 to 128 characters that specifies the key for a tag. Tag\nkeys must be unique for the domain to which they're attached.",
+                    "type": "string"
+                  },
+                  "value": {
+                    "description": "A string between 0 to 256 characters that specifies the value for a tag.\nTag values can be null and don't have to be unique in a tag set.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "vpcOptions": {
+              "description": "Options to specify the subnets and security groups for the VPC endpoint.\nFor more information, see Launching your Amazon OpenSearch Service domains\nusing a VPC (http://docs.aws.amazon.com/opensearch-service/latest/developerguide/vpc.html).",
+              "properties": {
+                "securityGroupIdRefs": {
+                  "description": "SecurityGroupIDRefs is a list of references to SecurityGroups used to set\nthe SecurityGroupIDs.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "securityGroupIdSelector": {
+                  "description": "SecurityGroupIDsSelector selects references to SecurityGroupID used\nto set the SecurityGroupIDs.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "securityGroupIds": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "subnetIdRefs": {
+                  "description": "SubnetIDRefs is a list of references to Subnets used to set\nthe SubnetIDs.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "subnetIdSelector": {
+                  "description": "SubnetIDsSelector selects references to Subnets used\nto set the SubnetIDs.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "subnetIds": {
+                  "description": "SecurityGroupIDs is the list of IDs for the SecurityGroups.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "DomainStatus defines the observed state of Domain.",
+      "properties": {
+        "atProvider": {
+          "description": "DomainObservation defines the observed state of Domain",
+          "properties": {
+            "accessPolicies": {
+              "description": "Identity and Access Management (IAM) policy document specifying the access\npolicies for the domain.",
+              "type": "string"
+            },
+            "advancedOptions": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Key-value pairs that specify advanced configuration options.",
+              "type": "object"
+            },
+            "advancedSecurityOptions": {
+              "description": "Settings for fine-grained access control.",
+              "properties": {
+                "anonymousAuthDisableDate": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "anonymousAuthEnabled": {
+                  "type": "boolean"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "internalUserDatabaseEnabled": {
+                  "type": "boolean"
+                },
+                "sAMLOptions": {
+                  "description": "Describes the SAML application configured for the domain.",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "idp": {
+                      "description": "The SAML identity povider information.",
+                      "properties": {
+                        "entityID": {
+                          "type": "string"
+                        },
+                        "metadataContent": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "rolesKey": {
+                      "type": "string"
+                    },
+                    "sessionTimeoutMinutes": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "subjectKey": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "arn": {
+              "description": "The Amazon Resource Name (ARN) of the domain. For more information, see IAM\nidentifiers (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html)\nin the AWS Identity and Access Management User Guide.",
+              "type": "string"
+            },
+            "autoTuneOptions": {
+              "description": "Auto-Tune settings for the domain.",
+              "properties": {
+                "errorMessage": {
+                  "type": "string"
+                },
+                "state": {
+                  "description": "The Auto-Tune state for the domain. For valid states see Auto-Tune for Amazon\nOpenSearch Service (https://docs.aws.amazon.com/opensearch-service/latest/developerguide/auto-tune.html).",
+                  "type": "string"
+                },
+                "useOffPeakWindow": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "changeProgressDetails": {
+              "description": "Information about a configuration change happening on the domain.",
+              "properties": {
+                "changeID": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "clusterConfig": {
+              "description": "Container for the cluster configuration of the domain.",
+              "properties": {
+                "coldStorageOptions": {
+                  "description": "Container for the parameters required to enable cold storage for an OpenSearch\nService domain. For more information, see Cold storage for Amazon OpenSearch\nService (https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cold-storage.html).",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "dedicatedMasterCount": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "dedicatedMasterEnabled": {
+                  "type": "boolean"
+                },
+                "dedicatedMasterType": {
+                  "type": "string"
+                },
+                "instanceCount": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "instanceType": {
+                  "type": "string"
+                },
+                "multiAZWithStandbyEnabled": {
+                  "type": "boolean"
+                },
+                "warmCount": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "warmEnabled": {
+                  "type": "boolean"
+                },
+                "warmType": {
+                  "type": "string"
+                },
+                "zoneAwarenessConfig": {
+                  "description": "The zone awareness configuration for an Amazon OpenSearch Service domain.",
+                  "properties": {
+                    "availabilityZoneCount": {
+                      "format": "int64",
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                },
+                "zoneAwarenessEnabled": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "cognitoOptions": {
+              "description": "Key-value pairs to configure Amazon Cognito authentication for OpenSearch\nDashboards.",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "identityPoolID": {
+                  "type": "string"
+                },
+                "roleARN": {
+                  "type": "string"
+                },
+                "userPoolID": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "created": {
+              "description": "Creation status of an OpenSearch Service domain. True if domain creation\nis complete. False if domain creation is still in progress.",
+              "type": "boolean"
+            },
+            "deleted": {
+              "description": "Deletion status of an OpenSearch Service domain. True if domain deletion\nis complete. False if domain deletion is still in progress. Once deletion\nis complete, the status of the domain is no longer returned.",
+              "type": "boolean"
+            },
+            "domainEndpointOptions": {
+              "description": "Additional options for the domain endpoint, such as whether to require HTTPS\nfor all traffic.",
+              "properties": {
+                "customEndpoint": {
+                  "type": "string"
+                },
+                "customEndpointCertificateARN": {
+                  "description": "The Amazon Resource Name (ARN) of the domain. See Identifiers for IAM Entities\n(https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html) in Using AWS\nIdentity and Access Management for more information.",
+                  "type": "string"
+                },
+                "customEndpointEnabled": {
+                  "type": "boolean"
+                },
+                "enforceHTTPS": {
+                  "type": "boolean"
+                },
+                "tlsSecurityPolicy": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "domainID": {
+              "description": "Unique identifier for the domain.",
+              "type": "string"
+            },
+            "domainName": {
+              "description": "Name of the domain. Domain names are unique across all domains owned by the\nsame account within an Amazon Web Services Region.",
+              "type": "string"
+            },
+            "encryptionAtRestOptions": {
+              "description": "Encryption at rest settings for the domain.",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "kmsKeyID": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "endpoint": {
+              "description": "Domain-specific endpoint used to submit index, search, and data upload requests\nto the domain.",
+              "type": "string"
+            },
+            "endpoints": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The key-value pair that exists if the OpenSearch Service domain uses VPC\nendpoints.. Example key, value: 'vpc','vpc-endpoint-h2dsd34efgyghrtguk5gt6j2foh4.us-east-1.es.amazonaws.com'.",
+              "type": "object"
+            },
+            "engineVersion": {
+              "description": "Version of OpenSearch or Elasticsearch that the domain is running, in the\nformat Elasticsearch_X.Y or OpenSearch_X.Y.",
+              "type": "string"
+            },
+            "nodeToNodeEncryptionOptions": {
+              "description": "Whether node-to-node encryption is enabled or disabled.",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "processing": {
+              "description": "The status of the domain configuration. True if OpenSearch Service is processing\nconfiguration changes. False if the configuration is active.",
+              "type": "boolean"
+            },
+            "serviceSoftwareOptions": {
+              "description": "The current status of the domain's service software.",
+              "properties": {
+                "automatedUpdateDate": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "cancellable": {
+                  "type": "boolean"
+                },
+                "currentVersion": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "newVersion": {
+                  "type": "string"
+                },
+                "optionalDeployment": {
+                  "type": "boolean"
+                },
+                "updateAvailable": {
+                  "type": "boolean"
+                },
+                "updateStatus": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "snapshotOptions": {
+              "description": "DEPRECATED. Container for parameters required to configure automated snapshots\nof domain indexes.",
+              "properties": {
+                "automatedSnapshotStartHour": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "upgradeProcessing": {
+              "description": "The status of a domain version upgrade to a new version of OpenSearch or\nElasticsearch. True if OpenSearch Service is in the process of a version\nupgrade. False if the configuration is active.",
+              "type": "boolean"
+            },
+            "vpcOptions": {
+              "description": "The VPC configuration for the domain.",
+              "properties": {
+                "availabilityZones": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "securityGroupIDs": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "subnetIDs": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "vpcID": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

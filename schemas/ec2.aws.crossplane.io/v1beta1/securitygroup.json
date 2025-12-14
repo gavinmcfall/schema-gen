@@ -1,0 +1,1093 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/ec2.aws.crossplane.io/v1beta1/securitygroup.json",
+  "title": "SecurityGroup",
+  "description": "SecurityGroup is the Schema for the securitygroups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.399776+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "A SecurityGroupSpec defines the desired state of a SecurityGroup.",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "SecurityGroupParameters define the desired state of an AWS VPC Security\nGroup.",
+          "properties": {
+            "description": {
+              "description": "A description of the security group.",
+              "type": "string"
+            },
+            "egress": {
+              "description": "[EC2-VPC] One or more outbound rules associated with the security group.",
+              "items": {
+                "description": "IPPermission Describes a set of permissions for a security group rule.",
+                "properties": {
+                  "fromPort": {
+                    "description": "The start of port range for the TCP and UDP protocols, or an ICMP/ICMPv6\ntype number. A value of -1 indicates all ICMP/ICMPv6 types. If you specify\nall ICMP/ICMPv6 types, you must specify all codes.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "ipProtocol": {
+                    "description": "The IP protocol name (tcp, udp, icmp, icmpv6) or number (see Protocol Numbers\n(http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml)).\n\n\n[VPC only] Use -1 to specify all protocols. When authorizing security group\nrules, specifying -1 or a protocol number other than tcp, udp, icmp, or icmpv6\nallows traffic on all ports, regardless of any port range you specify. For\ntcp, udp, and icmp, you must specify a port range. For icmpv6, the port range\nis optional; if you omit the port range, traffic for all types and codes\nis allowed.",
+                    "type": "string"
+                  },
+                  "ipRanges": {
+                    "description": "The IPv4 ranges.",
+                    "items": {
+                      "description": "IPRange describes an IPv4 range.",
+                      "properties": {
+                        "cidrIp": {
+                          "description": "The IPv4 CIDR range. You can either specify a CIDR range or a source security\ngroup, not both. To specify a single IPv4 address, use the /32 prefix length.",
+                          "type": "string"
+                        },
+                        "description": {
+                          "description": "A description for the security group rule that references this IPv4 address\nrange.\n\n\nConstraints: Up to 255 characters in length. Allowed characters are a-z,\nA-Z, 0-9, spaces, and ._-:/()#,@[]+=&;{}!$*",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cidrIp"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "ipv6Ranges": {
+                    "description": "The IPv6 ranges.\n\n\n[VPC only]",
+                    "items": {
+                      "description": "IPv6Range describes an IPv6 range.",
+                      "properties": {
+                        "cidrIPv6": {
+                          "description": "The IPv6 CIDR range. You can either specify a CIDR range or a source security\ngroup, not both. To specify a single IPv6 address, use the /128 prefix length.",
+                          "type": "string"
+                        },
+                        "description": {
+                          "description": "A description for the security group rule that references this IPv6 address\nrange.\n\n\nConstraints: Up to 255 characters in length. Allowed characters are a-z,\nA-Z, 0-9, spaces, and ._-:/()#,@[]+=&;{}!$*",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cidrIPv6"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "prefixListIds": {
+                    "description": "PrefixListIDs for an AWS service. With outbound rules, this\nis the AWS service to access through a VPC endpoint from instances associated\nwith the security group.\n\n\n[VPC only]",
+                    "items": {
+                      "description": "PrefixListID describes a prefix list ID.",
+                      "properties": {
+                        "description": {
+                          "description": "A description for the security group rule that references this prefix list\nID.\n\n\nConstraints: Up to 255 characters in length. Allowed characters are a-z,\nA-Z, 0-9, spaces, and ._-:/()#,@[]+=;{}!$*",
+                          "type": "string"
+                        },
+                        "prefixListId": {
+                          "description": "The ID of the prefix.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "prefixListId"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "toPort": {
+                    "description": "The end of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 code.\nA value of -1 indicates all ICMP/ICMPv6 codes. If you specify all ICMP/ICMPv6\ntypes, you must specify all codes.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "userIdGroupPairs": {
+                    "description": "UserIDGroupPairs are the source security group and AWS account ID pairs.\nIt contains one or more accounts and security groups to allow flows from\nsecurity groups of other accounts.",
+                    "items": {
+                      "description": "UserIDGroupPair describes a security group and AWS account ID pair.",
+                      "properties": {
+                        "description": {
+                          "description": "A description for the security group rule that references this user ID group\npair.\n\n\nConstraints: Up to 255 characters in length. Allowed characters are a-z,\nA-Z, 0-9, spaces, and ._-:/()#,@[]+=;{}!$*",
+                          "type": "string"
+                        },
+                        "groupId": {
+                          "description": "The ID of the security group.",
+                          "type": "string"
+                        },
+                        "groupIdRef": {
+                          "description": "GroupIDRef reference a security group to retrieve its GroupID",
+                          "properties": {
+                            "name": {
+                              "description": "Name of the referenced object.",
+                              "type": "string"
+                            },
+                            "policy": {
+                              "description": "Policies for referencing.",
+                              "properties": {
+                                "resolution": {
+                                  "default": "Required",
+                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                  "enum": [
+                                    "Required",
+                                    "Optional"
+                                  ],
+                                  "type": "string"
+                                },
+                                "resolve": {
+                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                  "enum": [
+                                    "Always",
+                                    "IfNotPresent"
+                                  ],
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "type": "object"
+                        },
+                        "groupIdSelector": {
+                          "description": "GroupIDSelector selects reference to a security group to retrieve its GroupID",
+                          "properties": {
+                            "matchControllerRef": {
+                              "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                              "type": "boolean"
+                            },
+                            "matchLabels": {
+                              "additionalProperties": {
+                                "type": "string"
+                              },
+                              "description": "MatchLabels ensures an object with matching labels is selected.",
+                              "type": "object"
+                            },
+                            "policy": {
+                              "description": "Policies for selection.",
+                              "properties": {
+                                "resolution": {
+                                  "default": "Required",
+                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                  "enum": [
+                                    "Required",
+                                    "Optional"
+                                  ],
+                                  "type": "string"
+                                },
+                                "resolve": {
+                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                  "enum": [
+                                    "Always",
+                                    "IfNotPresent"
+                                  ],
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "groupName": {
+                          "description": "The name of the security group. In a request, use this parameter for a security\ngroup in EC2-Classic or a default VPC only. For a security group in a nondefault\nVPC, use the security group ID.\n\n\nFor a referenced security group in another VPC, this value is not returned\nif the referenced security group is deleted.",
+                          "type": "string"
+                        },
+                        "userId": {
+                          "description": "The ID of an AWS account.\n\n\nFor a referenced security group in another VPC, the account ID of the referenced\nsecurity group is returned in the response. If the referenced security group\nis deleted, this value is not returned.\n\n\n[EC2-Classic] Required when adding or removing rules that reference a security\ngroup in another AWS account.",
+                          "type": "string"
+                        },
+                        "vpcId": {
+                          "description": "The ID of the VPC for the referenced security group, if applicable.",
+                          "type": "string"
+                        },
+                        "vpcIdRef": {
+                          "description": "VPCIDRef reference a VPC to retrieve its vpcId",
+                          "properties": {
+                            "name": {
+                              "description": "Name of the referenced object.",
+                              "type": "string"
+                            },
+                            "policy": {
+                              "description": "Policies for referencing.",
+                              "properties": {
+                                "resolution": {
+                                  "default": "Required",
+                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                  "enum": [
+                                    "Required",
+                                    "Optional"
+                                  ],
+                                  "type": "string"
+                                },
+                                "resolve": {
+                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                  "enum": [
+                                    "Always",
+                                    "IfNotPresent"
+                                  ],
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "type": "object"
+                        },
+                        "vpcIdSelector": {
+                          "description": "VPCIDSelector selects reference to a VPC to retrieve its vpcId",
+                          "properties": {
+                            "matchControllerRef": {
+                              "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                              "type": "boolean"
+                            },
+                            "matchLabels": {
+                              "additionalProperties": {
+                                "type": "string"
+                              },
+                              "description": "MatchLabels ensures an object with matching labels is selected.",
+                              "type": "object"
+                            },
+                            "policy": {
+                              "description": "Policies for selection.",
+                              "properties": {
+                                "resolution": {
+                                  "default": "Required",
+                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                  "enum": [
+                                    "Required",
+                                    "Optional"
+                                  ],
+                                  "type": "string"
+                                },
+                                "resolve": {
+                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                  "enum": [
+                                    "Always",
+                                    "IfNotPresent"
+                                  ],
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "vpcPeeringConnectionId": {
+                          "description": "The ID of the VPC peering connection, if applicable.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "ipProtocol"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "groupName": {
+              "description": "The name of the security group.",
+              "type": "string"
+            },
+            "ignoreEgress": {
+              "description": "Dont manage the egress settings for the created resource",
+              "type": "boolean"
+            },
+            "ignoreIngress": {
+              "description": "Dont manage the ingress settings for the created resource",
+              "type": "boolean"
+            },
+            "ingress": {
+              "description": "One or more inbound rules associated with the security group.",
+              "items": {
+                "description": "IPPermission Describes a set of permissions for a security group rule.",
+                "properties": {
+                  "fromPort": {
+                    "description": "The start of port range for the TCP and UDP protocols, or an ICMP/ICMPv6\ntype number. A value of -1 indicates all ICMP/ICMPv6 types. If you specify\nall ICMP/ICMPv6 types, you must specify all codes.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "ipProtocol": {
+                    "description": "The IP protocol name (tcp, udp, icmp, icmpv6) or number (see Protocol Numbers\n(http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml)).\n\n\n[VPC only] Use -1 to specify all protocols. When authorizing security group\nrules, specifying -1 or a protocol number other than tcp, udp, icmp, or icmpv6\nallows traffic on all ports, regardless of any port range you specify. For\ntcp, udp, and icmp, you must specify a port range. For icmpv6, the port range\nis optional; if you omit the port range, traffic for all types and codes\nis allowed.",
+                    "type": "string"
+                  },
+                  "ipRanges": {
+                    "description": "The IPv4 ranges.",
+                    "items": {
+                      "description": "IPRange describes an IPv4 range.",
+                      "properties": {
+                        "cidrIp": {
+                          "description": "The IPv4 CIDR range. You can either specify a CIDR range or a source security\ngroup, not both. To specify a single IPv4 address, use the /32 prefix length.",
+                          "type": "string"
+                        },
+                        "description": {
+                          "description": "A description for the security group rule that references this IPv4 address\nrange.\n\n\nConstraints: Up to 255 characters in length. Allowed characters are a-z,\nA-Z, 0-9, spaces, and ._-:/()#,@[]+=&;{}!$*",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cidrIp"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "ipv6Ranges": {
+                    "description": "The IPv6 ranges.\n\n\n[VPC only]",
+                    "items": {
+                      "description": "IPv6Range describes an IPv6 range.",
+                      "properties": {
+                        "cidrIPv6": {
+                          "description": "The IPv6 CIDR range. You can either specify a CIDR range or a source security\ngroup, not both. To specify a single IPv6 address, use the /128 prefix length.",
+                          "type": "string"
+                        },
+                        "description": {
+                          "description": "A description for the security group rule that references this IPv6 address\nrange.\n\n\nConstraints: Up to 255 characters in length. Allowed characters are a-z,\nA-Z, 0-9, spaces, and ._-:/()#,@[]+=&;{}!$*",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cidrIPv6"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "prefixListIds": {
+                    "description": "PrefixListIDs for an AWS service. With outbound rules, this\nis the AWS service to access through a VPC endpoint from instances associated\nwith the security group.\n\n\n[VPC only]",
+                    "items": {
+                      "description": "PrefixListID describes a prefix list ID.",
+                      "properties": {
+                        "description": {
+                          "description": "A description for the security group rule that references this prefix list\nID.\n\n\nConstraints: Up to 255 characters in length. Allowed characters are a-z,\nA-Z, 0-9, spaces, and ._-:/()#,@[]+=;{}!$*",
+                          "type": "string"
+                        },
+                        "prefixListId": {
+                          "description": "The ID of the prefix.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "prefixListId"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "toPort": {
+                    "description": "The end of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 code.\nA value of -1 indicates all ICMP/ICMPv6 codes. If you specify all ICMP/ICMPv6\ntypes, you must specify all codes.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "userIdGroupPairs": {
+                    "description": "UserIDGroupPairs are the source security group and AWS account ID pairs.\nIt contains one or more accounts and security groups to allow flows from\nsecurity groups of other accounts.",
+                    "items": {
+                      "description": "UserIDGroupPair describes a security group and AWS account ID pair.",
+                      "properties": {
+                        "description": {
+                          "description": "A description for the security group rule that references this user ID group\npair.\n\n\nConstraints: Up to 255 characters in length. Allowed characters are a-z,\nA-Z, 0-9, spaces, and ._-:/()#,@[]+=;{}!$*",
+                          "type": "string"
+                        },
+                        "groupId": {
+                          "description": "The ID of the security group.",
+                          "type": "string"
+                        },
+                        "groupIdRef": {
+                          "description": "GroupIDRef reference a security group to retrieve its GroupID",
+                          "properties": {
+                            "name": {
+                              "description": "Name of the referenced object.",
+                              "type": "string"
+                            },
+                            "policy": {
+                              "description": "Policies for referencing.",
+                              "properties": {
+                                "resolution": {
+                                  "default": "Required",
+                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                  "enum": [
+                                    "Required",
+                                    "Optional"
+                                  ],
+                                  "type": "string"
+                                },
+                                "resolve": {
+                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                  "enum": [
+                                    "Always",
+                                    "IfNotPresent"
+                                  ],
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "type": "object"
+                        },
+                        "groupIdSelector": {
+                          "description": "GroupIDSelector selects reference to a security group to retrieve its GroupID",
+                          "properties": {
+                            "matchControllerRef": {
+                              "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                              "type": "boolean"
+                            },
+                            "matchLabels": {
+                              "additionalProperties": {
+                                "type": "string"
+                              },
+                              "description": "MatchLabels ensures an object with matching labels is selected.",
+                              "type": "object"
+                            },
+                            "policy": {
+                              "description": "Policies for selection.",
+                              "properties": {
+                                "resolution": {
+                                  "default": "Required",
+                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                  "enum": [
+                                    "Required",
+                                    "Optional"
+                                  ],
+                                  "type": "string"
+                                },
+                                "resolve": {
+                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                  "enum": [
+                                    "Always",
+                                    "IfNotPresent"
+                                  ],
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "groupName": {
+                          "description": "The name of the security group. In a request, use this parameter for a security\ngroup in EC2-Classic or a default VPC only. For a security group in a nondefault\nVPC, use the security group ID.\n\n\nFor a referenced security group in another VPC, this value is not returned\nif the referenced security group is deleted.",
+                          "type": "string"
+                        },
+                        "userId": {
+                          "description": "The ID of an AWS account.\n\n\nFor a referenced security group in another VPC, the account ID of the referenced\nsecurity group is returned in the response. If the referenced security group\nis deleted, this value is not returned.\n\n\n[EC2-Classic] Required when adding or removing rules that reference a security\ngroup in another AWS account.",
+                          "type": "string"
+                        },
+                        "vpcId": {
+                          "description": "The ID of the VPC for the referenced security group, if applicable.",
+                          "type": "string"
+                        },
+                        "vpcIdRef": {
+                          "description": "VPCIDRef reference a VPC to retrieve its vpcId",
+                          "properties": {
+                            "name": {
+                              "description": "Name of the referenced object.",
+                              "type": "string"
+                            },
+                            "policy": {
+                              "description": "Policies for referencing.",
+                              "properties": {
+                                "resolution": {
+                                  "default": "Required",
+                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                  "enum": [
+                                    "Required",
+                                    "Optional"
+                                  ],
+                                  "type": "string"
+                                },
+                                "resolve": {
+                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                  "enum": [
+                                    "Always",
+                                    "IfNotPresent"
+                                  ],
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "type": "object"
+                        },
+                        "vpcIdSelector": {
+                          "description": "VPCIDSelector selects reference to a VPC to retrieve its vpcId",
+                          "properties": {
+                            "matchControllerRef": {
+                              "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                              "type": "boolean"
+                            },
+                            "matchLabels": {
+                              "additionalProperties": {
+                                "type": "string"
+                              },
+                              "description": "MatchLabels ensures an object with matching labels is selected.",
+                              "type": "object"
+                            },
+                            "policy": {
+                              "description": "Policies for selection.",
+                              "properties": {
+                                "resolution": {
+                                  "default": "Required",
+                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                  "enum": [
+                                    "Required",
+                                    "Optional"
+                                  ],
+                                  "type": "string"
+                                },
+                                "resolve": {
+                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                  "enum": [
+                                    "Always",
+                                    "IfNotPresent"
+                                  ],
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "vpcPeeringConnectionId": {
+                          "description": "The ID of the VPC peering connection, if applicable.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "ipProtocol"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "region": {
+              "description": "Region is the region you'd like your SecurityGroup to be created in.",
+              "type": "string"
+            },
+            "tags": {
+              "description": "Tags represents to current ec2 tags.",
+              "items": {
+                "description": "Tag defines a tag",
+                "properties": {
+                  "key": {
+                    "description": "Key is the name of the tag.",
+                    "type": "string"
+                  },
+                  "value": {
+                    "description": "Value is the value of the tag.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "key",
+                  "value"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "vpcId": {
+              "description": "VPCID is the ID of the VPC.",
+              "type": "string"
+            },
+            "vpcIdRef": {
+              "description": "VPCIDRef references a VPC to and retrieves its vpcId",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "vpcIdSelector": {
+              "description": "VPCIDSelector selects a reference to a VPC to and retrieves its vpcId",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "description",
+            "groupName",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "A SecurityGroupStatus represents the observed state of a SecurityGroup.",
+      "properties": {
+        "atProvider": {
+          "description": "SecurityGroupObservation keeps the state for the external resource",
+          "properties": {
+            "egressRules": {
+              "description": "EgressRules of the observed SecurityGroup.",
+              "items": {
+                "properties": {
+                  "cidrIpv4": {
+                    "description": "CidrIpv4 range.",
+                    "type": "string"
+                  },
+                  "cidrIpv6": {
+                    "description": "CidrIpv6 range.",
+                    "type": "string"
+                  },
+                  "description": {
+                    "description": "Description of this rule.",
+                    "type": "string"
+                  },
+                  "fromPort": {
+                    "description": "The start of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 type. A\nvalue of -1 indicates all ICMP/ICMPv6 types. If you specify all ICMP/ICMPv6\ntypes, you must specify all codes.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "id": {
+                    "description": "ID of the security group rule.",
+                    "type": "string"
+                  },
+                  "ipProtocol": {
+                    "description": "The IP protocol name (tcp, udp, icmp, icmpv6) or number (see Protocol Numbers\n(http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml)). Use\n-1 to specify all protocols.",
+                    "type": "string"
+                  },
+                  "prefixListId": {
+                    "description": "The ID of the prefix list.",
+                    "type": "string"
+                  },
+                  "referencedGroupInfo": {
+                    "description": "Describes the security group that is referenced in the rule.",
+                    "properties": {
+                      "groupId": {
+                        "description": "The ID of the security group.",
+                        "type": "string"
+                      },
+                      "peeringStatus": {
+                        "description": "The status of a VPC peering connection, if applicable.",
+                        "type": "string"
+                      },
+                      "userId": {
+                        "description": "The Amazon Web Services account ID.",
+                        "type": "string"
+                      },
+                      "vpcId": {
+                        "description": "The ID of the VPC.",
+                        "type": "string"
+                      },
+                      "vpcPeeringConnectionId": {
+                        "description": "The ID of the VPC peering connection.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "toPort": {
+                    "description": "The end of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 code. A\nvalue of -1 indicates all ICMP/ICMPv6 codes. If you specify all ICMP/ICMPv6\ntypes, you must specify all codes.",
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "ingressRules": {
+              "description": "IngressRules of the observed SecurityGroup.",
+              "items": {
+                "properties": {
+                  "cidrIpv4": {
+                    "description": "CidrIpv4 range.",
+                    "type": "string"
+                  },
+                  "cidrIpv6": {
+                    "description": "CidrIpv6 range.",
+                    "type": "string"
+                  },
+                  "description": {
+                    "description": "Description of this rule.",
+                    "type": "string"
+                  },
+                  "fromPort": {
+                    "description": "The start of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 type. A\nvalue of -1 indicates all ICMP/ICMPv6 types. If you specify all ICMP/ICMPv6\ntypes, you must specify all codes.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "id": {
+                    "description": "ID of the security group rule.",
+                    "type": "string"
+                  },
+                  "ipProtocol": {
+                    "description": "The IP protocol name (tcp, udp, icmp, icmpv6) or number (see Protocol Numbers\n(http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml)). Use\n-1 to specify all protocols.",
+                    "type": "string"
+                  },
+                  "prefixListId": {
+                    "description": "The ID of the prefix list.",
+                    "type": "string"
+                  },
+                  "referencedGroupInfo": {
+                    "description": "Describes the security group that is referenced in the rule.",
+                    "properties": {
+                      "groupId": {
+                        "description": "The ID of the security group.",
+                        "type": "string"
+                      },
+                      "peeringStatus": {
+                        "description": "The status of a VPC peering connection, if applicable.",
+                        "type": "string"
+                      },
+                      "userId": {
+                        "description": "The Amazon Web Services account ID.",
+                        "type": "string"
+                      },
+                      "vpcId": {
+                        "description": "The ID of the VPC.",
+                        "type": "string"
+                      },
+                      "vpcPeeringConnectionId": {
+                        "description": "The ID of the VPC peering connection.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "toPort": {
+                    "description": "The end of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 code. A\nvalue of -1 indicates all ICMP/ICMPv6 codes. If you specify all ICMP/ICMPv6\ntypes, you must specify all codes.",
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "ownerId": {
+              "description": "The AWS account ID of the owner of the security group.",
+              "type": "string"
+            },
+            "securityGroupID": {
+              "description": "SecurityGroupID is the ID of the SecurityGroup.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "ownerId",
+            "securityGroupID"
+          ],
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

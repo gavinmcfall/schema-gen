@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/neuvector.com/v1/nvdlpsecurityrule.json",
+  "title": "NvDlpSecurityRule",
+  "description": "NvDlpSecurityRule is the Schema for the nvdlpsecurityrules API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "neuvector",
+    "sourceVersion": "2.8.3",
+    "extractedAt": "2025-12-14T02:23:03.470268+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "properties": {
+        "sensor": {
+          "properties": {
+            "comment": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "rules": {
+              "items": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "patterns": {
+                    "items": {
+                      "properties": {
+                        "context": {
+                          "enum": [
+                            "url",
+                            "header",
+                            "body",
+                            "packet"
+                          ],
+                          "type": "string"
+                        },
+                        "key": {
+                          "enum": [
+                            "pattern"
+                          ],
+                          "type": "string"
+                        },
+                        "op": {
+                          "enum": [
+                            "regex",
+                            "!regex"
+                          ],
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "op",
+                        "value",
+                        "context"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "name",
+                  "patterns"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "sensor"
+      ],
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "neuvector.com/v1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "NvDlpSecurityRule"
+      ]
+    }
+  }
+}

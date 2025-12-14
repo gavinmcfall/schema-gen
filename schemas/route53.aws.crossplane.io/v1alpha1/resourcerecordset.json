@@ -1,0 +1,437 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/route53.aws.crossplane.io/v1alpha1/resourcerecordset.json",
+  "title": "ResourceRecordSet",
+  "description": "ResourceRecordSet is the Schema for the resourcerecordsets API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.474778+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ResourceRecordSetSpec defines the desired state of an AWS Route53 Resource Record.",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "ResourceRecordSetParameters define the desired state of an AWS Route53 Resource Record.",
+          "properties": {
+            "aliasTarget": {
+              "description": "Alias resource record sets only: Information about the AWS resource, such\nas a CloudFront distribution or an Amazon S3 bucket, that you want to route\ntraffic to.\n\n\nIf you're creating resource records sets for a private hosted zone, note\nthe following:\n\n\n   * You can't create an alias resource record set in a private hosted zone\n   to route traffic to a CloudFront distribution.\n\n\n   * Creating geolocation alias resource record sets or latency alias resource\n   record sets in a private hosted zone is unsupported.\n\n\n   * For information about creating failover resource record sets in a private\n   hosted zone, see Configuring Failover in a Private Hosted Zone (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-private-hosted-zones.html)\n   in the Amazon Route 53 Developer Guide.",
+              "properties": {
+                "dnsName": {
+                  "description": "Alias resource record sets only: The value that you specify depends on where\nyou want to route queries:\n\n\nAmazon API Gateway custom regional APIs and edge-optimized APIs\n\n\nSpecify the applicable domain name for your API. You can get the applicable\nvalue using the AWS CLI command get-domain-names (https://docs.aws.amazon.com/cli/latest/reference/apigateway/get-domain-names.html):\n\n\n   * For regional APIs, specify the value of regionalDomainName.\n\n\n   * For edge-optimized APIs, specify the value of distributionDomainName.\n   This is the name of the associated CloudFront distribution, such as da1b2c3d4e5.cloudfront.net.\n\n\nThe name of the record that you're creating must match a custom domain name\nfor your API, such as api.example.com.\n\n\nAmazon Virtual Private Cloud interface VPC endpoint\n\n\nEnter the API endpoint for the interface endpoint, such as vpce-123456789abcdef01-example-us-east-1a.elasticloadbalancing.us-east-1.vpce.amazonaws.com.\nFor edge-optimized APIs, this is the domain name for the corresponding CloudFront\ndistribution. You can get the value of DnsName using the AWS CLI command\ndescribe-vpc-endpoints (https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-vpc-endpoints.html).\n\n\nCloudFront distribution\n\n\nSpecify the domain name that CloudFront assigned when you created your distribution.\n\n\nYour CloudFront distribution must include an alternate domain name that matches\nthe name of the resource record set. For example, if the name of the resource\nrecord set is acme.example.com, your CloudFront distribution must include\nacme.example.com as one of the alternate domain names. For more information,\nsee Using Alternate Domain Names (CNAMEs) (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html)\nin the Amazon CloudFront Developer Guide.\n\n\nYou can't create a resource record set in a private hosted zone to route\ntraffic to a CloudFront distribution.\n\n\nFor failover alias records, you can't specify a CloudFront distribution for\nboth the primary and secondary records. A distribution must include an alternate\ndomain name that matches the name of the record. However, the primary and\nsecondary records have the same name, and you can't include the same alternate\ndomain name in more than one distribution.\n\n\nElastic Beanstalk environment\n\n\nIf the domain name for your Elastic Beanstalk environment includes the region\nthat you deployed the environment in, you can create an alias record that\nroutes traffic to the environment. For example, the domain name my-environment.us-west-2.elasticbeanstalk.com\nis a regionalized domain name.\n\n\nFor environments that were created before early 2016, the domain name doesn't\ninclude the region. To route traffic to these environments, you must create\na CNAME record instead of an alias record. Note that you can't create a CNAME\nrecord for the root domain name. For example, if your domain name is example.com,\nyou can create a record that routes traffic for acme.example.com to your\nElastic Beanstalk environment, but you can't create a record that routes\ntraffic for example.com to your Elastic Beanstalk environment.\n\n\nFor Elastic Beanstalk environments that have regionalized subdomains, specify\nthe CNAME attribute for the environment. You can use the following methods\nto get the value of the CNAME attribute:\n\n\n   * AWS Management Console: For information about how to get the value by\n   using the console, see Using Custom Domains with AWS Elastic Beanstalk\n   (https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customdomains.html)\n   in the AWS Elastic Beanstalk Developer Guide.\n\n\n   * Elastic Beanstalk API: Use the DescribeEnvironments action to get the\n   value of the CNAME attribute. For more information, see DescribeEnvironments\n   (https://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_DescribeEnvironments.html)\n   in the AWS Elastic Beanstalk API Reference.\n\n\n   * AWS CLI: Use the describe-environments command to get the value of the\n   CNAME attribute. For more information, see describe-environments (https://docs.aws.amazon.com/cli/latest/reference/elasticbeanstalk/describe-environments.html)\n   in the AWS CLI Command Reference.\n\n\nELB load balancer\n\n\nSpecify the DNS name that is associated with the load balancer. Get the DNS\nname by using the AWS Management Console, the ELB API, or the AWS CLI.\n\n\n   * AWS Management Console: Go to the EC2 page, choose Load Balancers in\n   the navigation pane, choose the load balancer, choose the Description\n   tab, and get the value of the DNS name field. If you're routing traffic\n   to a Classic Load Balancer, get the value that begins with dualstack.\n   If you're routing traffic to another type of load balancer, get the value\n   that applies to the record type, A or AAAA.\n\n\n   * Elastic Load Balancing API: Use DescribeLoadBalancers to get the value\n   of DNSName. For more information, see the applicable guide: Classic Load\n   Balancers: DescribeLoadBalancers (https://docs.aws.amazon.com/elasticloadbalancing/2012-06-01/APIReference/API_DescribeLoadBalancers.html)\n   Application and Network Load Balancers: DescribeLoadBalancers (https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DescribeLoadBalancers.html)\n\n\n   * AWS CLI: Use describe-load-balancers to get the value of DNSName. For\n   more information, see the applicable guide: Classic Load Balancers: describe-load-balancers\n   (http://docs.aws.amazon.com/cli/latest/reference/elb/describe-load-balancers.html)\n   Application and Network Load Balancers: describe-load-balancers (http://docs.aws.amazon.com/cli/latest/reference/elbv2/describe-load-balancers.html)\n\n\nAWS Global Accelerator accelerator\n\n\nSpecify the DNS name for your accelerator:\n\n\n   * Global Accelerator API: To get the DNS name, use DescribeAccelerator\n   (https://docs.aws.amazon.com/global-accelerator/latest/api/API_DescribeAccelerator.html).\n\n\n   * AWS CLI: To get the DNS name, use describe-accelerator (https://docs.aws.amazon.com/cli/latest/reference/globalaccelerator/describe-accelerator.html).\n\n\nAmazon S3 bucket that is configured as a static website\n\n\nSpecify the domain name of the Amazon S3 website endpoint that you created\nthe bucket in, for example, s3-website.us-east-2.amazonaws.com. For more\ninformation about valid values, see the table Amazon S3 Website Endpoints\n(https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_website_region_endpoints)\nin the Amazon Web Services General Reference. For more information about\nusing S3 buckets for websites, see Getting Started with Amazon Route 53 (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/getting-started.html)\nin the Amazon Route 53 Developer Guide.\n\n\nAnother Route 53 resource record set\n\n\nSpecify the value of the Name element for a resource record set in the current\nhosted zone.\n\n\nIf you're creating an alias record that has the same name as the hosted zone\n(known as the zone apex), you can't specify the domain name for a record\nfor which the value of Type is CNAME. This is because the alias record must\nhave the same type as the record that you're routing traffic to, and creating\na CNAME record for the zone apex isn't supported even for an alias record.",
+                  "type": "string"
+                },
+                "evaluateTargetHealth": {
+                  "description": "Applies only to alias, failover alias, geolocation alias, latency alias,\nand weighted alias resource record sets: When EvaluateTargetHealth is true,\nan alias resource record set inherits the health of the referenced AWS resource,\nsuch as an ELB load balancer or another resource record set in the hosted\nzone.\n\n\nNote the following:\n\n\nCloudFront distributions\n\n\nYou can't set EvaluateTargetHealth to true when the alias target is a CloudFront\ndistribution.\n\n\nElastic Beanstalk environments that have regionalized subdomains\n\n\nIf you specify an Elastic Beanstalk environment in DNSName and the environment\ncontains an ELB load balancer, Elastic Load Balancing routes queries only\nto the healthy Amazon EC2 instances that are registered with the load balancer.\n(An environment automatically contains an ELB load balancer if it includes\nmore than one Amazon EC2 instance.) If you set EvaluateTargetHealth to true\nand either no Amazon EC2 instances are healthy or the load balancer itself\nis unhealthy, Route 53 routes queries to other available resources that are\nhealthy, if any.\n\n\nIf the environment contains a single Amazon EC2 instance, there are no special\nrequirements.\n\n\nELB load balancers\n\n\nHealth checking behavior depends on the type of load balancer:\n\n\n   * Classic Load Balancers: If you specify an ELB Classic Load Balancer\n   in DNSName, Elastic Load Balancing routes queries only to the healthy\n   Amazon EC2 instances that are registered with the load balancer. If you\n   set EvaluateTargetHealth to true and either no EC2 instances are healthy\n   or the load balancer itself is unhealthy, Route 53 routes queries to other\n   resources.\n\n\n   * Application and Network Load Balancers: If you specify an ELB Application\n   or Network Load Balancer and you set EvaluateTargetHealth to true, Route\n   53 routes queries to the load balancer based on the health of the target\n   groups that are associated with the load balancer: For an Application\n   or Network Load Balancer to be considered healthy, every target group\n   that contains targets must contain at least one healthy target. If any\n   target group contains only unhealthy targets, the load balancer is considered\n   unhealthy, and Route 53 routes queries to other resources. A target group\n   that has no registered targets is considered unhealthy.\n\n\nWhen you create a load balancer, you configure settings for Elastic Load\nBalancing health checks; they're not Route 53 health checks, but they perform\na similar function. Do not create Route 53 health checks for the EC2 instances\nthat you register with an ELB load balancer.\n\n\nS3 buckets\n\n\nThere are no special requirements for setting EvaluateTargetHealth to true\nwhen the alias target is an S3 bucket.\n\n\nOther records in the same hosted zone\n\n\nIf the AWS resource that you specify in DNSName is a record or a group of\nrecords (for example, a group of weighted records) but is not another alias\nrecord, we recommend that you associate a health check with all of the records\nin the alias target. For more information, see What Happens When You Omit\nHealth Checks? (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-complex-configs.html#dns-failover-complex-configs-hc-omitting)\nin the Amazon Route 53 Developer Guide.\n\n\nFor more information and examples, see Amazon Route 53 Health Checks and\nDNS Failover (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html)\nin the Amazon Route 53 Developer Guide.",
+                  "type": "boolean"
+                },
+                "hostedZoneId": {
+                  "description": "Alias resource records sets only: The value used depends on where you want\nto route traffic:\n\n\nAmazon API Gateway custom regional APIs and edge-optimized APIs\n\n\nSpecify the hosted zone ID for your API. You can get the applicable value\nusing the AWS CLI command get-domain-names (https://docs.aws.amazon.com/cli/latest/reference/apigateway/get-domain-names.html):\n\n\n   * For regional APIs, specify the value of regionalHostedZoneId.\n\n\n   * For edge-optimized APIs, specify the value of distributionHostedZoneId.\n\n\nAmazon Virtual Private Cloud interface VPC endpoint\n\n\nSpecify the hosted zone ID for your interface endpoint. You can get the value\nof HostedZoneId using the AWS CLI command describe-vpc-endpoints (https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-vpc-endpoints.html).\n\n\nCloudFront distribution\n\n\nSpecify Z2FDTNDATAQYW2.\n\n\nAlias resource record sets for CloudFront can't be created in a private zone.\n\n\nElastic Beanstalk environment\n\n\nSpecify the hosted zone ID for the region that you created the environment\nin. The environment must have a regionalized subdomain. For a list of regions\nand the corresponding hosted zone IDs, see AWS Elastic Beanstalk (https://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region)\nin the \"AWS Service Endpoints\" chapter of the Amazon Web Services General\nReference.\n\n\nELB load balancer\n\n\nSpecify the value of the hosted zone ID for the load balancer. Use the following\nmethods to get the hosted zone ID:\n\n\n   * Service Endpoints (https://docs.aws.amazon.com/general/latest/gr/elb.html)\n   table in the \"Elastic Load Balancing Endpoints and Quotas\" topic in the\n   Amazon Web Services General Reference: Use the value that corresponds\n   with the region that you created your load balancer in. Note that there\n   are separate columns for Application and Classic Load Balancers and for\n   Network Load Balancers.\n\n\n   * AWS Management Console: Go to the Amazon EC2 page, choose Load Balancers\n   in the navigation pane, select the load balancer, and get the value of\n   the Hosted zone field on the Description tab.\n\n\n   * Elastic Load Balancing API: Use DescribeLoadBalancers to get the applicable\n   value. For more information, see the applicable guide: Classic Load Balancers:\n   Use DescribeLoadBalancers (https://docs.aws.amazon.com/elasticloadbalancing/2012-06-01/APIReference/API_DescribeLoadBalancers.html)\n   to get the value of CanonicalHostedZoneNameId. Application and Network\n   Load Balancers: Use DescribeLoadBalancers (https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_DescribeLoadBalancers.html)\n   to get the value of CanonicalHostedZoneId.\n\n\n   * AWS CLI: Use describe-load-balancers to get the applicable value. For\n   more information, see the applicable guide: Classic Load Balancers: Use\n   describe-load-balancers (http://docs.aws.amazon.com/cli/latest/reference/elb/describe-load-balancers.html)\n   to get the value of CanonicalHostedZoneNameId. Application and Network\n   Load Balancers: Use describe-load-balancers (http://docs.aws.amazon.com/cli/latest/reference/elbv2/describe-load-balancers.html)\n   to get the value of CanonicalHostedZoneId.\n\n\nAWS Global Accelerator accelerator\n\n\nSpecify Z2BJ6XQ5FK7U4H.\n\n\nAn Amazon S3 bucket configured as a static website\n\n\nSpecify the hosted zone ID for the region that you created the bucket in.\nFor more information about valid values, see the table Amazon S3 Website\nEndpoints (https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_website_region_endpoints)\nin the Amazon Web Services General Reference.\n\n\nAnother Route 53 resource record set in your hosted zone\n\n\nSpecify the hosted zone ID of your hosted zone. (An alias resource record\nset can't reference a resource record set in a different hosted zone.)",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "dnsName",
+                "evaluateTargetHealth",
+                "hostedZoneId"
+              ],
+              "type": "object"
+            },
+            "failover": {
+              "description": "Failover resource record sets only: To configure failover, you add the Failover\nelement to two resource record sets. For one resource record set, you specify\nPRIMARY as the value for Failover; for the other resource record set, you\nspecify SECONDARY. In addition, you include the HealthCheckId element and\nspecify the health check that you want Amazon Route 53 to perform for each\nresource record set.\n\n\nExcept where noted, the following failover behaviors assume that you have\nincluded the HealthCheckId element in both resource record sets:\n\n\n   * When the primary resource record set is healthy, Route 53 responds to\n   DNS queries with the applicable value from the primary resource record\n   set regardless of the health of the secondary resource record set.\n\n\n   * When the primary resource record set is unhealthy and the secondary\n   resource record set is healthy, Route 53 responds to DNS queries with\n   the applicable value from the secondary resource record set.\n\n\n   * When the secondary resource record set is unhealthy, Route 53 responds\n   to DNS queries with the applicable value from the primary resource record\n   set regardless of the health of the primary resource record set.\n\n\n   * If you omit the HealthCheckId element for the secondary resource record\n   set, and if the primary resource record set is unhealthy, Route 53 always\n   responds to DNS queries with the applicable value from the secondary resource\n   record set. This is true regardless of the health of the associated endpoint.\n\n\nYou can't create non-failover resource record sets that have the same values\nfor the Name and Type elements as failover resource record sets.\n\n\nFor failover alias resource record sets, you must also include the EvaluateTargetHealth\nelement and set the value to true.\n\n\nFor more information about configuring failover for Route 53, see the following\ntopics in the Amazon Route 53 Developer Guide:\n\n\n   * Route 53 Health Checks and DNS Failover (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html)\n\n\n   * Configuring Failover in a Private Hosted Zone (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-private-hosted-zones.html)",
+              "type": "string"
+            },
+            "geoLocation": {
+              "description": "Geolocation resource record sets only: A complex type that lets you control\nhow Amazon Route 53 responds to DNS queries based on the geographic origin\nof the query. For example, if you want all queries from Africa to be routed\nto a web server with an IP address of 192.0.2.111, create a resource record\nset with a Type of A and a ContinentCode of AF.\n\n\nAlthough creating geolocation and geolocation alias resource record sets\nin a private hosted zone is allowed, it's not supported.\n\n\nIf you create separate resource record sets for overlapping geographic regions\n(for example, one resource record set for a continent and one for a country\non the same continent), priority goes to the smallest geographic region.\nThis allows you to route most queries for a continent to one resource and\nto route queries for a country on that continent to a different resource.\n\n\nYou can't create two geolocation resource record sets that specify the same\ngeographic location.\n\n\nThe value * in the CountryCode element matches all geographic locations that\naren't specified in other geolocation resource record sets that have the\nsame values for the Name and Type elements.\n\n\nGeolocation works by mapping IP addresses to locations. However, some IP\naddresses aren't mapped to geographic locations, so even if you create geolocation\nresource record sets that cover all seven continents, Route 53 will receive\nsome DNS queries from locations that it can't identify. We recommend that\nyou create a resource record set for which the value of CountryCode is *.\nTwo groups of queries are routed to the resource that you specify in this\nrecord: queries that come from locations for which you haven't created geolocation\nresource record sets and queries from IP addresses that aren't mapped to\na location. If you don't create a * resource record set, Route 53 returns\na \"no answer\" response for queries from those locations.\n\n\nYou can't create non-geolocation resource record sets that have the same\nvalues for the Name and Type elements as geolocation resource record sets.",
+              "properties": {
+                "continentCode": {
+                  "description": "ContinentCode is the two-letter code for the continent.\nAmazon Route 53 supports the following continent codes:\n   * AF: Africa\n   * AN: Antarctica\n   * AS: Asia\n   * EU: Europe\n   * OC: Oceania\n   * NA: North America\n   * SA: South America\nConstraint: Specifying ContinentCode with either CountryCode or SubdivisionCode\nreturns an InvalidInput error.",
+                  "type": "string"
+                },
+                "countryCode": {
+                  "description": "For geolocation resource record sets, the two-letter code for a country.\n\n\nAmazon Route 53 uses the two-letter country codes that are specified in ISO\nstandard 3166-1 alpha-2 (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).",
+                  "type": "string"
+                },
+                "subdivisionCode": {
+                  "description": "For geolocation resource record sets, the two-letter code for a state of\nthe United States. Route 53 doesn't support any other values for SubdivisionCode.\nFor a list of state abbreviations, see Appendix B: Two\u2013Letter State and\nPossession Abbreviations (https://pe.usps.com/text/pub28/28apb.htm) on the\nUnited States Postal Service website.\n\n\nIf you specify subdivision code, you must also specify US for CountryCode.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "healthCheckId": {
+              "description": "If you want Amazon Route 53 to return this resource record set in response\nto a DNS query only when the status of a health check is healthy, include\nthe HealthCheckId element and specify the ID of the applicable health check.\n\n\nRoute 53 determines whether a resource record set is healthy based on one\nof the following:\n\n\n   * By periodically sending a request to the endpoint that is specified\n   in the health check\n\n\n   * By aggregating the status of a specified group of health checks (calculated\n   health checks)\n\n\n   * By determining the current state of a CloudWatch alarm (CloudWatch metric\n   health checks)\n\n\nRoute 53 doesn't check the health of the endpoint that is specified in the\nresource record set, for example, the endpoint specified by the IP address\nin the Value element. When you add a HealthCheckId element to a resource\nrecord set, Route 53 checks the health of the endpoint that you specified\nin the health check.\n\n\nFor more information, see the following topics in the Amazon Route 53 Developer\nGuide:\n\n\n   * How Amazon Route 53 Determines Whether an Endpoint Is Healthy (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html)\n\n\n   * Route 53 Health Checks and DNS Failover (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html)\n\n\n   * Configuring Failover in a Private Hosted Zone (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-private-hosted-zones.html)\n\n\nWhen to Specify HealthCheckId\n\n\nSpecifying a value for HealthCheckId is useful only when Route 53 is choosing\nbetween two or more resource record sets to respond to a DNS query, and you\nwant Route 53 to base the choice in part on the status of a health check.\nConfiguring health checks makes sense only in the following configurations:\n\n\n   * Non-alias resource record sets: You're checking the health of a group\n   of non-alias resource record sets that have the same routing policy, name,\n   and type (such as multiple weighted records named www.example.com with\n   a type of A) and you specify health check IDs for all the resource record\n   sets. If the health check status for a resource record set is healthy,\n   Route 53 includes the record among the records that it responds to DNS\n   queries with. If the health check status for a resource record set is\n   unhealthy, Route 53 stops responding to DNS queries using the value for\n   that resource record set. If the health check status for all resource\n   record sets in the group is unhealthy, Route 53 considers all resource\n   record sets in the group healthy and responds to DNS queries accordingly.\n\n\n   * Alias resource record sets: You specify the following settings: You\n   set EvaluateTargetHealth to true for an alias resource record set in a\n   group of resource record sets that have the same routing policy, name,\n   and type (such as multiple weighted records named www.example.com with\n   a type of A). You configure the alias resource record set to route traffic\n   to a non-alias resource record set in the same hosted zone. You specify\n   a health check ID for the non-alias resource record set. If the health\n   check status is healthy, Route 53 considers the alias resource record\n   set to be healthy and includes the alias record among the records that\n   it responds to DNS queries with. If the health check status is unhealthy,\n   Route 53 stops responding to DNS queries using the alias resource record\n   set. The alias resource record set can also route traffic to a group of\n   non-alias resource record sets that have the same routing policy, name,\n   and type. In that configuration, associate health checks with all of the\n   resource record sets in the group of non-alias resource record sets.\n\n\nGeolocation Routing\n\n\nFor geolocation resource record sets, if an endpoint is unhealthy, Route\n53 looks for a resource record set for the larger, associated geographic\nregion. For example, suppose you have resource record sets for a state in\nthe United States, for the entire United States, for North America, and a\nresource record set that has * for CountryCode is *, which applies to all\nlocations. If the endpoint for the state resource record set is unhealthy,\nRoute 53 checks for healthy resource record sets in the following order until\nit finds a resource record set for which the endpoint is healthy:\n\n\n   * The United States\n\n\n   * North America\n\n\n   * The default resource record set\n\n\nSpecifying the Health Check Endpoint by Domain Name\n\n\nIf your health checks specify the endpoint only by domain name, we recommend\nthat you create a separate health check for each endpoint. For example, create\na health check for each HTTP server that is serving content for www.example.com.\nFor the value of FullyQualifiedDomainName, specify the domain name of the\nserver (such as us-east-2-www.example.com), not the name of the resource\nrecord sets (www.example.com).\n\n\nHealth check results will be unpredictable if you do the following:\n\n\n   * Create a health check that has the same value for FullyQualifiedDomainName\n   as the name of a resource record set.\n\n\n   * Associate that health check with the resource record set.",
+              "type": "string"
+            },
+            "multiValueAnswer": {
+              "description": "Multivalue answer resource record sets only: To route traffic approximately\nrandomly to multiple resources, such as web servers, create one multivalue\nanswer record for each resource and specify true for MultiValueAnswer. Note\nthe following:\n\n\n   * If you associate a health check with a multivalue answer resource record\n   set, Amazon Route 53 responds to DNS queries with the corresponding IP\n   address only when the health check is healthy.\n\n\n   * If you don't associate a health check with a multivalue answer record,\n   Route 53 always considers the record to be healthy.\n\n\n   * Route 53 responds to DNS queries with up to eight healthy records; if\n   you have eight or fewer healthy records, Route 53 responds to all DNS\n   queries with all the healthy records.\n\n\n   * If you have more than eight healthy records, Route 53 responds to different\n   DNS resolvers with different combinations of healthy records.\n\n\n   * When all records are unhealthy, Route 53 responds to DNS queries with\n   up to eight unhealthy records.\n\n\n   * If a resource becomes unavailable after a resolver caches a response,\n   client software typically tries another of the IP addresses in the response.\n\n\nYou can't create multivalue answer alias records.",
+              "type": "boolean"
+            },
+            "region": {
+              "description": "Latency-based resource record sets only: The Amazon EC2 Region where you\ncreated the resource that this resource record set refers to. The resource\ntypically is an AWS resource, such as an EC2 instance or an ELB load balancer,\nand is referred to by an IP address or a DNS domain name, depending on the\nrecord type.\n\n\nAlthough creating latency and latency alias resource record sets in a private\nhosted zone is allowed, it's not supported.\n\n\nWhen Amazon Route 53 receives a DNS query for a domain name and type for\nwhich you have created latency resource record sets, Route 53 selects the\nlatency resource record set that has the lowest latency between the end user\nand the associated Amazon EC2 Region. Route 53 then returns the value that\nis associated with the selected resource record set.\n\n\nNote the following:\n\n\n   * You can only specify one ResourceRecord per latency resource record\n   set.\n\n\n   * You can only create one latency resource record set for each Amazon\n   EC2 Region.\n\n\n   * You aren't required to create latency resource record sets for all Amazon\n   EC2 Regions. Route 53 will choose the region with the best latency from\n   among the regions that you create latency resource record sets for.\n\n\n   * You can't create non-latency resource record sets that have the same\n   values for the Name and Type elements as latency resource record sets.",
+              "type": "string"
+            },
+            "resourceRecords": {
+              "description": "Information about the resource records to act upon.\n\n\nIf you're creating an alias resource record set, omit ResourceRecords.",
+              "items": {
+                "description": "ResourceRecord holds the DNS value to be used for the record.",
+                "properties": {
+                  "value": {
+                    "description": "The current or new DNS record value, not to exceed 4,000 characters. In the\ncase of a DELETE action, if the current value does not match the actual value,\nan error is returned. For descriptions about how to format Value for different\nrecord types, see Supported DNS Resource Record Types (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html)\nin the Amazon Route 53 Developer Guide.\n\n\nYou can specify more than one value for all record types except CNAME and\nSOA.\n\n\nIf you're creating an alias resource record set, omit Value.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "setIdentifier": {
+              "description": "Resource record sets that have a routing policy other than simple: An identifier\nthat differentiates among multiple resource record sets that have the same\ncombination of name and type, such as multiple weighted resource record sets\nnamed acme.example.com that have a type of A. In a group of resource record\nsets that have the same name and type, the value of SetIdentifier must be\nunique for each resource record set.\n\n\nFor information about routing policies, see Choosing a Routing Policy (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html)\nin the Amazon Route 53 Developer Guide.",
+              "type": "string"
+            },
+            "trafficPolicyInstanceId": {
+              "description": "When you create a traffic policy instance, Amazon Route 53 automatically\ncreates a resource record set. TrafficPolicyInstanceId is the ID of the traffic\npolicy instance that Route 53 created this resource record set for.\n\n\nTo delete the resource record set that is associated with a traffic policy\ninstance, use DeleteTrafficPolicyInstance. Route 53 will delete the resource\nrecord set automatically. If you delete the resource record set by using\nChangeResourceRecordSets, Route 53 doesn't automatically delete the traffic\npolicy instance, and you'll continue to be charged for it even though it's\nno longer in use.",
+              "type": "string"
+            },
+            "ttl": {
+              "description": "The resource record cache time to live (TTL), in seconds. Note the following:\n\n\n   * If you're creating or updating an alias resource record set, omit TTL.\n   Amazon Route 53 uses the value of TTL for the alias target.\n\n\n   * If you're associating this resource record set with a health check (if\n   you're adding a HealthCheckId element), we recommend that you specify\n   a TTL of 60 seconds or less so clients respond quickly to changes in health\n   status.\n\n\n   * All of the resource record sets in a group of weighted resource record\n   sets must have the same value for TTL.\n\n\n   * If a group of weighted resource record sets includes one or more weighted\n   alias resource record sets for which the alias target is an ELB load balancer,\n   we recommend that you specify a TTL of 60 seconds for all of the non-alias\n   weighted resource record sets that have the same name and type. Values\n   other than 60 seconds (the TTL for load balancers) will change the effect\n   of the values that you specify for Weight.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "type": {
+              "description": "The DNS record type. For information about different record types and how\ndata is encoded for them, see Supported DNS Resource Record Types (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html)\nin the Amazon Route 53 Developer Guide.\n\n\nValid values for basic resource record sets: A | AAAA | CAA | CNAME | MX\n| NAPTR | NS | PTR | SOA | SPF | SRV | TXT\n\n\nValues for weighted, latency, geolocation, and failover resource record sets:\nA | AAAA | CAA | CNAME | MX | NAPTR | PTR | SPF | SRV | TXT. When creating\na group of weighted, latency, geolocation, or failover resource record sets,\nspecify the same value for all of the resource record sets in the group.\n\n\nValid values for multivalue answer resource record sets: A | AAAA | MX |\nNAPTR | PTR | SPF | SRV | TXT\n\n\nSPF records were formerly used to verify the identity of the sender of email\nmessages. However, we no longer recommend that you create resource record\nsets for which the value of Type is SPF. RFC 7208, Sender Policy Framework\n(SPF) for Authorizing Use of Domains in Email, Version 1, has been updated\nto say, \"...[I]ts existence and mechanism defined in [RFC4408] have led to\nsome interoperability issues. Accordingly, its use is no longer appropriate\nfor SPF version 1; implementations are not to use it.\" In RFC 7208, see section\n14.1, The SPF DNS Record Type (http://tools.ietf.org/html/rfc7208#section-14.1).\n\n\nValues for alias resource record sets:\n\n\n   * Amazon API Gateway custom regional APIs and edge-optimized APIs: A\n\n\n   * CloudFront distributions: A If IPv6 is enabled for the distribution,\n   create two resource record sets to route traffic to your distribution,\n   one with a value of A and one with a value of AAAA.\n\n\n   * Amazon API Gateway environment that has a regionalized subdomain: A\n\n\n   * ELB load balancers: A | AAAA\n\n\n   * Amazon S3 buckets: A\n\n\n   * Amazon Virtual Private Cloud interface VPC endpoints A\n\n\n   * Another resource record set in this hosted zone: Specify the type of\n   the resource record set that you're creating the alias for. All values\n   are supported except NS and SOA. If you're creating an alias record that\n   has the same name as the hosted zone (known as the zone apex), you can't\n   route traffic to a record for which the value of Type is CNAME. This is\n   because the alias record must have the same type as the record you're\n   routing traffic to, and creating a CNAME record for the zone apex isn't\n   supported even for an alias record.",
+              "type": "string"
+            },
+            "weight": {
+              "description": "Weighted resource record sets only: Among resource record sets that have\nthe same combination of DNS name and type, a value that determines the proportion\nof DNS queries that Amazon Route 53 responds to using the current resource\nrecord set. Route 53 calculates the sum of the weights for the resource record\nsets that have the same combination of DNS name and type. Route 53 then responds\nto queries based on the ratio of a resource's weight to the total. Note the\nfollowing:\n\n\n   * You must specify a value for the Weight element for every weighted resource\n   record set.\n\n\n   * You can only specify one ResourceRecord per weighted resource record\n   set.\n\n\n   * You can't create latency, failover, or geolocation resource record sets\n   that have the same values for the Name and Type elements as weighted resource\n   record sets.\n\n\n   * You can create a maximum of 100 weighted resource record sets that have\n   the same values for the Name and Type elements.\n\n\n   * For weighted (but not weighted alias) resource record sets, if you set\n   Weight to 0 for a resource record set, Route 53 never responds to queries\n   with the applicable value for that resource record set. However, if you\n   set Weight to 0 for all resource record sets that have the same combination\n   of DNS name and type, traffic is routed to all resources with equal probability.\n   The effect of setting Weight to 0 is different when you associate health\n   checks with weighted resource record sets. For more information, see Options\n   for Configuring Route 53 Active-Active and Active-Passive Failover (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-configuring-options.html)\n   in the Amazon Route 53 Developer Guide.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "zoneId": {
+              "description": "ZoneID is the ID of the hosted zone that contains the resource record sets\nthat you want to change.",
+              "type": "string"
+            },
+            "zoneIdRef": {
+              "description": "ZoneIDRef references a Zone to retrieves its ZoneId",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "zoneIdSelector": {
+              "description": "ZoneIDSelector selects a reference to a Zone to retrieves its ZoneID",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "ResourceRecordSetStatus represents the observed state of a ResourceRecordSet.",
+      "properties": {
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

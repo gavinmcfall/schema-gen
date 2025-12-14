@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/policies.kubewarden.io/v1alpha1/clusteradmissionpolicy.json",
+  "title": "ClusterAdmissionPolicy",
+  "description": "ClusterAdmissionPolicy is the Schema for the clusteradmissionpolicys API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "kubewarden-controller",
+    "sourceVersion": "0.1.0",
+    "extractedAt": "2025-12-14T00:15:53.594811+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ClusterAdmissionPolicySpec defines the desired state of ClusterAdmissionPolicy",
+      "properties": {
+        "apiGroups": {
+          "description": "APIGroups is a list of API groups that this webhook should be registered against. Empty array or \"*\" means everything.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "apiVersions": {
+          "description": "APIVersions is a list of API versions that this webhook should be registered against. Empty array or \"*\" means everything.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "failurePolicy": {
+          "description": "FailurePolicy defines how unrecognized errors and timeout errors from the policy are handled. Allowed values are \"Ignore\" or \"Fail\". * \"Ignore\" means that an error calling the webhook is ignored and the API   request is allowed to continue. * \"Fail\" means that an error calling the webhook causes the admission to   fail and the API request to be rejected. The default behaviour is \"Fail\"",
+          "type": "string"
+        },
+        "module": {
+          "description": "Module is the location of the WASM module to be loaded. Can be a local file (file://), a remote file served by an HTTP server (http://, https://), or an artifact served by an OCI-compatible registry (registry://).",
+          "type": "string"
+        },
+        "mutating": {
+          "description": "Mutating indicates whether a policy has the ability to mutate incoming requests or not.",
+          "type": "boolean"
+        },
+        "operations": {
+          "description": "Operations is a list of operations that this webhook should be registered against. Empty array or \"*\" means everything.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "resources": {
+          "description": "Resources is a list of resource types that this webhook should be registered against. Empty array or \"*\" means everything.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "settings": {
+          "description": "Settings is a free-form object that contains the policy configuration values. x-kubernetes-embedded-resource: false",
+          "type": "object"
+        }
+      },
+      "required": [
+        "mutating"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "ClusterAdmissionPolicyStatus defines the observed state of ClusterAdmissionPolicy",
+      "type": "object"
+    }
+  }
+}

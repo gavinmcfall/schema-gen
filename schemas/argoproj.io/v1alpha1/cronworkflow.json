@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/argoproj.io/v1alpha1/cronworkflow.json",
+  "title": "CronWorkflow",
+  "description": "CronWorkflow is the Schema for the cronworkflows API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "argo-workflows",
+    "sourceVersion": "0.45.6",
+    "extractedAt": "2025-12-14T02:17:11.563691+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "type": "object"
+    },
+    "status": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "metadata",
+    "spec"
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/hnc.x-k8s.io/v1alpha2/hierarchicalresourcequota.json",
+  "title": "HierarchicalResourceQuota",
+  "description": "HierarchicalResourceQuota is the Schema for the hierarchicalresourcequotas API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "hierarchical-namespaces",
+    "sourceVersion": "v1.1.0",
+    "extractedAt": "2025-12-14T02:26:21.050015+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "Spec defines the desired quota",
+      "properties": {
+        "hard": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "pattern": "^(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))))?$"
+          },
+          "description": "Hard is the set of desired hard limits for each named resource",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "Status defines the actual enforced quota and its current usage",
+      "properties": {
+        "hard": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "pattern": "^(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))))?$"
+          },
+          "description": "Hard is the set of enforced hard limits for each named resource",
+          "type": "object"
+        },
+        "used": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "pattern": "^(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))))?$"
+          },
+          "description": "Used is the current observed total usage of the resource in the namespace and its descendant namespaces.",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

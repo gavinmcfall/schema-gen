@@ -1,0 +1,437 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/stackgres.io/v1beta1/sgobjectstorage.json",
+  "title": "SGObjectStorage",
+  "description": "SGObjectStorage is the Schema for the sgobjectstorages API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "stackgres",
+    "sourceVersion": "1.18.2",
+    "extractedAt": "2025-12-14T02:28:30.446691+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "metadata": {
+      "properties": {
+        "name": {
+          "description": "Name of the Object Storage configuration.\nThe name must be unique across all object storage configurations in the same namespace.\n",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "spec": {
+      "description": "Object Storage configuration\n",
+      "properties": {
+        "azureBlob": {
+          "description": "Azure Blob Storage configuration.\n",
+          "properties": {
+            "azureCredentials": {
+              "description": "The credentials to access Azure Blob Storage for writing and reading.\n",
+              "properties": {
+                "secretKeySelectors": {
+                  "description": "Kubernetes [SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#secretkeyselector-v1-core)(s) to reference the Secret(s) that contain the information about the `azureCredentials`. . Note that you may use the same or different Secrets for the `storageAccount` and the `accessKey`. In the former case, the `keys` that identify each must be, obviously, different.\n",
+                  "properties": {
+                    "accessKey": {
+                      "description": "The [storage account access key](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal).\n",
+                      "properties": {
+                        "key": {
+                          "description": "The key of the secret to select from. Must be a valid secret key.\n",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).\n",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "name"
+                      ],
+                      "type": "object"
+                    },
+                    "storageAccount": {
+                      "description": "The [Storage Account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview?toc=/azure/storage/blobs/toc.json) that contains the Blob bucket to be used.\n",
+                      "properties": {
+                        "key": {
+                          "description": "The key of the secret to select from. Must be a valid secret key.\n",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).\n",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "name"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "storageAccount",
+                    "accessKey"
+                  ],
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "bucket": {
+              "description": "Azure Blob Storage bucket name.\n",
+              "pattern": "^(azure://)?[^/]+(/[^/]*)*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "bucket",
+            "azureCredentials"
+          ],
+          "type": "object"
+        },
+        "encryption": {
+          "description": "Section to configure object storage encryption of stored files.\n",
+          "properties": {
+            "method": {
+              "description": "Select the storage encryption method.\n\nPossible options are:\n\n* `sodium`: will use libsodium to encrypt the files stored.\n* `openpgp`: will use OpenPGP standard to encrypt the files stored.\n\nWhen not set no encryption will be applied to stored files.\n",
+              "type": "string"
+            },
+            "openpgp": {
+              "description": "OpenPGP encryption configuration.",
+              "properties": {
+                "key": {
+                  "description": "To configure encryption and decryption with OpenPGP standard. You can join multiline\n key using `\\n` symbols into one line (mostly used in case of daemontools and envdir).\n",
+                  "properties": {
+                    "key": {
+                      "description": "The key of the secret to select from. Must be a valid secret key.",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "keyPassphrase": {
+                  "description": "If your private key is encrypted with a passphrase, you should set passphrase for decrypt.\n",
+                  "properties": {
+                    "key": {
+                      "description": "The key of the secret to select from. Must be a valid secret key.",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "type": "object"
+            },
+            "sodium": {
+              "description": "libsodium encryption configuration.",
+              "properties": {
+                "key": {
+                  "description": "To configure encryption and decryption with libsodium an algorithm that only requires\n a secret key is used. libsodium keys are fixed-size keys of 32 bytes. For optimal\n cryptographic security, it is recommened to use a random 32 byte key. To generate a\n random key, you can something like `openssl rand -hex 32` (set `keyTransform` to `hex`)\n or `openssl rand -base64 32` (set `keyTransform` to `base64`).\n",
+                  "properties": {
+                    "key": {
+                      "description": "The key of the secret to select from. Must be a valid secret key.",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "keyTransform": {
+                  "default": "none",
+                  "description": "The transform that will be applied to the `key` to get the required 32 byte key.\n Supported transformations are `base64`, `hex` or `none` (default). The option\n none exists for backwards compatbility, the user input will be converted to 32\n byte either via truncation or by zero-padding.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "gcs": {
+          "description": "Google Cloud Storage configuration.\n",
+          "properties": {
+            "bucket": {
+              "description": "GCS bucket name.\n",
+              "pattern": "^(gs://)?[^/]+(/[^/]*)*$",
+              "type": "string"
+            },
+            "gcpCredentials": {
+              "description": "The credentials to access GCS for writing and reading.\n",
+              "properties": {
+                "fetchCredentialsFromMetadataService": {
+                  "description": "If true, the credentials will be fetched from the GCE/GKE metadata service and the field `secretKeySelectors` have to be set to null or omitted.\n\nThis is useful when running StackGres inside a GKE cluster using [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity).\n",
+                  "type": "boolean"
+                },
+                "secretKeySelectors": {
+                  "description": "A Kubernetes [SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#secretkeyselector-v1-core) to reference the Secrets that contain the information about the Service Account to access GCS.\n",
+                  "properties": {
+                    "serviceAccountJSON": {
+                      "description": "A service account key from GCP. In JSON format, as downloaded from the GCP Console.\n",
+                      "properties": {
+                        "key": {
+                          "description": "The key of the secret to select from. Must be a valid secret key.\n",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).\n",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "name"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "serviceAccountJSON"
+                  ],
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "bucket",
+            "gcpCredentials"
+          ],
+          "type": "object"
+        },
+        "s3": {
+          "description": "Amazon Web Services S3 configuration.\n",
+          "properties": {
+            "awsCredentials": {
+              "description": "The credentials to access AWS S3 for writing and reading.\n",
+              "properties": {
+                "secretKeySelectors": {
+                  "description": "Kubernetes [SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#secretkeyselector-v1-core)(s) to reference the Secrets that contain the information about the `awsCredentials`. Note that you may use the same or different Secrets for the `accessKeyId` and the `secretAccessKey`. In the former case, the `keys` that identify each must be, obviously, different.\n",
+                  "properties": {
+                    "accessKeyId": {
+                      "description": "AWS [access key ID](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys). For example, `AKIAIOSFODNN7EXAMPLE`.\n",
+                      "properties": {
+                        "key": {
+                          "description": "The key of the secret to select from. Must be a valid secret key.\n",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).\n",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "name"
+                      ],
+                      "type": "object"
+                    },
+                    "secretAccessKey": {
+                      "description": "AWS [secret access key](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys). For example, `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`.\n",
+                      "properties": {
+                        "key": {
+                          "description": "The key of the secret to select from. Must be a valid secret key.\n",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).\n",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "name"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "accessKeyId",
+                    "secretAccessKey"
+                  ],
+                  "type": "object"
+                },
+                "useIAMRole": {
+                  "default": false,
+                  "description": "When set to `true` the IAM role credentials will be used instead of the secret key selector.\n",
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "type": "object"
+            },
+            "bucket": {
+              "description": "AWS S3 bucket name.\n",
+              "pattern": "^((s3|https?)://)?[^/]+(/[^/]*)*$",
+              "type": "string"
+            },
+            "region": {
+              "description": "The AWS S3 region. The Region may be detected using s3:GetBucketLocation, but if you wish to avoid giving permissions to this API call or forbid it from the applicable IAM policy, you must then specify this property.\n",
+              "type": "string"
+            },
+            "storageClass": {
+              "description": "The [Amazon S3 Storage Class](https://aws.amazon.com/s3/storage-classes/) to use for the backup object storage. By default, the `STANDARD` storage class is used. Other supported values include `STANDARD_IA` for Infrequent Access and `REDUCED_REDUNDANCY`.\n",
+              "type": "string"
+            }
+          },
+          "required": [
+            "bucket",
+            "awsCredentials"
+          ],
+          "type": "object"
+        },
+        "s3Compatible": {
+          "description": "AWS S3-Compatible API configuration",
+          "properties": {
+            "awsCredentials": {
+              "description": "The credentials to access AWS S3 for writing and reading.\n",
+              "properties": {
+                "secretKeySelectors": {
+                  "description": "Kubernetes [SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#secretkeyselector-v1-core)(s) to reference the Secret(s) that contain the information about the `awsCredentials`. Note that you may use the same or different Secrets for the `accessKeyId` and the `secretAccessKey`. In the former case, the `keys` that identify each must be, obviously, different.\n",
+                  "properties": {
+                    "accessKeyId": {
+                      "description": "AWS [access key ID](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys). For example, `AKIAIOSFODNN7EXAMPLE`.\n",
+                      "properties": {
+                        "key": {
+                          "description": "The key of the secret to select from. Must be a valid secret key.\n",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).\n",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "name"
+                      ],
+                      "type": "object"
+                    },
+                    "caCertificate": {
+                      "description": "CA Certificate file to be used when connecting to the S3 Compatible Service.\n",
+                      "properties": {
+                        "key": {
+                          "description": "The key of the secret to select from. Must be a valid secret key.\n",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).\n",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "name"
+                      ],
+                      "type": "object"
+                    },
+                    "secretAccessKey": {
+                      "description": "AWS [secret access key](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys). For example, `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`.\n",
+                      "properties": {
+                        "key": {
+                          "description": "The key of the secret to select from. Must be a valid secret key.\n",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the referent. [More information](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).\n",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "name"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "accessKeyId",
+                    "secretAccessKey"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "secretKeySelectors"
+              ],
+              "type": "object"
+            },
+            "bucket": {
+              "description": "Bucket name.\n",
+              "pattern": "^((s3|https?)://)?[^/]+(/[^/]*)*$",
+              "type": "string"
+            },
+            "enablePathStyleAddressing": {
+              "description": "Enable path-style addressing (i.e. `http://s3.amazonaws.com/BUCKET/KEY`) when connecting to an S3-compatible service that lacks support for sub-domain style bucket URLs (i.e. `http://BUCKET.s3.amazonaws.com/KEY`).\n\nDefaults to false.\n",
+              "type": "boolean"
+            },
+            "endpoint": {
+              "description": "Overrides the default url to connect to an S3-compatible service.\nFor example: `http://s3-like-service:9000`.\n",
+              "type": "string"
+            },
+            "region": {
+              "description": "The AWS S3 region. The Region may be detected using s3:GetBucketLocation, but if you wish to avoid giving permissions to this API call or forbid it from the applicable IAM policy, you must then specify this property.\n",
+              "type": "string"
+            },
+            "storageClass": {
+              "description": "The [Amazon S3 Storage Class](https://aws.amazon.com/s3/storage-classes/) to use for the backup object storage. By default, the `STANDARD` storage class is used. Other supported values include `STANDARD_IA` for Infrequent Access and `REDUCED_REDUNDANCY`.\n",
+              "type": "string"
+            }
+          },
+          "required": [
+            "bucket",
+            "awsCredentials"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "description": "Determine the type of object storage used for storing the base backups and WAL segments.\n      Possible values:\n      *  `s3`: Amazon Web Services S3 (Simple Storage Service).\n      *  `s3Compatible`: non-AWS services that implement a compatibility API with AWS S3.\n      *  `gcs`: Google Cloud Storage.\n      *  `azureBlob`: Microsoft Azure Blob Storage.\n",
+          "enum": [
+            "s3",
+            "s3Compatible",
+            "gcs",
+            "azureBlob"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "stackgres.io/v1beta1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "SGObjectStorage"
+      ]
+    }
+  },
+  "required": [
+    "metadata",
+    "spec"
+  ]
+}

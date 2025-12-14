@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/logging.banzaicloud.io/v1alpha1/logging.json",
+  "title": "Logging",
+  "description": "Logging is the Schema for the loggings API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "kube-logging",
+    "sourceVersion": "4.2.3",
+    "extractedAt": "2025-12-14T02:19:55.354181+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "type": "object"
+    },
+    "status": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,1734 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/rds.aws.crossplane.io/v1alpha1/dbinstance.json",
+  "title": "DBInstance",
+  "description": "DBInstance is the Schema for the dbinstances API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.469324+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "DBInstanceSpec defines the desired state of DBInstance",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "DBInstanceParameters defines the desired state of DBInstance",
+          "properties": {
+            "allocatedStorage": {
+              "description": "The amount of storage in gibibytes (GiB) to allocate for the DB instance.\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. Aurora cluster\nvolumes automatically grow as the amount of data in your database increases,\nthough you are only charged for the space that you use in an Aurora cluster\nvolume.\n\n\nAmazon RDS Custom\n\n\nConstraints to the amount of storage for each storage type are the following:\n\n\n   * General Purpose (SSD) storage (gp2, gp3): Must be an integer from 40\n   to 65536 for RDS Custom for Oracle, 16384 for RDS Custom for SQL Server.\n\n\n   * Provisioned IOPS storage (io1): Must be an integer from 40 to 65536\n   for RDS Custom for Oracle, 16384 for RDS Custom for SQL Server.\n\n\nRDS for MariaDB\n\n\nConstraints to the amount of storage for each storage type are the following:\n\n\n   * General Purpose (SSD) storage (gp2, gp3): Must be an integer from 20\n   to 65536.\n\n\n   * Provisioned IOPS storage (io1): Must be an integer from 100 to 65536.\n\n\n   * Magnetic storage (standard): Must be an integer from 5 to 3072.\n\n\nRDS for MySQL\n\n\nConstraints to the amount of storage for each storage type are the following:\n\n\n   * General Purpose (SSD) storage (gp2, gp3): Must be an integer from 20\n   to 65536.\n\n\n   * Provisioned IOPS storage (io1): Must be an integer from 100 to 65536.\n\n\n   * Magnetic storage (standard): Must be an integer from 5 to 3072.\n\n\nRDS for Oracle\n\n\nConstraints to the amount of storage for each storage type are the following:\n\n\n   * General Purpose (SSD) storage (gp2, gp3): Must be an integer from 20\n   to 65536.\n\n\n   * Provisioned IOPS storage (io1): Must be an integer from 100 to 65536.\n\n\n   * Magnetic storage (standard): Must be an integer from 10 to 3072.\n\n\nRDS for PostgreSQL\n\n\nConstraints to the amount of storage for each storage type are the following:\n\n\n   * General Purpose (SSD) storage (gp2, gp3): Must be an integer from 20\n   to 65536.\n\n\n   * Provisioned IOPS storage (io1): Must be an integer from 100 to 65536.\n\n\n   * Magnetic storage (standard): Must be an integer from 5 to 3072.\n\n\nRDS for SQL Server\n\n\nConstraints to the amount of storage for each storage type are the following:\n\n\n   * General Purpose (SSD) storage (gp2, gp3): Enterprise and Standard editions:\n   Must be an integer from 20 to 16384. Web and Express editions: Must be\n   an integer from 20 to 16384.\n\n\n   * Provisioned IOPS storage (io1): Enterprise and Standard editions: Must\n   be an integer from 100 to 16384. Web and Express editions: Must be an\n   integer from 100 to 16384.\n\n\n   * Magnetic storage (standard): Enterprise and Standard editions: Must\n   be an integer from 20 to 1024. Web and Express editions: Must be an integer\n   from 20 to 1024.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "allowMajorVersionUpgrade": {
+              "description": "Specifies whether major version upgrades are allowed. Changing this parameter\ndoesn't result in an outage and the change is asynchronously applied as soon\nas possible.\n\n\nThis setting doesn't apply to RDS Custom DB instances.\n\n\nConstraints:\n\n\n   * Major version upgrades must be allowed when specifying a value for the\n   EngineVersion parameter that's a different major version than the DB instance's\n   current version.",
+              "type": "boolean"
+            },
+            "applyImmediately": {
+              "description": "A value that indicates whether the modifications in this request and any\npending modifications are asynchronously applied as soon as possible, regardless\nof the PreferredMaintenanceWindow setting for the DB instance. By default,\nthis parameter is disabled.\n\n\nIf this parameter is disabled, changes to the DB instance are applied during\nthe next maintenance window. Some parameter changes can cause an outage and\nare applied on the next call to RebootDBInstance, or the next failure reboot.\nReview the table of parameters in Modifying a DB Instance (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.DBInstance.Modifying.html)\nin the Amazon RDS User Guide. to see the impact of enabling or disabling\nApplyImmediately for each modified parameter and to determine when the changes\nare applied.",
+              "type": "boolean"
+            },
+            "autoMinorVersionUpgrade": {
+              "description": "Specifies whether minor engine upgrades are applied automatically to the\nDB instance during the maintenance window. By default, minor engine upgrades\nare applied automatically.\n\n\nIf you create an RDS Custom DB instance, you must set AutoMinorVersionUpgrade\nto false.",
+              "type": "boolean"
+            },
+            "autogeneratePassword": {
+              "description": "AutogeneratePassword indicates whether the controller should generate\na random password for the master user if one is not provided via\nMasterUserPasswordSecretRef.\n\n\nIf a password is generated, it will\nbe stored as a secret at the location specified by MasterUserPasswordSecretRef.",
+              "type": "boolean"
+            },
+            "availabilityZone": {
+              "description": "The Availability Zone (AZ) where the database will be created. For information\non Amazon Web Services Regions and Availability Zones, see Regions and Availability\nZones (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html).\n\n\nFor Amazon Aurora, each Aurora DB cluster hosts copies of its storage in\nthree separate Availability Zones. Specify one of these Availability Zones.\nAurora automatically chooses an appropriate Availability Zone if you don't\nspecify one.\n\n\nDefault: A random, system-chosen Availability Zone in the endpoint's Amazon\nWeb Services Region.\n\n\nConstraints:\n\n\n   * The AvailabilityZone parameter can't be specified if the DB instance\n   is a Multi-AZ deployment.\n\n\n   * The specified Availability Zone must be in the same Amazon Web Services\n   Region as the current endpoint.\n\n\nExample: us-east-1d",
+              "type": "string"
+            },
+            "backupRetentionPeriod": {
+              "description": "The number of days for which automated backups are retained. Setting this\nparameter to a positive number enables backups. Setting this parameter to\n0 disables automated backups.\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. The retention period\nfor automated backups is managed by the DB cluster.\n\n\nDefault: 1\n\n\nConstraints:\n\n\n   * Must be a value from 0 to 35.\n\n\n   * Can't be set to 0 if the DB instance is a source to read replicas.\n\n\n   * Can't be set to 0 for an RDS Custom for Oracle DB instance.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "backupTarget": {
+              "description": "The location for storing automated backups and manual snapshots.\n\n\nValie Values:\n\n\n   * outposts (Amazon Web Services Outposts)\n\n\n   * region (Amazon Web Services Region)\n\n\nDefault: region\n\n\nFor more information, see Working with Amazon RDS on Amazon Web Services\nOutposts (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html)\nin the Amazon RDS User Guide.",
+              "type": "string"
+            },
+            "caCertificateIdentifier": {
+              "description": "The CA certificate identifier to use for the DB instance's server certificate.\n\n\nThis setting doesn't apply to RDS Custom DB instances.\n\n\nFor more information, see Using SSL/TLS to encrypt a connection to a DB instance\n(https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html)\nin the Amazon RDS User Guide and Using SSL/TLS to encrypt a connection to\na DB cluster (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html)\nin the Amazon Aurora User Guide.",
+              "type": "string"
+            },
+            "characterSetName": {
+              "description": "For supported engines, the character set (CharacterSet) to associate the\nDB instance with.\n\n\nThis setting doesn't apply to the following DB instances:\n\n\n   * Amazon Aurora - The character set is managed by the DB cluster. For\n   more information, see CreateDBCluster.\n\n\n   * RDS Custom - However, if you need to change the character set, you can\n   change it on the database itself.",
+              "type": "string"
+            },
+            "copyTagsToSnapshot": {
+              "description": "Specifies whether to copy tags from the DB instance to snapshots of the DB\ninstance. By default, tags are not copied.\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. Copying tags to\nsnapshots is managed by the DB cluster. Setting this value for an Aurora\nDB instance has no effect on the DB cluster setting.",
+              "type": "boolean"
+            },
+            "customIAMInstanceProfile": {
+              "description": "The instance profile associated with the underlying Amazon EC2 instance of\nan RDS Custom DB instance.\n\n\nThis setting is required for RDS Custom.\n\n\nConstraints:\n\n\n   * The profile must exist in your account.\n\n\n   * The profile must have an IAM role that Amazon EC2 has permissions to\n   assume.\n\n\n   * The instance profile name and the associated IAM role name must start\n   with the prefix AWSRDSCustom.\n\n\nFor the list of permissions required for the IAM role, see Configure IAM\nand your VPC (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-setup-orcl.html#custom-setup-orcl.iam-vpc)\nin the Amazon RDS User Guide.",
+              "type": "string"
+            },
+            "dbClusterIdentifier": {
+              "description": "The identifier of the DB cluster that this DB instance will belong to.\n\n\nThis setting doesn't apply to RDS Custom DB instances.",
+              "type": "string"
+            },
+            "dbClusterIdentifierRef": {
+              "description": "DBClusterIdentifierRef is a reference to a DBCluster used to set\nDBClusterIdentifier.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "dbClusterIdentifierSelector": {
+              "description": "DBClusterIdentifierSelector selects a reference to a DBCluster used to\nset DBClusterIdentifier.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "dbInstanceClass": {
+              "description": "The compute and memory capacity of the DB instance, for example db.m5.large.\nNot all DB instance classes are available in all Amazon Web Services Regions,\nor for all database engines. For the full list of DB instance classes, and\navailability for your engine, see DB instance classes (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html)\nin the Amazon RDS User Guide or Aurora DB instance classes (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.DBInstanceClass.html)\nin the Amazon Aurora User Guide.",
+              "type": "string"
+            },
+            "dbName": {
+              "description": "The meaning of this parameter differs according to the database engine you\nuse.\n\n\nMySQL\n\n\nThe name of the database to create when the DB instance is created. If this\nparameter isn't specified, no database is created in the DB instance.\n\n\nConstraints:\n\n\n   * Must contain 1 to 64 letters or numbers.\n\n\n   * Must begin with a letter. Subsequent characters can be letters, underscores,\n   or digits (0-9).\n\n\n   * Can't be a word reserved by the specified database engine\n\n\nMariaDB\n\n\nThe name of the database to create when the DB instance is created. If this\nparameter isn't specified, no database is created in the DB instance.\n\n\nConstraints:\n\n\n   * Must contain 1 to 64 letters or numbers.\n\n\n   * Must begin with a letter. Subsequent characters can be letters, underscores,\n   or digits (0-9).\n\n\n   * Can't be a word reserved by the specified database engine\n\n\nPostgreSQL\n\n\nThe name of the database to create when the DB instance is created. If this\nparameter isn't specified, a database named postgres is created in the DB\ninstance.\n\n\nConstraints:\n\n\n   * Must contain 1 to 63 letters, numbers, or underscores.\n\n\n   * Must begin with a letter. Subsequent characters can be letters, underscores,\n   or digits (0-9).\n\n\n   * Can't be a word reserved by the specified database engine\n\n\nOracle\n\n\nThe Oracle System ID (SID) of the created DB instance. If you don't specify\na value, the default value is ORCL. You can't specify the string null, or\nany other reserved word, for DBName.\n\n\nDefault: ORCL\n\n\nConstraints:\n\n\n   * Can't be longer than 8 characters\n\n\nAmazon RDS Custom for Oracle\n\n\nThe Oracle System ID (SID) of the created RDS Custom DB instance. If you\ndon't specify a value, the default value is ORCL for non-CDBs and RDSCDB\nfor CDBs.\n\n\nDefault: ORCL\n\n\nConstraints:\n\n\n   * It must contain 1 to 8 alphanumeric characters.\n\n\n   * It must contain a letter.\n\n\n   * It can't be a word reserved by the database engine.\n\n\nAmazon RDS Custom for SQL Server\n\n\nNot applicable. Must be null.\n\n\nSQL Server\n\n\nNot applicable. Must be null.\n\n\nAmazon Aurora MySQL\n\n\nThe name of the database to create when the primary DB instance of the Aurora\nMySQL DB cluster is created. If this parameter isn't specified for an Aurora\nMySQL DB cluster, no database is created in the DB cluster.\n\n\nConstraints:\n\n\n   * It must contain 1 to 64 alphanumeric characters.\n\n\n   * It can't be a word reserved by the database engine.\n\n\nAmazon Aurora PostgreSQL\n\n\nThe name of the database to create when the primary DB instance of the Aurora\nPostgreSQL DB cluster is created. If this parameter isn't specified for an\nAurora PostgreSQL DB cluster, a database named postgres is created in the\nDB cluster.\n\n\nConstraints:\n\n\n   * It must contain 1 to 63 alphanumeric characters.\n\n\n   * It must begin with a letter. Subsequent characters can be letters, underscores,\n   or digits (0 to 9).\n\n\n   * It can't be a word reserved by the database engine.",
+              "type": "string"
+            },
+            "dbParameterGroupName": {
+              "description": "The name of the DB parameter group to associate with this DB instance. If\nyou don't specify a value, then Amazon RDS uses the default DB parameter\ngroup for the specified DB engine and version.\n\n\nThis setting doesn't apply to RDS Custom DB instances.\n\n\nConstraints:\n\n\n   * Must be 1 to 255 letters, numbers, or hyphens.\n\n\n   * The first character must be a letter.\n\n\n   * Can't end with a hyphen or contain two consecutive hyphens.",
+              "type": "string"
+            },
+            "dbParameterGroupNameRef": {
+              "description": "DBParameterGroupNameRef is a reference to a DBParameterGroup used to set\nDBParameterGroupName.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "dbParameterGroupNameSelector": {
+              "description": "DBParameterGroupNameSelector selects a reference to a DBParameterGroup used to\nset DBParameterGroupName.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "dbSecurityGroups": {
+              "description": "A list of database security groups to associate with this DB instance",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "dbSubnetGroupName": {
+              "description": "A DB subnet group to associate with this DB instance.\n\n\nConstraints:\n\n\n   * Must match the name of an existing DB subnet group.\n\n\n   * Must not be default.\n\n\nExample: mydbsubnetgroup",
+              "type": "string"
+            },
+            "dbSubnetGroupNameRef": {
+              "description": "DBSubnetGroupNameRef is a reference to a DBSubnetGroup used to set\nDBSubnetGroupName.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "dbSubnetGroupNameSelector": {
+              "description": "DBSubnetGroupNameSelector selects a reference to a DBSubnetGroup used to\nset DBSubnetGroupName.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "dbSystemID": {
+              "description": "The Oracle system identifier (SID), which is the name of the Oracle database\ninstance that manages your database files. In this context, the term \"Oracle\ndatabase instance\" refers exclusively to the system global area (SGA) and\nOracle background processes. If you don't specify a SID, the value defaults\nto RDSCDB. The Oracle SID is also the name of your CDB.",
+              "type": "string"
+            },
+            "deleteAutomatedBackups": {
+              "description": "DeleteAutomatedBackups indicates whether to remove automated backups\nimmediately after the DB instance is deleted. The default is to\nremove automated backups immediately after the DB instance is\ndeleted.",
+              "type": "boolean"
+            },
+            "deletionProtection": {
+              "description": "Specifies whether the DB instance has deletion protection enabled. The database\ncan't be deleted when deletion protection is enabled. By default, deletion\nprotection isn't enabled. For more information, see Deleting a DB Instance\n(https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html).\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. You can enable\nor disable deletion protection for the DB cluster. For more information,\nsee CreateDBCluster. DB instances in a DB cluster can be deleted even when\ndeletion protection is enabled for the DB cluster.",
+              "type": "boolean"
+            },
+            "domain": {
+              "description": "The Active Directory directory ID to create the DB instance in. Currently,\nonly Microsoft SQL Server, MySQL, Oracle, and PostgreSQL DB instances can\nbe created in an Active Directory Domain.\n\n\nFor more information, see Kerberos Authentication (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/kerberos-authentication.html)\nin the Amazon RDS User Guide.\n\n\nThis setting doesn't apply to the following DB instances:\n\n\n   * Amazon Aurora (The domain is managed by the DB cluster.)\n\n\n   * RDS Custom",
+              "type": "string"
+            },
+            "domainAuthSecretARN": {
+              "description": "The ARN for the Secrets Manager secret with the credentials for the user\njoining the domain.\n\n\nExample: arn:aws:secretsmanager:region:account-number:secret:myselfmanagedADtestsecret-123456",
+              "type": "string"
+            },
+            "domainDNSIPs": {
+              "description": "The IPv4 DNS IP addresses of your primary and secondary Active Directory\ndomain controllers.\n\n\nConstraints:\n\n\n   * Two IP addresses must be provided. If there isn't a secondary domain\n   controller, use the IP address of the primary domain controller for both\n   entries in the list.\n\n\nExample: 123.124.125.126,234.235.236.237",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "domainFqdn": {
+              "description": "The fully qualified domain name (FQDN) of an Active Directory domain.\n\n\nConstraints:\n\n\n   * Can't be longer than 64 characters.\n\n\nExample: mymanagedADtest.mymanagedAD.mydomain",
+              "type": "string"
+            },
+            "domainIAMRoleName": {
+              "description": "The name of the IAM role to use when making API calls to the Directory Service.\n\n\nThis setting doesn't apply to the following DB instances:\n\n\n   * Amazon Aurora (The domain is managed by the DB cluster.)\n\n\n   * RDS Custom",
+              "type": "string"
+            },
+            "domainIAMRoleNameRef": {
+              "description": "DomainIAMRoleNameRef is a reference to an IAMRole used to set\nDomainIAMRoleName.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "domainIAMRoleNameSelector": {
+              "description": "DomainIAMRoleNameSelector selects a reference to an IAMRole used to set\nDomainIAMRoleName.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "domainOu": {
+              "description": "The Active Directory organizational unit for your DB instance to join.\n\n\nConstraints:\n\n\n   * Must be in the distinguished name format.\n\n\n   * Can't be longer than 64 characters.\n\n\nExample: OU=mymanagedADtestOU,DC=mymanagedADtest,DC=mymanagedAD,DC=mydomain",
+              "type": "string"
+            },
+            "enableCloudwatchLogsExports": {
+              "description": "The list of log types that need to be enabled for exporting to CloudWatch\nLogs. For more information, see Publishing Database Logs to Amazon CloudWatch\nLogs (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_LogAccess.html#USER_LogAccess.Procedural.UploadtoCloudWatch)\nin the Amazon RDS User Guide.\n\n\nThis setting doesn't apply to the following DB instances:\n\n\n   * Amazon Aurora (CloudWatch Logs exports are managed by the DB cluster.)\n\n\n   * RDS Custom\n\n\nThe following values are valid for each DB engine:\n\n\n   * RDS for MariaDB - audit | error | general | slowquery\n\n\n   * RDS for Microsoft SQL Server - agent | error\n\n\n   * RDS for MySQL - audit | error | general | slowquery\n\n\n   * RDS for Oracle - alert | audit | listener | trace | oemagent\n\n\n   * RDS for PostgreSQL - postgresql | upgrade",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "enableCustomerOwnedIP": {
+              "description": "Specifies whether to enable a customer-owned IP address (CoIP) for an RDS\non Outposts DB instance.\n\n\nA CoIP provides local or external connectivity to resources in your Outpost\nsubnets through your on-premises network. For some use cases, a CoIP can\nprovide lower latency for connections to the DB instance from outside of\nits virtual private cloud (VPC) on your local network.\n\n\nFor more information about RDS on Outposts, see Working with Amazon RDS on\nAmazon Web Services Outposts (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html)\nin the Amazon RDS User Guide.\n\n\nFor more information about CoIPs, see Customer-owned IP addresses (https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing)\nin the Amazon Web Services Outposts User Guide.",
+              "type": "boolean"
+            },
+            "enableIAMDatabaseAuthentication": {
+              "description": "Specifies whether to enable mapping of Amazon Web Services Identity and Access\nManagement (IAM) accounts to database accounts. By default, mapping isn't\nenabled.\n\n\nFor more information, see IAM Database Authentication for MySQL and PostgreSQL\n(https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html)\nin the Amazon RDS User Guide.\n\n\nThis setting doesn't apply to the following DB instances:\n\n\n   * Amazon Aurora (Mapping Amazon Web Services IAM accounts to database\n   accounts is managed by the DB cluster.)\n\n\n   * RDS Custom",
+              "type": "boolean"
+            },
+            "enablePerformanceInsights": {
+              "description": "Specifies whether to enable Performance Insights for the DB instance. For\nmore information, see Using Amazon Performance Insights (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PerfInsights.html)\nin the Amazon RDS User Guide.\n\n\nThis setting doesn't apply to RDS Custom DB instances.",
+              "type": "boolean"
+            },
+            "engine": {
+              "description": "The database engine to use for this DB instance.\n\n\nNot every database engine is available in every Amazon Web Services Region.\n\n\nValid Values:\n\n\n   * aurora-mysql (for Aurora MySQL DB instances)\n\n\n   * aurora-postgresql (for Aurora PostgreSQL DB instances)\n\n\n   * custom-oracle-ee (for RDS Custom for Oracle DB instances)\n\n\n   * custom-oracle-ee-cdb (for RDS Custom for Oracle DB instances)\n\n\n   * custom-sqlserver-ee (for RDS Custom for SQL Server DB instances)\n\n\n   * custom-sqlserver-se (for RDS Custom for SQL Server DB instances)\n\n\n   * custom-sqlserver-web (for RDS Custom for SQL Server DB instances)\n\n\n   * mariadb\n\n\n   * mysql\n\n\n   * oracle-ee\n\n\n   * oracle-ee-cdb\n\n\n   * oracle-se2\n\n\n   * oracle-se2-cdb\n\n\n   * postgres\n\n\n   * sqlserver-ee\n\n\n   * sqlserver-se\n\n\n   * sqlserver-ex\n\n\n   * sqlserver-web",
+              "type": "string"
+            },
+            "engineVersion": {
+              "description": "The version number of the database engine to use.\n\n\nFor a list of valid engine versions, use the DescribeDBEngineVersions operation.\n\n\nThe following are the database engines and links to information about the\nmajor and minor versions that are available with Amazon RDS. Not every database\nengine is available for every Amazon Web Services Region.\n\n\nAmazon Aurora\n\n\nNot applicable. The version number of the database engine to be used by the\nDB instance is managed by the DB cluster.\n\n\nAmazon RDS Custom for Oracle\n\n\nA custom engine version (CEV) that you have previously created. This setting\nis required for RDS Custom for Oracle. The CEV name has the following format:\n19.customized_string. A valid CEV name is 19.my_cev1. For more information,\nsee Creating an RDS Custom for Oracle DB instance (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-creating.html#custom-creating.create)\nin the Amazon RDS User Guide.\n\n\nAmazon RDS Custom for SQL Server\n\n\nSee RDS Custom for SQL Server general requirements (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-reqs-limits-MS.html)\nin the Amazon RDS User Guide.\n\n\nMariaDB\n\n\nFor information, see MariaDB on Amazon RDS Versions (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MariaDB.html#MariaDB.Concepts.VersionMgmt)\nin the Amazon RDS User Guide.\n\n\nMicrosoft SQL Server\n\n\nFor information, see Microsoft SQL Server Versions on Amazon RDS (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_SQLServer.html#SQLServer.Concepts.General.VersionSupport)\nin the Amazon RDS User Guide.\n\n\nMySQL\n\n\nFor information, see MySQL on Amazon RDS Versions (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html#MySQL.Concepts.VersionMgmt)\nin the Amazon RDS User Guide.\n\n\nOracle\n\n\nFor information, see Oracle Database Engine Release Notes (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.Oracle.PatchComposition.html)\nin the Amazon RDS User Guide.\n\n\nPostgreSQL\n\n\nFor information, see Amazon RDS for PostgreSQL versions and extensions (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts)\nin the Amazon RDS User Guide.\n\n\nNote: Downgrades are not allowed by AWS and attempts to set a lower version\nwill be ignored.",
+              "type": "string"
+            },
+            "finalDBSnapshotIdentifier": {
+              "description": "The DB instance snapshot identifier of the new DB instance snapshot created\nwhen SkipFinalSnapshot is disabled.\n\n\nSpecifying this parameter and also skipping the creation of a final DB instance\nsnapshot with the SkipFinalShapshot parameter results in an error.\n\n\nConstraints:\n\n\n   * Must be 1 to 255 letters, numbers, or hyphens.\n\n\n   * First character must be a letter\n\n\n   * Can't end with a hyphen or contain two consecutive hyphens",
+              "type": "string"
+            },
+            "iops": {
+              "description": "The amount of Provisioned IOPS (input/output operations per second) to initially\nallocate for the DB instance. For information about valid IOPS values, see\nAmazon RDS DB instance storage (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html)\nin the Amazon RDS User Guide.\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. Storage is managed\nby the DB cluster.\n\n\nConstraints:\n\n\n   * For RDS for MariaDB, MySQL, Oracle, and PostgreSQL - Must be a multiple\n   between .5 and 50 of the storage amount for the DB instance.\n\n\n   * For RDS for SQL Server - Must be a multiple between 1 and 50 of the\n   storage amount for the DB instance.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "kmsKeyID": {
+              "description": "The Amazon Web Services KMS key identifier for an encrypted DB instance.\n\n\nThe Amazon Web Services KMS key identifier is the key ARN, key ID, alias\nARN, or alias name for the KMS key. To use a KMS key in a different Amazon\nWeb Services account, specify the key ARN or alias ARN.\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. The Amazon Web\nServices KMS key identifier is managed by the DB cluster. For more information,\nsee CreateDBCluster.\n\n\nIf StorageEncrypted is enabled, and you do not specify a value for the KmsKeyId\nparameter, then Amazon RDS uses your default KMS key. There is a default\nKMS key for your Amazon Web Services account. Your Amazon Web Services account\nhas a different default KMS key for each Amazon Web Services Region.\n\n\nFor Amazon RDS Custom, a KMS key is required for DB instances. For most RDS\nengines, if you leave this parameter empty while enabling StorageEncrypted,\nthe engine uses the default KMS key. However, RDS Custom doesn't use the\ndefault key when this parameter is empty. You must explicitly specify a key.",
+              "type": "string"
+            },
+            "kmsKeyIDRef": {
+              "description": "KMSKeyIDRef is a reference to a KMS Key used to set KMSKeyID.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "kmsKeyIDSelector": {
+              "description": "KMSKeyIDSelector selects a reference to a KMS Key used to set KMSKeyID.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "licenseModel": {
+              "description": "The license model information for this DB instance.\n\n\nThis setting doesn't apply to Amazon Aurora or RDS Custom DB instances.\n\n\nValid Values:\n\n\n   * RDS for MariaDB - general-public-license\n\n\n   * RDS for Microsoft SQL Server - license-included\n\n\n   * RDS for MySQL - general-public-license\n\n\n   * RDS for Oracle - bring-your-own-license | license-included\n\n\n   * RDS for PostgreSQL - postgresql-license",
+              "type": "string"
+            },
+            "manageMasterUserPassword": {
+              "description": "Specifies whether to manage the master user password with Amazon Web Services\nSecrets Manager.\n\n\nFor more information, see Password management with Amazon Web Services Secrets\nManager (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html)\nin the Amazon RDS User Guide.\n\n\nConstraints:\n\n\n   * Can't manage the master user password with Amazon Web Services Secrets\n   Manager if MasterUserPassword is specified.",
+              "type": "boolean"
+            },
+            "masterUserPasswordSecretRef": {
+              "description": "The password for the master database user. This password can contain any\nprintable ASCII character except \"/\", \"\"\", or \"@\".\n\n\nConstraints: Must contain from 8 to 41 characters.",
+              "properties": {
+                "key": {
+                  "description": "The key to select.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Name of the secret.",
+                  "type": "string"
+                },
+                "namespace": {
+                  "description": "Namespace of the secret.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "name",
+                "namespace"
+              ],
+              "type": "object"
+            },
+            "masterUserSecretKMSKeyID": {
+              "description": "The Amazon Web Services KMS key identifier to encrypt a secret that is automatically\ngenerated and managed in Amazon Web Services Secrets Manager.\n\n\nThis setting is valid only if the master user password is managed by RDS\nin Amazon Web Services Secrets Manager for the DB instance.\n\n\nThe Amazon Web Services KMS key identifier is the key ARN, key ID, alias\nARN, or alias name for the KMS key. To use a KMS key in a different Amazon\nWeb Services account, specify the key ARN or alias ARN.\n\n\nIf you don't specify MasterUserSecretKmsKeyId, then the aws/secretsmanager\nKMS key is used to encrypt the secret. If the secret is in a different Amazon\nWeb Services account, then you can't use the aws/secretsmanager KMS key to\nencrypt the secret, and you must use a customer managed KMS key.\n\n\nThere is a default KMS key for your Amazon Web Services account. Your Amazon\nWeb Services account has a different default KMS key for each Amazon Web\nServices Region.",
+              "type": "string"
+            },
+            "masterUsername": {
+              "description": "The name for the master user.\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. The name for the\nmaster user is managed by the DB cluster.\n\n\nThis setting is required for RDS DB instances.\n\n\nConstraints:\n\n\n   * Must be 1 to 16 letters, numbers, or underscores.\n\n\n   * First character must be a letter.\n\n\n   * Can't be a reserved word for the chosen database engine.",
+              "type": "string"
+            },
+            "maxAllocatedStorage": {
+              "description": "The upper limit in gibibytes (GiB) to which Amazon RDS can automatically\nscale the storage of the DB instance.\n\n\nFor more information about this setting, including limitations that apply\nto it, see Managing capacity automatically with Amazon RDS storage autoscaling\n(https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIOPS.StorageTypes.html#USER_PIOPS.Autoscaling)\nin the Amazon RDS User Guide.\n\n\nThis setting doesn't apply to the following DB instances:\n\n\n   * Amazon Aurora (Storage is managed by the DB cluster.)\n\n\n   * RDS Custom",
+              "format": "int64",
+              "type": "integer"
+            },
+            "monitoringInterval": {
+              "description": "The interval, in seconds, between points when Enhanced Monitoring metrics\nare collected for the DB instance. To disable collection of Enhanced Monitoring\nmetrics, specify 0.\n\n\nIf MonitoringRoleArn is specified, then you must set MonitoringInterval to\na value other than 0.\n\n\nThis setting doesn't apply to RDS Custom DB instances.\n\n\nValid Values: 0 | 1 | 5 | 10 | 15 | 30 | 60\n\n\nDefault: 0",
+              "format": "int64",
+              "type": "integer"
+            },
+            "monitoringRoleARN": {
+              "description": "The ARN for the IAM role that permits RDS to send enhanced monitoring metrics\nto Amazon CloudWatch Logs. For example, arn:aws:iam:123456789012:role/emaccess.\nFor information on creating a monitoring role, see Setting Up and Enabling\nEnhanced Monitoring (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Monitoring.OS.html#USER_Monitoring.OS.Enabling)\nin the Amazon RDS User Guide.\n\n\nIf MonitoringInterval is set to a value other than 0, then you must supply\na MonitoringRoleArn value.\n\n\nThis setting doesn't apply to RDS Custom DB instances.",
+              "type": "string"
+            },
+            "monitoringRoleArnRef": {
+              "description": "MonitoringRoleARNRef is a reference to an IAMRole used to set\nMonitoringRoleARN.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "monitoringRoleArnSelector": {
+              "description": "MonitoringRoleARNSelector selects a reference to an IAMRole used to set\nMonitoringRoleARN.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "multiAZ": {
+              "description": "Specifies whether the DB instance is a Multi-AZ deployment. You can't set\nthe AvailabilityZone parameter if the DB instance is a Multi-AZ deployment.\n\n\nThis setting doesn't apply to the following DB instances:\n\n\n   * Amazon Aurora (DB instance Availability Zones (AZs) are managed by the\n   DB cluster.)\n\n\n   * RDS Custom",
+              "type": "boolean"
+            },
+            "ncharCharacterSetName": {
+              "description": "The name of the NCHAR character set for the Oracle DB instance.\n\n\nThis setting doesn't apply to RDS Custom DB instances.",
+              "type": "string"
+            },
+            "networkType": {
+              "description": "The network type of the DB instance.\n\n\nThe network type is determined by the DBSubnetGroup specified for the DB\ninstance. A DBSubnetGroup can support only the IPv4 protocol or the IPv4\nand the IPv6 protocols (DUAL).\n\n\nFor more information, see Working with a DB instance in a VPC (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html)\nin the Amazon RDS User Guide.\n\n\nValid Values: IPV4 | DUAL",
+              "type": "string"
+            },
+            "optionGroupName": {
+              "description": "The option group to associate the DB instance with.\n\n\nPermanent options, such as the TDE option for Oracle Advanced Security TDE,\ncan't be removed from an option group. Also, that option group can't be removed\nfrom a DB instance after it is associated with a DB instance.\n\n\nThis setting doesn't apply to Amazon Aurora or RDS Custom DB instances.",
+              "type": "string"
+            },
+            "performanceInsightsKMSKeyID": {
+              "description": "The Amazon Web Services KMS key identifier for encryption of Performance\nInsights data.\n\n\nThe Amazon Web Services KMS key identifier is the key ARN, key ID, alias\nARN, or alias name for the KMS key.\n\n\nIf you don't specify a value for PerformanceInsightsKMSKeyId, then Amazon\nRDS uses your default KMS key. There is a default KMS key for your Amazon\nWeb Services account. Your Amazon Web Services account has a different default\nKMS key for each Amazon Web Services Region.\n\n\nThis setting doesn't apply to RDS Custom DB instances.",
+              "type": "string"
+            },
+            "performanceInsightsRetentionPeriod": {
+              "description": "The number of days to retain Performance Insights data.\n\n\nThis setting doesn't apply to RDS Custom DB instances.\n\n\nValid Values:\n\n\n   * 7\n\n\n   * month * 31, where month is a number of months from 1-23. Examples: 93\n   (3 months * 31), 341 (11 months * 31), 589 (19 months * 31)\n\n\n   * 731\n\n\nDefault: 7 days\n\n\nIf you specify a retention period that isn't valid, such as 94, Amazon RDS\nreturns an error.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "port": {
+              "description": "The port number on which the database accepts connections.\n\n\nThis setting doesn't apply to Aurora DB instances. The port number is managed\nby the cluster.\n\n\nValid Values: 1150-65535\n\n\nDefault:\n\n\n   * RDS for MariaDB - 3306\n\n\n   * RDS for Microsoft SQL Server - 1433\n\n\n   * RDS for MySQL - 3306\n\n\n   * RDS for Oracle - 1521\n\n\n   * RDS for PostgreSQL - 5432\n\n\nConstraints:\n\n\n   * For RDS for Microsoft SQL Server, the value can't be 1234, 1434, 3260,\n   3343, 3389, 47001, or 49152-49156.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "preferredBackupWindow": {
+              "description": "The daily time range during which automated backups are created if automated\nbackups are enabled, using the BackupRetentionPeriod parameter. The default\nis a 30-minute window selected at random from an 8-hour block of time for\neach Amazon Web Services Region. For more information, see Backup window\n(https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html#USER_WorkingWithAutomatedBackups.BackupWindow)\nin the Amazon RDS User Guide.\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. The daily time\nrange for creating automated backups is managed by the DB cluster.\n\n\nConstraints:\n\n\n   * Must be in the format hh24:mi-hh24:mi.\n\n\n   * Must be in Universal Coordinated Time (UTC).\n\n\n   * Must not conflict with the preferred maintenance window.\n\n\n   * Must be at least 30 minutes.",
+              "type": "string"
+            },
+            "preferredMaintenanceWindow": {
+              "description": "The time range each week during which system maintenance can occur. For more\ninformation, see Amazon RDS Maintenance Window (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Maintenance.html#Concepts.DBMaintenance)\nin the Amazon RDS User Guide.\n\n\nThe default is a 30-minute window selected at random from an 8-hour block\nof time for each Amazon Web Services Region, occurring on a random day of\nthe week.\n\n\nConstraints:\n\n\n   * Must be in the format ddd:hh24:mi-ddd:hh24:mi.\n\n\n   * The day values must be mon | tue | wed | thu | fri | sat | sun.\n\n\n   * Must be in Universal Coordinated Time (UTC).\n\n\n   * Must not conflict with the preferred backup window.\n\n\n   * Must be at least 30 minutes.",
+              "type": "string"
+            },
+            "processorFeatures": {
+              "description": "The number of CPU cores and the number of threads per core for the DB instance\nclass of the DB instance.\n\n\nThis setting doesn't apply to Amazon Aurora or RDS Custom DB instances.",
+              "items": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "promotionTier": {
+              "description": "The order of priority in which an Aurora Replica is promoted to the primary\ninstance after a failure of the existing primary instance. For more information,\nsee Fault Tolerance for an Aurora DB Cluster (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.AuroraHighAvailability.html#Aurora.Managing.FaultTolerance)\nin the Amazon Aurora User Guide.\n\n\nThis setting doesn't apply to RDS Custom DB instances.\n\n\nDefault: 1\n\n\nValid Values: 0 - 15",
+              "format": "int64",
+              "type": "integer"
+            },
+            "publiclyAccessible": {
+              "description": "Specifies whether the DB instance is publicly accessible.\n\n\nWhen the DB instance is publicly accessible, its Domain Name System (DNS)\nendpoint resolves to the private IP address from within the DB instance's\nvirtual private cloud (VPC). It resolves to the public IP address from outside\nof the DB instance's VPC. Access to the DB instance is ultimately controlled\nby the security group it uses. That public access is not permitted if the\nsecurity group assigned to the DB instance doesn't permit it.\n\n\nWhen the DB instance isn't publicly accessible, it is an internal DB instance\nwith a DNS name that resolves to a private IP address.\n\n\nDefault: The default behavior varies depending on whether DBSubnetGroupName\nis specified.\n\n\nIf DBSubnetGroupName isn't specified, and PubliclyAccessible isn't specified,\nthe following applies:\n\n\n   * If the default VPC in the target Region doesn\u2019t have an internet gateway\n   attached to it, the DB instance is private.\n\n\n   * If the default VPC in the target Region has an internet gateway attached\n   to it, the DB instance is public.\n\n\nIf DBSubnetGroupName is specified, and PubliclyAccessible isn't specified,\nthe following applies:\n\n\n   * If the subnets are part of a VPC that doesn\u2019t have an internet gateway\n   attached to it, the DB instance is private.\n\n\n   * If the subnets are part of a VPC that has an internet gateway attached\n   to it, the DB instance is public.",
+              "type": "boolean"
+            },
+            "region": {
+              "description": "Region is which region the DBInstance will be created.",
+              "type": "string"
+            },
+            "restoreFrom": {
+              "description": "RestoreFrom specifies the details of the backup to restore when creating a new DBInstance.",
+              "properties": {
+                "pointInTime": {
+                  "description": "PointInTime specifies the details of the point in time restore.",
+                  "properties": {
+                    "restoreTime": {
+                      "description": "RestoreTime is the date and time (UTC) to restore from.\nMust be before the latest restorable time for the DB instance.\nCan't be specified if the useLatestRestorableTime parameter is enabled.\nExample: 2011-09-07T23:45:00Z",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "sourceDBInstanceAutomatedBackupsArn": {
+                      "description": "SourceDBInstanceAutomatedBackupsArn specifies the Amazon Resource Name (ARN) of the replicated automated backups\nfrom which to restore. Example: arn:aws:rds:useast-1:123456789012:auto-backup:ab-L2IJCEXJP7XQ7HOJ4SIEXAMPLE",
+                      "type": "string"
+                    },
+                    "sourceDBInstanceIdentifier": {
+                      "description": "SourceDBInstanceIdentifier specifies the identifier of the source DB instance from which to restore. Constraints:\nMust match the identifier of an existing DB instance.",
+                      "type": "string"
+                    },
+                    "sourceDbiResourceId": {
+                      "description": "SourceDbiResourceID specifies the resource ID of the source DB instance from which to restore.",
+                      "type": "string"
+                    },
+                    "useLatestRestorableTime": {
+                      "description": "UseLatestRestorableTime indicates that the DB instance is restored from the latest backup\nCan't be specified if the restoreTime parameter is provided.",
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "s3": {
+                  "description": "S3 specifies the details of the S3 backup to restore from.",
+                  "properties": {
+                    "bucketName": {
+                      "description": "BucketName is the name of the S3 bucket containing the backup to restore.",
+                      "type": "string"
+                    },
+                    "ingestionRoleARN": {
+                      "description": "IngestionRoleARN is the IAM role RDS can assume that will allow it to access the contents of the S3 bucket.",
+                      "type": "string"
+                    },
+                    "prefix": {
+                      "description": "Prefix is the path prefix of the S3 bucket within which the backup to restore is located.",
+                      "type": "string"
+                    },
+                    "sourceEngine": {
+                      "description": "SourceEngine is the engine used to create the backup.\nMust be \"mysql\".",
+                      "type": "string"
+                    },
+                    "sourceEngineVersion": {
+                      "description": "SourceEngineVersion is the version of the engine used to create the backup.\nExample: \"5.7.30\"",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "bucketName",
+                    "ingestionRoleARN",
+                    "sourceEngine",
+                    "sourceEngineVersion"
+                  ],
+                  "type": "object"
+                },
+                "snapshot": {
+                  "description": "Snapshot specifies the details of the snapshot to restore from.",
+                  "properties": {
+                    "snapshotIdentifier": {
+                      "description": "SnapshotIdentifier is the identifier of the snapshot to restore.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "snapshotIdentifier"
+                  ],
+                  "type": "object"
+                },
+                "source": {
+                  "description": "Source is the type of the backup to restore when creating a new  DBCluster or DBInstance.\nS3, Snapshot and PointInTime are supported.",
+                  "enum": [
+                    "S3",
+                    "Snapshot",
+                    "PointInTime"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source"
+              ],
+              "type": "object"
+            },
+            "skipFinalSnapshot": {
+              "description": "A value that indicates whether to skip the creation of a final DB instance\nsnapshot before the DB instance is deleted. If skip is specified, no DB instance\nsnapshot is created. If skip isn't specified, a DB instance snapshot is created\nbefore the DB instance is deleted. By default, skip isn't specified, and the\nDB instance snapshot is created. By default, this parameter is disabled.\n\n\nYou must specify a FinalDBSnapshotIdentifier parameter if SkipFinalSnapshot\nis disabled.",
+              "type": "boolean"
+            },
+            "storageEncrypted": {
+              "description": "Specifes whether the DB instance is encrypted. By default, it isn't encrypted.\n\n\nFor RDS Custom DB instances, either enable this setting or leave it unset.\nOtherwise, Amazon RDS reports an error.\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. The encryption\nfor DB instances is managed by the DB cluster.",
+              "type": "boolean"
+            },
+            "storageThroughput": {
+              "description": "The storage throughput value for the DB instance.\n\n\nThis setting applies only to the gp3 storage type.\n\n\nThis setting doesn't apply to Amazon Aurora or RDS Custom DB instances.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "storageType": {
+              "description": "The storage type to associate with the DB instance.\n\n\nIf you specify io1 or gp3, you must also include a value for the Iops parameter.\n\n\nThis setting doesn't apply to Amazon Aurora DB instances. Storage is managed\nby the DB cluster.\n\n\nValid Values: gp2 | gp3 | io1 | standard\n\n\nDefault: io1, if the Iops parameter is specified. Otherwise, gp2.",
+              "type": "string"
+            },
+            "tags": {
+              "description": "Tags to assign to the DB instance.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "tdeCredentialARN": {
+              "description": "The ARN from the key store with which to associate the instance for TDE encryption.\n\n\nThis setting doesn't apply to Amazon Aurora or RDS Custom DB instances.",
+              "type": "string"
+            },
+            "tdeCredentialPassword": {
+              "description": "The password for the given ARN from the key store in order to access the\ndevice.\n\n\nThis setting doesn't apply to RDS Custom DB instances.",
+              "type": "string"
+            },
+            "timezone": {
+              "description": "The time zone of the DB instance. The time zone parameter is currently supported\nonly by Microsoft SQL Server (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_SQLServer.html#SQLServer.Concepts.General.TimeZone).",
+              "type": "string"
+            },
+            "vpcSecurityGroupIDRefs": {
+              "description": "VPCSecurityGroupIDRefs are references to VPCSecurityGroups used to set\nthe VPCSecurityGroupIDs.",
+              "items": {
+                "description": "A Reference to a named object.",
+                "properties": {
+                  "name": {
+                    "description": "Name of the referenced object.",
+                    "type": "string"
+                  },
+                  "policy": {
+                    "description": "Policies for referencing.",
+                    "properties": {
+                      "resolution": {
+                        "default": "Required",
+                        "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                        "enum": [
+                          "Required",
+                          "Optional"
+                        ],
+                        "type": "string"
+                      },
+                      "resolve": {
+                        "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                        "enum": [
+                          "Always",
+                          "IfNotPresent"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "vpcSecurityGroupIDSelector": {
+              "description": "VPCSecurityGroupIDSelector selects references to VPCSecurityGroups used\nto set the VPCSecurityGroupIDs.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "vpcSecurityGroupIDs": {
+              "description": "A list of Amazon EC2 VPC security groups to authorize on this DB instance.\nThis change is asynchronously applied as soon as possible.\n\n\nThis setting doesn't apply to RDS Custom.\n\n\nAmazon Aurora\nNot applicable. The associated list of EC2 VPC security groups is managed\nby the DB cluster. For more information, see ModifyDBCluster.\n\n\nConstraints:\n   * If supplied, must match existing VpcSecurityGroupIds.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "dbInstanceClass",
+            "engine",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "DBInstanceStatus defines the observed state of DBInstance.",
+      "properties": {
+        "atProvider": {
+          "description": "DBInstanceObservation defines the observed state of DBInstance",
+          "properties": {
+            "activityStreamEngineNativeAuditFieldsIncluded": {
+              "description": "Indicates whether engine-native audit fields are included in the database\nactivity stream.",
+              "type": "boolean"
+            },
+            "activityStreamKMSKeyID": {
+              "description": "The Amazon Web Services KMS key identifier used for encrypting messages in\nthe database activity stream. The Amazon Web Services KMS key identifier\nis the key ARN, key ID, alias ARN, or alias name for the KMS key.",
+              "type": "string"
+            },
+            "activityStreamKinesisStreamName": {
+              "description": "The name of the Amazon Kinesis data stream used for the database activity\nstream.",
+              "type": "string"
+            },
+            "activityStreamMode": {
+              "description": "The mode of the database activity stream. Database events such as a change\nor access generate an activity stream event. RDS for Oracle always handles\nthese events asynchronously.",
+              "type": "string"
+            },
+            "activityStreamPolicyStatus": {
+              "description": "The status of the policy state of the activity stream.",
+              "type": "string"
+            },
+            "activityStreamStatus": {
+              "description": "The status of the database activity stream.",
+              "type": "string"
+            },
+            "associatedRoles": {
+              "description": "The Amazon Web Services Identity and Access Management (IAM) roles associated\nwith the DB instance.",
+              "items": {
+                "properties": {
+                  "featureName": {
+                    "type": "string"
+                  },
+                  "roleARN": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "automaticRestartTime": {
+              "description": "The time when a stopped DB instance is restarted automatically.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "automationMode": {
+              "description": "The automation mode of the RDS Custom DB instance: full or all paused. If\nfull, the DB instance automates monitoring and instance recovery. If all\npaused, the instance pauses automation for the duration set by --resume-full-automation-mode-minutes.",
+              "type": "string"
+            },
+            "awsBackupRecoveryPointARN": {
+              "description": "The Amazon Resource Name (ARN) of the recovery point in Amazon Web Services\nBackup.",
+              "type": "string"
+            },
+            "certificateDetails": {
+              "description": "The details of the DB instance's server certificate.",
+              "properties": {
+                "cAIdentifier": {
+                  "type": "string"
+                },
+                "validTill": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "customerOwnedIPEnabled": {
+              "description": "Indicates whether a customer-owned IP address (CoIP) is enabled for an RDS\non Outposts DB instance.\n\n\nA CoIP provides local or external connectivity to resources in your Outpost\nsubnets through your on-premises network. For some use cases, a CoIP can\nprovide lower latency for connections to the DB instance from outside of\nits virtual private cloud (VPC) on your local network.\n\n\nFor more information about RDS on Outposts, see Working with Amazon RDS on\nAmazon Web Services Outposts (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html)\nin the Amazon RDS User Guide.\n\n\nFor more information about CoIPs, see Customer-owned IP addresses (https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing)\nin the Amazon Web Services Outposts User Guide.",
+              "type": "boolean"
+            },
+            "dbClusterIdentifier": {
+              "description": "If the DB instance is a member of a DB cluster, indicates the name of the\nDB cluster that the DB instance is a member of.",
+              "type": "string"
+            },
+            "dbInstanceARN": {
+              "description": "The Amazon Resource Name (ARN) for the DB instance.",
+              "type": "string"
+            },
+            "dbInstanceAutomatedBackupsReplications": {
+              "description": "The list of replicated automated backups associated with the DB instance.",
+              "items": {
+                "properties": {
+                  "dbInstanceAutomatedBackupsARN": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "dbInstanceIdentifier": {
+              "description": "The user-supplied database identifier. This identifier is the unique key\nthat identifies a DB instance.",
+              "type": "string"
+            },
+            "dbInstancePort": {
+              "description": "The port that the DB instance listens on. If the DB instance is part of a\nDB cluster, this can be a different port than the DB cluster port.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "dbInstanceStatus": {
+              "description": "The current state of this database.\n\n\nFor information about DB instance statuses, see Viewing DB instance status\n(https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/accessing-monitoring.html#Overview.DBInstance.Status)\nin the Amazon RDS User Guide.",
+              "type": "string"
+            },
+            "dbParameterGroups": {
+              "description": "The list of DB parameter groups applied to this DB instance.",
+              "items": {
+                "properties": {
+                  "dbParameterGroupName": {
+                    "type": "string"
+                  },
+                  "parameterApplyStatus": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "dbSecurityGroups": {
+              "description": "A list of DB security group elements containing DBSecurityGroup.Name and\nDBSecurityGroup.Status subelements.",
+              "items": {
+                "properties": {
+                  "dbSecurityGroupName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "dbSubnetGroup": {
+              "description": "Information about the subnet group associated with the DB instance, including\nthe name, description, and subnets in the subnet group.",
+              "properties": {
+                "dbSubnetGroupARN": {
+                  "type": "string"
+                },
+                "dbSubnetGroupDescription": {
+                  "type": "string"
+                },
+                "dbSubnetGroupName": {
+                  "type": "string"
+                },
+                "subnetGroupStatus": {
+                  "type": "string"
+                },
+                "subnets": {
+                  "items": {
+                    "properties": {
+                      "subnetAvailabilityZone": {
+                        "description": "Contains Availability Zone information.\n\n\nThis data type is used as an element in the OrderableDBInstanceOption data\ntype.",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "subnetIdentifier": {
+                        "type": "string"
+                      },
+                      "subnetOutpost": {
+                        "description": "A data type that represents an Outpost.\n\n\nFor more information about RDS on Outposts, see Amazon RDS on Amazon Web\nServices Outposts (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html)\nin the Amazon RDS User Guide.",
+                        "properties": {
+                          "arn": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "subnetStatus": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "supportedNetworkTypes": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "vpcID": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "dbiResourceID": {
+              "description": "The Amazon Web Services Region-unique, immutable identifier for the DB instance.\nThis identifier is found in Amazon Web Services CloudTrail log entries whenever\nthe Amazon Web Services KMS key for the DB instance is accessed.",
+              "type": "string"
+            },
+            "domainMemberships": {
+              "description": "The Active Directory Domain membership records associated with the DB instance.",
+              "items": {
+                "properties": {
+                  "authSecretARN": {
+                    "type": "string"
+                  },
+                  "dnsIPs": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "domain": {
+                    "type": "string"
+                  },
+                  "fQDN": {
+                    "type": "string"
+                  },
+                  "iamRoleName": {
+                    "type": "string"
+                  },
+                  "oU": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "enabledCloudwatchLogsExports": {
+              "description": "A list of log types that this DB instance is configured to export to CloudWatch\nLogs.\n\n\nLog types vary by DB engine. For information about the log types for each\nDB engine, see Monitoring Amazon RDS log files (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_LogAccess.html)\nin the Amazon RDS User Guide.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "endpoint": {
+              "description": "The connection endpoint for the DB instance.\n\n\nThe endpoint might not be shown for instances with the status of creating.",
+              "properties": {
+                "address": {
+                  "type": "string"
+                },
+                "hostedZoneID": {
+                  "type": "string"
+                },
+                "port": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "engineVersion": {
+              "description": "The version of the database engine.",
+              "type": "string"
+            },
+            "enhancedMonitoringResourceARN": {
+              "description": "The Amazon Resource Name (ARN) of the Amazon CloudWatch Logs log stream that\nreceives the Enhanced Monitoring metrics data for the DB instance.",
+              "type": "string"
+            },
+            "iamDatabaseAuthenticationEnabled": {
+              "description": "Indicates whether mapping of Amazon Web Services Identity and Access Management\n(IAM) accounts to database accounts is enabled for the DB instance.\n\n\nFor a list of engine versions that support IAM database authentication, see\nIAM database authentication (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RDS_Fea_Regions_DB-eng.Feature.IamDatabaseAuthentication.html)\nin the Amazon RDS User Guide and IAM database authentication in Aurora (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.Aurora_Fea_Regions_DB-eng.Feature.IAMdbauth.html)\nin the Amazon Aurora User Guide.",
+              "type": "boolean"
+            },
+            "instanceCreateTime": {
+              "description": "The date and time when the DB instance was created.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "latestRestorableTime": {
+              "description": "The latest time to which a database in this DB instance can be restored with\npoint-in-time restore.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "listenerEndpoint": {
+              "description": "The listener connection endpoint for SQL Server Always On.",
+              "properties": {
+                "address": {
+                  "type": "string"
+                },
+                "hostedZoneID": {
+                  "type": "string"
+                },
+                "port": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "masterUserSecret": {
+              "description": "The secret managed by RDS in Amazon Web Services Secrets Manager for the\nmaster user password.\n\n\nFor more information, see Password management with Amazon Web Services Secrets\nManager (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html)\nin the Amazon RDS User Guide.",
+              "properties": {
+                "kmsKeyID": {
+                  "type": "string"
+                },
+                "secretARN": {
+                  "type": "string"
+                },
+                "secretStatus": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "optionGroupMemberships": {
+              "description": "The list of option group memberships for this DB instance.",
+              "items": {
+                "properties": {
+                  "optionGroupName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "pendingModifiedValues": {
+              "description": "Information about pending changes to the DB instance. This information is\nreturned only when there are pending changes. Specific changes are identified\nby subelements.",
+              "properties": {
+                "allocatedStorage": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "automationMode": {
+                  "type": "string"
+                },
+                "backupRetentionPeriod": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "caCertificateIdentifier": {
+                  "type": "string"
+                },
+                "dbInstanceClass": {
+                  "type": "string"
+                },
+                "dbInstanceIdentifier": {
+                  "type": "string"
+                },
+                "dbSubnetGroupName": {
+                  "type": "string"
+                },
+                "engine": {
+                  "type": "string"
+                },
+                "engineVersion": {
+                  "type": "string"
+                },
+                "iamDatabaseAuthenticationEnabled": {
+                  "type": "boolean"
+                },
+                "iops": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "licenseModel": {
+                  "type": "string"
+                },
+                "masterUserPassword": {
+                  "type": "string"
+                },
+                "multiAZ": {
+                  "type": "boolean"
+                },
+                "pendingCloudwatchLogsExports": {
+                  "description": "A list of the log types whose configuration is still pending. In other words,\nthese log types are in the process of being activated or deactivated.",
+                  "properties": {
+                    "logTypesToDisable": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "logTypesToEnable": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                "port": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "processorFeatures": {
+                  "items": {
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "resumeFullAutomationModeTime": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "storageThroughput": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "storageType": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "percentProgress": {
+              "description": "The progress of the storage optimization operation as a percentage.",
+              "type": "string"
+            },
+            "performanceInsightsEnabled": {
+              "description": "Indicates whether Performance Insights is enabled for the DB instance.",
+              "type": "boolean"
+            },
+            "readReplicaDBClusterIdentifiers": {
+              "description": "The identifiers of Aurora DB clusters to which the RDS DB instance is replicated\nas a read replica. For example, when you create an Aurora read replica of\nan RDS for MySQL DB instance, the Aurora MySQL DB cluster for the Aurora\nread replica is shown. This output doesn't contain information about cross-Region\nAurora read replicas.\n\n\nCurrently, each RDS DB instance can have only one Aurora read replica.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "readReplicaDBInstanceIdentifiers": {
+              "description": "The identifiers of the read replicas associated with this DB instance.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "readReplicaSourceDBClusterIdentifier": {
+              "description": "The identifier of the source DB cluster if this DB instance is a read replica.",
+              "type": "string"
+            },
+            "readReplicaSourceDBInstanceIdentifier": {
+              "description": "The identifier of the source DB instance if this DB instance is a read replica.",
+              "type": "string"
+            },
+            "replicaMode": {
+              "description": "The open mode of an Oracle read replica. The default is open-read-only. For\nmore information, see Working with Oracle Read Replicas for Amazon RDS (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.html)\nin the Amazon RDS User Guide.\n\n\nThis attribute is only supported in RDS for Oracle.",
+              "type": "string"
+            },
+            "resumeFullAutomationModeTime": {
+              "description": "The number of minutes to pause the automation. When the time period ends,\nRDS Custom resumes full automation. The minimum value is 60 (default). The\nmaximum value is 1,440.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "secondaryAvailabilityZone": {
+              "description": "If present, specifies the name of the secondary Availability Zone for a DB\ninstance with multi-AZ support.",
+              "type": "string"
+            },
+            "statusInfos": {
+              "description": "The status of a read replica. If the DB instance isn't a read replica, the\nvalue is blank.",
+              "items": {
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "normal": {
+                    "type": "boolean"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "statusType": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "tagList": {
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "vpcSecurityGroups": {
+              "description": "The list of Amazon EC2 VPC security groups that the DB instance belongs to.",
+              "items": {
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  },
+                  "vpcSecurityGroupID": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

@@ -1,0 +1,995 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/transfer.aws.crossplane.io/v1alpha1/server.json",
+  "title": "Server",
+  "description": "Server is the Schema for the servers API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.492188+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ServerSpec defines the desired state of Server",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "ServerParameters defines the desired state of Server",
+          "properties": {
+            "certificate": {
+              "description": "The Amazon Resource Name (ARN) of the AWS Certificate Manager (ACM) certificate.\nRequired when Protocols is set to FTPS.\n\n\nTo request a new public certificate, see Request a public certificate (https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html)\nin the AWS Certificate Manager User Guide.\n\n\nTo import an existing certificate into ACM, see Importing certificates into\nACM (https://docs.aws.amazon.com/acm/latest/userguide/import-certificate.html)\nin the AWS Certificate Manager User Guide.\n\n\nTo request a private certificate to use FTPS through private IP addresses,\nsee Request a private certificate (https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-private.html)\nin the AWS Certificate Manager User Guide.\n\n\nCertificates with the following cryptographic algorithms and key sizes are\nsupported:\n\n\n   * 2048-bit RSA (RSA_2048)\n\n\n   * 4096-bit RSA (RSA_4096)\n\n\n   * Elliptic Prime Curve 256 bit (EC_prime256v1)\n\n\n   * Elliptic Prime Curve 384 bit (EC_secp384r1)\n\n\n   * Elliptic Prime Curve 521 bit (EC_secp521r1)\n\n\nThe certificate must be a valid SSL/TLS X.509 version 3 certificate with\nFQDN or IP address specified and information about the issuer.",
+              "type": "string"
+            },
+            "certificateRef": {
+              "description": "CertificateRef is a reference to a Certificate.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "certificateSelector": {
+              "description": "CertificateSelector selects references to a Certificate.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "domain": {
+              "description": "The domain of the storage system that is used for file transfers. There are\ntwo domains available: Amazon Simple Storage Service (Amazon S3) and Amazon\nElastic File System (Amazon EFS). The default value is S3.\n\n\nAfter the server is created, the domain cannot be changed.",
+              "type": "string"
+            },
+            "endpointDetails": {
+              "description": "The virtual private cloud (VPC) endpoint settings that are configured for\nyour server. When you host your endpoint within your VPC, you can make it\naccessible only to resources within your VPC, or you can attach Elastic IPs\nand make it accessible to clients over the internet. Your VPC's default security\ngroups are automatically assigned to your endpoint.",
+              "properties": {
+                "addressAllocationIDRefs": {
+                  "description": "AddressAllocationIDRefs is a list of references to AddressAllocationID used to set\nthe AddressAllocationIDs.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "addressAllocationIDSelector": {
+                  "description": "AddressAllocationIDSelector selects references to AddressAllocationID used\nto set the AddressAllocationIDs.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "addressAllocationIDs": {
+                  "description": "A list of address allocation IDs that are required to attach an Elastic IP\naddress to your server's endpoint.\n\n\nThis property can only be set when EndpointType is set to VPC and it is only\nvalid in the UpdateServer API.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "securityGroupIDRefs": {
+                  "description": "SecurityGroupIDRefs is a list of references to SecurityGroups used to set\nthe SecurityGroupIDs.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "securityGroupIDSelector": {
+                  "description": "SecurityGroupIDsSelector selects references to SecurityGroupID used\nto set the SecurityGroupIDs.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "securityGroupIDs": {
+                  "description": "A list of security groups IDs that are available to attach to your server's\nendpoint.\n\n\nThis property can only be set when EndpointType is set to VPC.\n\n\nYou can edit the SecurityGroupIds property in the UpdateServer (https://docs.aws.amazon.com/transfer/latest/userguide/API_UpdateServer.html)\nAPI only if you are changing the EndpointType from PUBLIC or VPC_ENDPOINT\nto VPC. To change security groups associated with your server's VPC endpoint\nafter creation, use the Amazon EC2 ModifyVpcEndpoint (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_ModifyVpcEndpoint.html)\nAPI.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "subnetIDRefs": {
+                  "description": "SubnetIDRefs is a list of references to Subnets used to set\nthe SubnetIDs.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "subnetIDSelector": {
+                  "description": "SubnetIDSelector selects references to Subnets used\nto set the SubnetIds.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "subnetIDs": {
+                  "description": "A list of subnet IDs that are required to host your server endpoint in your\nVPC.\n\n\nThis property can only be set when EndpointType is set to VPC.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "vpcEndpointID": {
+                  "description": "The ID of the VPC endpoint.\n\n\nThis property can only be set when EndpointType is set to VPC_ENDPOINT.\n\n\nFor more information, see https://docs.aws.amazon.com/transfer/latest/userguide/create-server-in-vpc.html#deprecate-vpc-endpoint.",
+                  "type": "string"
+                },
+                "vpcEndpointIDRef": {
+                  "description": "VPCEndpointIDRef is a reference to a VPCEndpointID.",
+                  "properties": {
+                    "name": {
+                      "description": "Name of the referenced object.",
+                      "type": "string"
+                    },
+                    "policy": {
+                      "description": "Policies for referencing.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                },
+                "vpcEndpointIDSelector": {
+                  "description": "VPCEndpointIDSelector selects references to a VPCEndpointID.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "vpcID": {
+                  "description": "The VPC ID of the VPC in which a server's endpoint will be hosted.\n\n\nThis property can only be set when EndpointType is set to VPC.",
+                  "type": "string"
+                },
+                "vpcIDRef": {
+                  "description": "VPCIDRef is a reference to a VPCID.",
+                  "properties": {
+                    "name": {
+                      "description": "Name of the referenced object.",
+                      "type": "string"
+                    },
+                    "policy": {
+                      "description": "Policies for referencing.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                },
+                "vpcIDSelector": {
+                  "description": "VPCIDSelector selects references to a VPCID.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "endpointType": {
+              "description": "The type of endpoint that you want your server to use. You can choose to\nmake your server's endpoint publicly accessible (PUBLIC) or host it inside\nyour VPC. With an endpoint that is hosted in a VPC, you can restrict access\nto your server and resources only within your VPC or choose to make it internet\nfacing by attaching Elastic IP addresses directly to it.\n\n\nAfter May 19, 2021, you won't be able to create a server using EndpointType=VPC_ENDPOINT\nin your Amazon Web Services account if your account hasn't already done so\nbefore May 19, 2021. If you have already created servers with EndpointType=VPC_ENDPOINT\nin your Amazon Web Services account on or before May 19, 2021, you will not\nbe affected. After this date, use EndpointType=VPC.\n\n\nFor more information, see https://docs.aws.amazon.com/transfer/latest/userguide/create-server-in-vpc.html#deprecate-vpc-endpoint.\n\n\nIt is recommended that you use VPC as the EndpointType. With this endpoint\ntype, you have the option to directly associate up to three Elastic IPv4\naddresses (BYO IP included) with your server's endpoint and use VPC security\ngroups to restrict traffic by the client's public IP address. This is not\npossible with EndpointType set to VPC_ENDPOINT.",
+              "type": "string"
+            },
+            "hostKey": {
+              "description": "The RSA, ECDSA, or ED25519 private key to use for your SFTP-enabled server.\nYou can add multiple host keys, in case you want to rotate keys, or have\na set of active keys that use different algorithms.\n\n\nUse the following command to generate an RSA 2048 bit key with no passphrase:\n\n\nssh-keygen -t rsa -b 2048 -N \"\" -m PEM -f my-new-server-key.\n\n\nUse a minimum value of 2048 for the -b option. You can create a stronger\nkey by using 3072 or 4096.\n\n\nUse the following command to generate an ECDSA 256 bit key with no passphrase:\n\n\nssh-keygen -t ecdsa -b 256 -N \"\" -m PEM -f my-new-server-key.\n\n\nValid values for the -b option for ECDSA are 256, 384, and 521.\n\n\nUse the following command to generate an ED25519 key with no passphrase:\n\n\nssh-keygen -t ed25519 -N \"\" -f my-new-server-key.\n\n\nFor all of these commands, you can replace my-new-server-key with a string\nof your choice.\n\n\nIf you aren't planning to migrate existing users from an existing SFTP-enabled\nserver to a new server, don't update the host key. Accidentally changing\na server's host key can be disruptive.\n\n\nFor more information, see Manage host keys for your SFTP-enabled server (https://docs.aws.amazon.com/transfer/latest/userguide/edit-server-config.html#configuring-servers-change-host-key)\nin the Transfer Family User Guide.",
+              "type": "string"
+            },
+            "identityProviderDetails": {
+              "description": "Required when IdentityProviderType is set to AWS_DIRECTORY_SERVICE, Amazon\nWeb Services_LAMBDA or API_GATEWAY. Accepts an array containing all of the\ninformation required to use a directory in AWS_DIRECTORY_SERVICE or invoke\na customer-supplied authentication API, including the API Gateway URL. Not\nrequired when IdentityProviderType is set to SERVICE_MANAGED.",
+              "properties": {
+                "directoryID": {
+                  "type": "string"
+                },
+                "function": {
+                  "type": "string"
+                },
+                "invocationRole": {
+                  "type": "string"
+                },
+                "sftpAuthenticationMethods": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "identityProviderType": {
+              "description": "The mode of authentication for a server. The default value is SERVICE_MANAGED,\nwhich allows you to store and access user credentials within the Transfer\nFamily service.\n\n\nUse AWS_DIRECTORY_SERVICE to provide access to Active Directory groups in\nDirectory Service for Microsoft Active Directory or Microsoft Active Directory\nin your on-premises environment or in Amazon Web Services using AD Connector.\nThis option also requires you to provide a Directory ID by using the IdentityProviderDetails\nparameter.\n\n\nUse the API_GATEWAY value to integrate with an identity provider of your\nchoosing. The API_GATEWAY setting requires you to provide an Amazon API Gateway\nendpoint URL to call for authentication by using the IdentityProviderDetails\nparameter.\n\n\nUse the AWS_LAMBDA value to directly use an Lambda function as your identity\nprovider. If you choose this value, you must specify the ARN for the Lambda\nfunction in the Function parameter for the IdentityProviderDetails data type.",
+              "type": "string"
+            },
+            "loggingRole": {
+              "description": "Allows the service to write your users' activity to your Amazon CloudWatch\nlogs for monitoring and auditing purposes.",
+              "type": "string"
+            },
+            "loggingRoleRef": {
+              "description": "LoggingRoleRef is a reference to a IAM role.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "loggingRoleSelector": {
+              "description": "LoggingRoleSelector selects references to a IAM role.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "postAuthenticationLoginBanner": {
+              "description": "Specifies a string to display when users connect to a server. This string\nis displayed after the user authenticates.\n\n\nThe SFTP protocol does not support post-authentication display banners.",
+              "type": "string"
+            },
+            "preAuthenticationLoginBanner": {
+              "description": "Specifies a string to display when users connect to a server. This string\nis displayed before the user authenticates. For example, the following banner\ndisplays details about using the system:\n\n\nThis system is for the use of authorized users only. Individuals using this\ncomputer system without authority, or in excess of their authority, are subject\nto having all of their activities on this system monitored and recorded by\nsystem personnel.",
+              "type": "string"
+            },
+            "protocolDetails": {
+              "description": "The protocol settings that are configured for your server.\n\n\n   * To indicate passive mode (for FTP and FTPS protocols), use the PassiveIp\n   parameter. Enter a single dotted-quad IPv4 address, such as the external\n   IP address of a firewall, router, or load balancer.\n\n\n   * To ignore the error that is generated when the client attempts to use\n   the SETSTAT command on a file that you are uploading to an Amazon S3 bucket,\n   use the SetStatOption parameter. To have the Transfer Family server ignore\n   the SETSTAT command and upload files without needing to make any changes\n   to your SFTP client, set the value to ENABLE_NO_OP. If you set the SetStatOption\n   parameter to ENABLE_NO_OP, Transfer Family generates a log entry to Amazon\n   CloudWatch Logs, so that you can determine when the client is making a\n   SETSTAT call.\n\n\n   * To determine whether your Transfer Family server resumes recent, negotiated\n   sessions through a unique session ID, use the TlsSessionResumptionMode\n   parameter.\n\n\n   * As2Transports indicates the transport method for the AS2 messages. Currently,\n   only HTTP is supported.",
+              "properties": {
+                "as2Transports": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "passiveIP": {
+                  "type": "string"
+                },
+                "setStatOption": {
+                  "type": "string"
+                },
+                "tlsSessionResumptionMode": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "protocols": {
+              "description": "Specifies the file transfer protocol or protocols over which your file transfer\nprotocol client can connect to your server's endpoint. The available protocols\nare:\n\n\n   * SFTP (Secure Shell (SSH) File Transfer Protocol): File transfer over\n   SSH\n\n\n   * FTPS (File Transfer Protocol Secure): File transfer with TLS encryption\n\n\n   * FTP (File Transfer Protocol): Unencrypted file transfer\n\n\n   * AS2 (Applicability Statement 2): used for transporting structured business-to-business\n   data\n\n\n   * If you select FTPS, you must choose a certificate stored in Certificate\n   Manager (ACM) which is used to identify your server when clients connect\n   to it over FTPS.\n\n\n   * If Protocol includes either FTP or FTPS, then the EndpointType must\n   be VPC and the IdentityProviderType must be either AWS_DIRECTORY_SERVICE,\n   AWS_LAMBDA, or API_GATEWAY.\n\n\n   * If Protocol includes FTP, then AddressAllocationIds cannot be associated.\n\n\n   * If Protocol is set only to SFTP, the EndpointType can be set to PUBLIC\n   and the IdentityProviderType can be set any of the supported identity\n   types: SERVICE_MANAGED, AWS_DIRECTORY_SERVICE, AWS_LAMBDA, or API_GATEWAY.\n\n\n   * If Protocol includes AS2, then the EndpointType must be VPC, and domain\n   must be Amazon S3.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "region": {
+              "description": "Region is which region the Server will be created.",
+              "type": "string"
+            },
+            "securityPolicyName": {
+              "description": "Specifies the name of the security policy that is attached to the server.",
+              "type": "string"
+            },
+            "structuredLogDestinations": {
+              "description": "Specifies the log groups to which your server logs are sent.\n\n\nTo specify a log group, you must provide the ARN for an existing log group.\nIn this case, the format of the log group is as follows:\n\n\narn:aws:logs:region-name:amazon-account-id:log-group:log-group-name:*\n\n\nFor example, arn:aws:logs:us-east-1:111122223333:log-group:mytestgroup:*\n\n\nIf you have previously specified a log group for a server, you can clear\nit, and in effect turn off structured logging, by providing an empty value\nfor this parameter in an update-server call. For example:\n\n\nupdate-server --server-id s-1234567890abcdef0 --structured-log-destinations",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "tags": {
+              "description": "Key-value pairs that can be used to group and search for servers.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "workflowDetails": {
+              "description": "Specifies the workflow ID for the workflow to assign and the execution role\nthat's used for executing the workflow.\n\n\nIn addition to a workflow to execute when a file is uploaded completely,\nWorkflowDetails can also contain a workflow ID (and execution role) for a\nworkflow to execute on partial upload. A partial upload occurs when the server\nsession disconnects while the file is still being uploaded.",
+              "properties": {
+                "onPartialUpload": {
+                  "items": {
+                    "properties": {
+                      "executionRole": {
+                        "type": "string"
+                      },
+                      "workflowID": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "onUpload": {
+                  "items": {
+                    "properties": {
+                      "executionRole": {
+                        "type": "string"
+                      },
+                      "workflowID": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "ServerStatus defines the observed state of Server.",
+      "properties": {
+        "atProvider": {
+          "description": "ServerObservation defines the observed state of Server",
+          "properties": {
+            "serverID": {
+              "description": "The service-assigned identifier of the server that is created.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

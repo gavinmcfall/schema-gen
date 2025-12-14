@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/sts.min.io/v1alpha1/policybinding.json",
+  "title": "PolicyBinding",
+  "description": "PolicyBinding is the Schema for the policybindings API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "minio-operator",
+    "sourceVersion": "6.0.4",
+    "extractedAt": "2025-12-14T02:22:25.205738+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "application": {
+          "properties": {
+            "namespace": {
+              "type": "string"
+            },
+            "serviceaccount": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "namespace",
+            "serviceaccount"
+          ],
+          "type": "object"
+        },
+        "policies": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "application",
+        "policies"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "currentState": {
+          "type": "string"
+        },
+        "usage": {
+          "properties": {
+            "authotizations": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "currentState",
+        "usage"
+      ],
+      "type": "object"
+    }
+  }
+}

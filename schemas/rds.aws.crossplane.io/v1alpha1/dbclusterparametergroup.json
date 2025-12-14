@@ -1,0 +1,355 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/rds.aws.crossplane.io/v1alpha1/dbclusterparametergroup.json",
+  "title": "DBClusterParameterGroup",
+  "description": "DBClusterParameterGroup is the Schema for the dbclusterparametergroups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.466772+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "DBClusterParameterGroupSpec defines the desired state of DBClusterParameterGroup",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "DBClusterParameterGroupParameters defines the desired state of DBClusterParameterGroup",
+          "properties": {
+            "dbParameterGroupFamily": {
+              "description": "The DB cluster parameter group family name. A DB cluster parameter group\ncan be associated with one and only one DB cluster parameter group family,\nand can be applied only to a DB cluster running a database engine and engine\nversion compatible with that DB cluster parameter group family.\n\n\nAurora MySQL\n\n\nExample: aurora5.6, aurora-mysql5.7\n\n\nAurora PostgreSQL\n\n\nExample: aurora-postgresql9.6\n\n\nTo list all of the available parameter group families for a DB engine, use\nthe following command:\n\n\naws rds describe-db-engine-versions --query \"DBEngineVersions[].DBParameterGroupFamily\"\n--engine <engine>\n\n\nFor example, to list all of the available parameter group families for the\nAurora PostgreSQL DB engine, use the following command:\n\n\naws rds describe-db-engine-versions --query \"DBEngineVersions[].DBParameterGroupFamily\"\n--engine aurora-postgresql\n\n\nThe output contains duplicates.\n\n\nThe following are the valid DB engine values:\n\n\n   * aurora (for MySQL 5.6-compatible Aurora)\n\n\n   * aurora-mysql (for MySQL 5.7-compatible Aurora)\n\n\n   * aurora-postgresql\n\n\nOne of DBParameterGroupFamily or DBParameterGroupFamilySelector is required.",
+              "type": "string"
+            },
+            "dbParameterGroupFamilySelector": {
+              "description": "DBParameterGroupFamilySelector determines DBParameterGroupFamily from\nthe engine and engine version.\n\n\nOne of DBParameterGroupFamily or DBParameterGroupFamilySelector is required.\n\n\nWill not be used if DBParameterGroupFamily is already set.",
+              "properties": {
+                "engine": {
+                  "description": "Engine is the name of the database engine.",
+                  "type": "string"
+                },
+                "engineVersion": {
+                  "description": "EngineVersion is the version of the database engine.\nIf it is nil, the default engine version given by AWS will be used.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "engine"
+              ],
+              "type": "object"
+            },
+            "description": {
+              "description": "The description for the DB cluster parameter group.",
+              "type": "string"
+            },
+            "parameters": {
+              "description": "A list of parameters to associate with this DB cluster parameter group.\nThe fields ApplyMethod, ParameterName and ParameterValue are required\nfor every parameter.\nNote: AWS actually only modifies the ApplyMethod of a parameter,\nif the ParameterValue changes too.",
+              "items": {
+                "description": "CustomParameter are custom parameters for the Parameter",
+                "properties": {
+                  "applyMethod": {
+                    "description": "The apply method of the parameter.\nAWS actually only modifies to value set here, if the parameter value changes too.",
+                    "enum": [
+                      "immediate",
+                      "pending-reboot"
+                    ],
+                    "type": "string"
+                  },
+                  "parameterName": {
+                    "description": "The name of the parameter.",
+                    "type": "string"
+                  },
+                  "parameterValue": {
+                    "description": "The value of the parameter.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "applyMethod",
+                  "parameterName",
+                  "parameterValue"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "region": {
+              "description": "Region is which region the DBClusterParameterGroup will be created.",
+              "type": "string"
+            },
+            "tags": {
+              "description": "Tags to assign to the DB cluster parameter group.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "description",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "DBClusterParameterGroupStatus defines the observed state of DBClusterParameterGroup.",
+      "properties": {
+        "atProvider": {
+          "description": "DBClusterParameterGroupObservation defines the observed state of DBClusterParameterGroup",
+          "properties": {
+            "dbClusterParameterGroupARN": {
+              "description": "The Amazon Resource Name (ARN) for the DB cluster parameter group.",
+              "type": "string"
+            },
+            "dbClusterParameterGroupName": {
+              "description": "The name of the DB cluster parameter group.",
+              "type": "string"
+            },
+            "dbParameterGroupFamily": {
+              "description": "The name of the DB parameter group family that this DB cluster parameter\ngroup is compatible with.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

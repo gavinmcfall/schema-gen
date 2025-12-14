@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/offloading.liqo.io/v1beta1/shadowendpointslice.json",
+  "title": "ShadowEndpointSlice",
+  "description": "ShadowEndpointSlice is the Schema for the shadowendpointslices API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.930274+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ShadowEndpointSliceSpec defines the desired state of ShadowEndpointSlice.",
+      "properties": {
+        "template": {
+          "description": "EndpointSliceTemplate defines the desired state of the EndpointSlice.",
+          "properties": {
+            "addressType": {
+              "description": "AddressType represents the type of address referred to by an endpoint.",
+              "type": "string"
+            },
+            "endpoints": {
+              "items": {
+                "description": "Endpoint represents a single logical \"backend\" implementing a service.",
+                "properties": {
+                  "addresses": {
+                    "description": "addresses of this endpoint. The contents of this field are interpreted\naccording to the corresponding EndpointSlice addressType field. Consumers\nmust handle different types of addresses in the context of their own\ncapabilities. This must contain at least one address but no more than\n100. These are all assumed to be fungible and clients may choose to only\nuse the first element. Refer to: https://issue.k8s.io/106267",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "conditions": {
+                    "description": "conditions contains information about the current status of the endpoint.",
+                    "properties": {
+                      "ready": {
+                        "description": "ready indicates that this endpoint is prepared to receive traffic,\naccording to whatever system is managing the endpoint. A nil value\nindicates an unknown state. In most cases consumers should interpret this\nunknown state as ready. For compatibility reasons, ready should never be\n\"true\" for terminating endpoints, except when the normal readiness\nbehavior is being explicitly overridden, for example when the associated\nService has set the publishNotReadyAddresses flag.",
+                        "type": "boolean"
+                      },
+                      "serving": {
+                        "description": "serving is identical to ready except that it is set regardless of the\nterminating state of endpoints. This condition should be set to true for\na ready endpoint that is terminating. If nil, consumers should defer to\nthe ready condition.",
+                        "type": "boolean"
+                      },
+                      "terminating": {
+                        "description": "terminating indicates that this endpoint is terminating. A nil value\nindicates an unknown state. Consumers should interpret this unknown state\nto mean that the endpoint is not terminating.",
+                        "type": "boolean"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "deprecatedTopology": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "deprecatedTopology contains topology information part of the v1beta1\nAPI. This field is deprecated, and will be removed when the v1beta1\nAPI is removed (no sooner than kubernetes v1.24).  While this field can\nhold values, it is not writable through the v1 API, and any attempts to\nwrite to it will be silently ignored. Topology information can be found\nin the zone and nodeName fields instead.",
+                    "type": "object"
+                  },
+                  "hints": {
+                    "description": "hints contains information associated with how an endpoint should be\nconsumed.",
+                    "properties": {
+                      "forZones": {
+                        "description": "forZones indicates the zone(s) this endpoint should be consumed by to\nenable topology aware routing.",
+                        "items": {
+                          "description": "ForZone provides information about which zones should consume this endpoint.",
+                          "properties": {
+                            "name": {
+                              "description": "name represents the name of the zone.",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "hostname": {
+                    "description": "hostname of this endpoint. This field may be used by consumers of\nendpoints to distinguish endpoints from each other (e.g. in DNS names).\nMultiple endpoints which use the same hostname should be considered\nfungible (e.g. multiple A values in DNS). Must be lowercase and pass DNS\nLabel (RFC 1123) validation.",
+                    "type": "string"
+                  },
+                  "nodeName": {
+                    "description": "nodeName represents the name of the Node hosting this endpoint. This can\nbe used to determine endpoints local to a Node.",
+                    "type": "string"
+                  },
+                  "targetRef": {
+                    "description": "targetRef is a reference to a Kubernetes object that represents this\nendpoint.",
+                    "properties": {
+                      "apiVersion": {
+                        "description": "API version of the referent.",
+                        "type": "string"
+                      },
+                      "fieldPath": {
+                        "description": "If referring to a piece of an object instead of an entire object, this string\nshould contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].\nFor example, if the object reference is to a container within a pod, this would take on a value like:\n\"spec.containers{name}\" (where \"name\" refers to the name of the container that triggered\nthe event) or if no container name is specified \"spec.containers[2]\" (container with\nindex 2 in this pod). This syntax is chosen only to have some well-defined way of\nreferencing a part of an object.",
+                        "type": "string"
+                      },
+                      "kind": {
+                        "description": "Kind of the referent.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+                        "type": "string"
+                      },
+                      "name": {
+                        "description": "Name of the referent.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+                        "type": "string"
+                      },
+                      "namespace": {
+                        "description": "Namespace of the referent.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+                        "type": "string"
+                      },
+                      "resourceVersion": {
+                        "description": "Specific resourceVersion to which this reference is made, if any.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency",
+                        "type": "string"
+                      },
+                      "uid": {
+                        "description": "UID of the referent.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "zone": {
+                    "description": "zone is the name of the Zone this endpoint exists in.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "addresses"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "ports": {
+              "items": {
+                "description": "EndpointPort represents a Port used by an EndpointSlice",
+                "properties": {
+                  "appProtocol": {
+                    "description": "The application protocol for this port.\nThis is used as a hint for implementations to offer richer behavior for protocols that they understand.\nThis field follows standard Kubernetes label syntax.\nValid values are either:\n\n* Un-prefixed protocol names - reserved for IANA standard service names (as per\nRFC-6335 and https://www.iana.org/assignments/service-names).\n\n* Kubernetes-defined prefixed names:\n  * 'kubernetes.io/h2c' - HTTP/2 prior knowledge over cleartext as described in https://www.rfc-editor.org/rfc/rfc9113.html#name-starting-http-2-with-prior-\n  * 'kubernetes.io/ws'  - WebSocket over cleartext as described in https://www.rfc-editor.org/rfc/rfc6455\n  * 'kubernetes.io/wss' - WebSocket over TLS as described in https://www.rfc-editor.org/rfc/rfc6455\n\n* Other protocols should use implementation-defined prefixed names such as\nmycompany.com/my-custom-protocol.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "name represents the name of this port. All ports in an EndpointSlice must have a unique name.\nIf the EndpointSlice is derived from a Kubernetes service, this corresponds to the Service.ports[].name.\nName must either be an empty string or pass DNS_LABEL validation:\n* must be no more than 63 characters long.\n* must consist of lower case alphanumeric characters or '-'.\n* must start and end with an alphanumeric character.\nDefault is empty string.",
+                    "type": "string"
+                  },
+                  "port": {
+                    "description": "port represents the port number of the endpoint.\nIf this is not specified, ports are not restricted and must be\ninterpreted in the context of the specific consumer.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "protocol": {
+                    "description": "protocol represents the IP protocol for this port.\nMust be UDP, TCP, or SCTP.\nDefault is TCP.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

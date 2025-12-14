@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/appprotect.f5.com/v1beta1/apusersig.json",
+  "title": "APUserSig",
+  "description": "APUserSig is the Schema for the apusersigs API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "nginx-ingress",
+    "sourceVersion": "2.1.0",
+    "extractedAt": "2025-12-14T02:18:02.289969+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "APUserSigSpec defines the desired state of APUserSig",
+      "properties": {
+        "properties": {
+          "type": "string"
+        },
+        "signatures": {
+          "items": {
+            "properties": {
+              "accuracy": {
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ],
+                "type": "string"
+              },
+              "attackType": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "description": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "references": {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "bugtraq",
+                      "cve",
+                      "nessus",
+                      "url"
+                    ],
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "risk": {
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ],
+                "type": "string"
+              },
+              "rule": {
+                "type": "string"
+              },
+              "signatureType": {
+                "enum": [
+                  "request",
+                  "response"
+                ],
+                "type": "string"
+              },
+              "systems": {
+                "items": {
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "softwareVersion": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

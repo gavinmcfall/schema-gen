@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/offloading.liqo.io/v1beta1/namespacemap.json",
+  "title": "NamespaceMap",
+  "description": "NamespaceMap is the Schema for the namespacemaps API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.929302+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "NamespaceMapSpec defines the desired state of NamespaceMap.",
+      "properties": {
+        "desiredMapping": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "DesiredMapping is filled by NamespaceController when a user requires to offload a remote namespace, every entry\nof the map represents the localNamespaceName[key]-remoteNamespaceName[value] association. When a new entry is\ncreated the NamespaceMap Controller tries to create the associated remote namespace.",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "NamespaceMapStatus defines the observed state of NamespaceMap.",
+      "properties": {
+        "currentMapping": {
+          "additionalProperties": {
+            "description": "RemoteNamespaceStatus contains some information about remote namespace status.",
+            "properties": {
+              "phase": {
+                "description": "Phase is the remote Namespace's actual status (Accepted,Refused).",
+                "enum": [
+                  "Accepted",
+                  "CreationLoopBackOff",
+                  "Terminating"
+                ],
+                "type": "string"
+              },
+              "remoteNamespace": {
+                "description": "RemoteNamespace is the name chosen by the user at creation time according to NamespaceMappingStrategy",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "description": "CurrentMapping is filled by NamespaceMap Controller, when a new remote namespace's creation is requested. The key\nis the local namespace name, while the value is a summary of new remote namespace's status.",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/kms.aws.crossplane.io/v1alpha1/grant.json",
+  "title": "Grant",
+  "description": "Grant is the Schema for the grants API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.454828+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "GrantSpec defines the desired state of Grant",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "GrantParameters defines the desired state of Grant",
+          "properties": {
+            "constraints": {
+              "description": "Specifies a grant constraint.\n\n\nDo not include confidential or sensitive information in this field. This\nfield may be displayed in plaintext in CloudTrail logs and other output.\n\n\nKMS supports the EncryptionContextEquals and EncryptionContextSubset grant\nconstraints, which allow the permissions in the grant only when the encryption\ncontext in the request matches (EncryptionContextEquals) or includes (EncryptionContextSubset)\nthe encryption context specified in the constraint.\n\n\nThe encryption context grant constraints are supported only on grant operations\n(https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#terms-grant-operations)\nthat include an EncryptionContext parameter, such as cryptographic operations\non symmetric encryption KMS keys. Grants with grant constraints can include\nthe DescribeKey and RetireGrant operations, but the constraint doesn't apply\nto these operations. If a grant with a grant constraint includes the CreateGrant\noperation, the constraint requires that any grants created with the CreateGrant\npermission have an equally strict or stricter encryption context constraint.\n\n\nYou cannot use an encryption context grant constraint for cryptographic operations\nwith asymmetric KMS keys or HMAC KMS keys. Operations with these keys don't\nsupport an encryption context.\n\n\nEach constraint value can include up to 8 encryption context pairs. The encryption\ncontext value in each constraint cannot exceed 384 characters. For information\nabout grant constraints, see Using grant constraints (https://docs.aws.amazon.com/kms/latest/developerguide/create-grant-overview.html#grant-constraints)\nin the Key Management Service Developer Guide. For more information about\nencryption context, see Encryption context (https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context)\nin the Key Management Service Developer Guide .",
+              "properties": {
+                "encryptionContextEquals": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "encryptionContextSubset": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "grantTokens": {
+              "description": "A list of grant tokens.\n\n\nUse a grant token when your permission to call this operation comes from\na new grant that has not yet achieved eventual consistency. For more information,\nsee Grant token (https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token)\nand Using a grant token (https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token)\nin the Key Management Service Developer Guide.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "granteePrincipal": {
+              "description": "The identity that gets the permissions specified in the grant.\n\n\nTo specify the grantee principal, use the Amazon Resource Name (ARN) of an\nAmazon Web Services principal. Valid principals include Amazon Web Services\naccounts, IAM users, IAM roles, federated users, and assumed role users.\nFor help with the ARN syntax for a principal, see IAM ARNs (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns)\nin the Identity and Access Management User Guide .",
+              "type": "string"
+            },
+            "keyId": {
+              "description": "Identifies the KMS key for the grant. The grant gives principals permission\nto use this KMS key.\n\n\nSpecify the key ID or key ARN of the KMS key. To specify a KMS key in a different\nAmazon Web Services account, you must use the key ARN.\n\n\nFor example:\n\n\n   * Key ID: 1234abcd-12ab-34cd-56ef-1234567890ab\n\n\n   * Key ARN: arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab\n\n\nTo get the key ID and key ARN for a KMS key, use ListKeys or DescribeKey.\n\n\nKeyID or one of the referencers is a required parameter.",
+              "type": "string"
+            },
+            "keyIdRef": {
+              "description": "KeyIDRef is a reference to a KeyID.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "keyIdSelector": {
+              "description": "KeyIDSelector selects references to a KeyID.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "A friendly name for the grant. Use this value to prevent the unintended creation\nof duplicate grants when retrying this request.\n\n\nDo not include confidential or sensitive information in this field. This\nfield may be displayed in plaintext in CloudTrail logs and other output.\n\n\nWhen this value is absent, all CreateGrant requests result in a new grant\nwith a unique GrantId even if all the supplied parameters are identical.\nThis can result in unintended duplicates when you retry the CreateGrant request.\n\n\nWhen this value is present, you can retry a CreateGrant request with identical\nparameters; if the grant already exists, the original GrantId is returned\nwithout creating a new grant. Note that the returned grant token is unique\nwith every CreateGrant request, even when a duplicate GrantId is returned.\nAll grant tokens for the same grant ID can be used interchangeably.",
+              "type": "string"
+            },
+            "operations": {
+              "description": "A list of operations that the grant permits.\n\n\nThis list must include only operations that are permitted in a grant. Also,\nthe operation must be supported on the KMS key. For example, you cannot create\na grant for a symmetric encryption KMS key that allows the Sign operation,\nor a grant for an asymmetric KMS key that allows the GenerateDataKey operation.\nIf you try, KMS returns a ValidationError exception. For details, see Grant\noperations (https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#terms-grant-operations)\nin the Key Management Service Developer Guide.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "region": {
+              "description": "Region is which region the Grant will be created.",
+              "type": "string"
+            },
+            "retiringPrincipal": {
+              "description": "The principal that has permission to use the RetireGrant operation to retire\nthe grant.\n\n\nTo specify the principal, use the Amazon Resource Name (ARN) (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html)\nof an Amazon Web Services principal. Valid principals include Amazon Web\nServices accounts, IAM users, IAM roles, federated users, and assumed role\nusers. For help with the ARN syntax for a principal, see IAM ARNs (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns)\nin the Identity and Access Management User Guide .\n\n\nThe grant determines the retiring principal. Other principals might have\npermission to retire the grant or revoke the grant. For details, see RevokeGrant\nand Retiring and revoking grants (https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#grant-delete)\nin the Key Management Service Developer Guide.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "granteePrincipal",
+            "operations",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "GrantStatus defines the observed state of Grant.",
+      "properties": {
+        "atProvider": {
+          "description": "GrantObservation defines the observed state of Grant",
+          "properties": {
+            "grantID": {
+              "description": "The unique identifier for the grant.\n\n\nYou can use the GrantId in a ListGrants, RetireGrant, or RevokeGrant operation.",
+              "type": "string"
+            },
+            "grantToken": {
+              "description": "The grant token.\n\n\nUse a grant token when your permission to call this operation comes from\na new grant that has not yet achieved eventual consistency. For more information,\nsee Grant token (https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token)\nand Using a grant token (https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token)\nin the Key Management Service Developer Guide.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

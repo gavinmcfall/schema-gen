@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/appprotectdos.f5.com/v1beta1/dosprotectedresource.json",
+  "title": "DosProtectedResource",
+  "description": "DosProtectedResource is the Schema for the dosprotectedresources API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "nginx-ingress",
+    "sourceVersion": "2.1.0",
+    "extractedAt": "2025-12-14T02:18:02.291086+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "DosProtectedResourceSpec defines the properties and values a DosProtectedResource can have.",
+      "properties": {
+        "allowList": {
+          "description": "AllowList is a list of allowed IPs and subnet masks",
+          "items": {
+            "description": "AllowListEntry represents an IP address and a subnet mask.",
+            "properties": {
+              "ipWithMask": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "apDosMonitor": {
+          "description": "ApDosMonitor is how NGINX App Protect DoS monitors the stress level of the protected object. The monitor requests are sent from localhost (127.0.0.1). Default value: URI - None, protocol - http1, timeout - NGINX App Protect DoS default.",
+          "properties": {
+            "protocol": {
+              "description": "Protocol determines if the server listens on http1 / http2 / grpc / websocket. The default is http1.",
+              "enum": [
+                "http1",
+                "http2",
+                "grpc",
+                "websocket"
+              ],
+              "type": "string"
+            },
+            "timeout": {
+              "description": "Timeout determines how long (in seconds) should NGINX App Protect DoS wait for a response. Default is 10 seconds for http1/http2 and 5 seconds for grpc.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "uri": {
+              "description": "URI is the destination to the desired protected object in the nginx.conf:",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "apDosPolicy": {
+          "description": "ApDosPolicy is the namespace/name of a ApDosPolicy resource",
+          "type": "string"
+        },
+        "dosAccessLogDest": {
+          "description": "DosAccessLogDest is the network address for the access logs",
+          "type": "string"
+        },
+        "dosSecurityLog": {
+          "description": "DosSecurityLog defines the security log of the DosProtectedResource.",
+          "properties": {
+            "apDosLogConf": {
+              "description": "ApDosLogConf is the namespace/name of a APDosLogConf resource",
+              "type": "string"
+            },
+            "dosLogDest": {
+              "description": "DosLogDest is the network address of a logging service, can be either IP or DNS name.",
+              "type": "string"
+            },
+            "enable": {
+              "description": "Enable enables the security logging feature if set to true",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "enable": {
+          "description": "Enable enables the DOS feature if set to true",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name is the name of protected object, max of 63 characters.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

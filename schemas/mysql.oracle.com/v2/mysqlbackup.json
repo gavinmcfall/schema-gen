@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/mysql.oracle.com/v2/mysqlbackup.json",
+  "title": "MySQLBackup",
+  "description": "MySQLBackup is the Schema for the mysqlbackups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "mysql-operator",
+    "sourceVersion": "9.5.0-2.2.6",
+    "extractedAt": "2025-12-14T02:20:47.290701+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "type": "object",
+      "required": [
+        "clusterName"
+      ],
+      "properties": {
+        "clusterName": {
+          "type": "string"
+        },
+        "backupProfileName": {
+          "type": "string"
+        },
+        "backupProfile": {
+          "type": "object",
+          "description": "backupProfile specification if backupProfileName is not specified",
+          "properties": {
+            "podAnnotations": {
+              "type": "object"
+            },
+            "podLabels": {
+              "type": "object"
+            },
+            "dumpInstance": {
+              "type": "object",
+              "properties": {
+                "dumpOptions": {
+                  "type": "object",
+                  "description": "A dictionary of key-value pairs passed directly to MySQL Shell's DumpInstance()"
+                },
+                "storage": {
+                  "type": "object",
+                  "properties": {
+                    "ociObjectStorage": {
+                      "type": "object",
+                      "required": [
+                        "bucketName",
+                        "credentials"
+                      ],
+                      "properties": {
+                        "bucketName": {
+                          "type": "string",
+                          "description": "Name of the OCI bucket where backup is stored"
+                        },
+                        "prefix": {
+                          "type": "string",
+                          "description": "Path in bucket where backup is stored"
+                        },
+                        "credentials": {
+                          "type": "string",
+                          "description": "Name of a Secret with data for accessing the bucket"
+                        }
+                      }
+                    },
+                    "s3": {
+                      "type": "object",
+                      "required": [
+                        "bucketName",
+                        "config"
+                      ],
+                      "properties": {
+                        "bucketName": {
+                          "type": "string",
+                          "description": "Name of the S3 bucket where the dump is stored"
+                        },
+                        "prefix": {
+                          "type": "string",
+                          "description": "Path in the bucket where the dump files are stored"
+                        },
+                        "config": {
+                          "type": "string",
+                          "description": "Name of a Secret with S3 configuration and credentials"
+                        },
+                        "profile": {
+                          "type": "string",
+                          "default": "",
+                          "description": "Profile being used in configuration files"
+                        },
+                        "endpoint": {
+                          "type": "string",
+                          "description": "Override endpoint URL"
+                        }
+                      }
+                    },
+                    "azure": {
+                      "type": "object",
+                      "required": [
+                        "containerName",
+                        "config"
+                      ],
+                      "properties": {
+                        "containerName": {
+                          "type": "string",
+                          "description": "Name of the Azure  BLOB Storage container where the dump is stored"
+                        },
+                        "prefix": {
+                          "type": "string",
+                          "description": "Path in the container where the dump files are stored"
+                        },
+                        "config": {
+                          "type": "string",
+                          "description": "Name of a Secret with Azure BLOB Storage configuration and credentials"
+                        }
+                      }
+                    },
+                    "persistentVolumeClaim": {
+                      "type": "object",
+                      "description": "Specification of the PVC to be used. Used 'as is' in pod executing the backup."
+                    }
+                  }
+                }
+              }
+            },
+            "meb": {
+              "type": "object",
+              "description": "MySQL Enterprise Backup",
+              "required": [
+                "storage"
+              ],
+              "properties": {
+                "storage": {
+                  "type": "object",
+                  "description": "Configuration of storage for MySQL Enterprise Backup",
+                  "properties": {
+                    "s3": {
+                      "description": "S3 style storage",
+                      "type": "object",
+                      "required": [
+                        "region",
+                        "bucket",
+                        "objectKeyPrefix",
+                        "credentials"
+                      ],
+                      "properties": {
+                        "region": {
+                          "type": "string",
+                          "description": "S3 Region"
+                        },
+                        "bucket": {
+                          "type": "string",
+                          "description": "S3 Bucket Name"
+                        },
+                        "objectKeyPrefix": {
+                          "type": "string",
+                          "description": "S3 Object Key Prefix, this will be extended with the name of the actual backup"
+                        },
+                        "credentials": {
+                          "type": "string",
+                          "description": "Name of a Secret holding iaccessKeyId and secretAccessKey properties"
+                        },
+                        "host": {
+                          "type": "string",
+                          "description": "Override hostname for S3-compatible backends"
+                        }
+                      }
+                    },
+                    "oci": {
+                      "type": "object",
+                      "description": "Store MySQL Enterprise Backup on OCI Object Storage",
+                      "required": [
+                        "bucketName",
+                        "prefix",
+                        "namespace",
+                        "credentials"
+                      ],
+                      "properties": {
+                        "bucketName": {
+                          "type": "string",
+                          "description": "Name of the OCI bucket where backup is stored"
+                        },
+                        "prefix": {
+                          "type": "string",
+                          "description": "Path in bucket where backup is stored"
+                        },
+                        "namespace": {
+                          "type": "string",
+                          "description": "OCI Namespace of Object Store"
+                        },
+                        "credentials": {
+                          "type": "string",
+                          "description": "Name of a Secret with data for accessing the bucket"
+                        }
+                      }
+                    }
+                  }
+                },
+                "extraOptions": {
+                  "description": "Additonal Command Line Options being passed to MySQL Enterprise Backup",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "incremental": {
+          "type": "boolean",
+          "default": false,
+          "description": "MySQL Enterprise Backup only: Request taking an incremental backup"
+        },
+        "incrementalBase": {
+          "type": "string",
+          "description": "MySQL Enterprise Backup only: Base for incremental backup,  either last_backup or last_full_backup",
+          "enum": [
+            "last_backup",
+            "last_full_backup"
+          ],
+          "default": "last_backup"
+        },
+        "addTimestampToBackupDirectory": {
+          "type": "boolean",
+          "default": true
+        },
+        "deleteBackupData": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string"
+        },
+        "completionTime": {
+          "type": "string"
+        },
+        "elapsedTime": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "bucket": {
+          "type": "string"
+        },
+        "ociTenancy": {
+          "type": "string"
+        },
+        "container": {
+          "type": "string"
+        },
+        "spaceAvailable": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "mysql.oracle.com/v2"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "MySQLBackup"
+      ]
+    }
+  }
+}

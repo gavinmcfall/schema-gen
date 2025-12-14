@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/externaldns.nginx.org/v1/dnsendpoint.json",
+  "title": "DNSEndpoint",
+  "description": "DNSEndpoint is the Schema for the dnsendpoints API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "nginx-ingress",
+    "sourceVersion": "2.1.0",
+    "extractedAt": "2025-12-14T02:18:02.291370+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "DNSEndpointSpec holds information about endpoints.",
+      "properties": {
+        "endpoints": {
+          "items": {
+            "description": "Endpoint describes DNS Endpoint.",
+            "properties": {
+              "dnsName": {
+                "description": "The hostname for the DNS record",
+                "type": "string"
+              },
+              "labels": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Labels stores labels defined for the Endpoint",
+                "type": "object"
+              },
+              "providerSpecific": {
+                "description": "ProviderSpecific stores provider specific config",
+                "items": {
+                  "description": "ProviderSpecificProperty represents provider specific config property.",
+                  "properties": {
+                    "name": {
+                      "description": "Name of the property",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value of the property",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "recordTTL": {
+                "description": "TTL for the record",
+                "format": "int64",
+                "type": "integer"
+              },
+              "recordType": {
+                "description": "RecordType type of record, e.g. CNAME, A, SRV, TXT, MX",
+                "type": "string"
+              },
+              "targets": {
+                "description": "The targets the DNS service points to",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "DNSEndpointStatus represents generation observed by the external dns controller.",
+      "properties": {
+        "observedGeneration": {
+          "description": "The generation observed by by the external-dns controller.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

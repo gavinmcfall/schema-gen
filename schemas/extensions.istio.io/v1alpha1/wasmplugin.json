@@ -1,0 +1,356 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/extensions.istio.io/v1alpha1/wasmplugin.json",
+  "title": "WasmPlugin",
+  "description": "WasmPlugin is the Schema for the wasmplugins API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "istio-base",
+    "sourceVersion": "1.24.2",
+    "extractedAt": "2025-12-14T02:18:07.444911+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "description": "Extend the functionality provided by the Istio proxy through WebAssembly filters. See more details at: https://istio.io/docs/reference/config/proxy_extensions/wasm-plugin.html",
+      "properties": {
+        "failStrategy": {
+          "description": "Specifies the failure behavior for the plugin due to fatal errors.\n\nValid Options: FAIL_CLOSE, FAIL_OPEN",
+          "enum": [
+            "FAIL_CLOSE",
+            "FAIL_OPEN"
+          ],
+          "type": "string"
+        },
+        "imagePullPolicy": {
+          "description": "The pull behaviour to be applied when fetching Wasm module by either OCI image or `http/https`.\n\nValid Options: IfNotPresent, Always",
+          "enum": [
+            "UNSPECIFIED_POLICY",
+            "IfNotPresent",
+            "Always"
+          ],
+          "type": "string"
+        },
+        "imagePullSecret": {
+          "description": "Credentials to use for OCI image pulling.",
+          "maxLength": 253,
+          "minLength": 1,
+          "type": "string"
+        },
+        "match": {
+          "description": "Specifies the criteria to determine which traffic is passed to WasmPlugin.",
+          "items": {
+            "properties": {
+              "mode": {
+                "description": "Criteria for selecting traffic by their direction.\n\nValid Options: CLIENT, SERVER, CLIENT_AND_SERVER",
+                "enum": [
+                  "UNDEFINED",
+                  "CLIENT",
+                  "SERVER",
+                  "CLIENT_AND_SERVER"
+                ],
+                "type": "string"
+              },
+              "ports": {
+                "description": "Criteria for selecting traffic by their destination port.",
+                "items": {
+                  "properties": {
+                    "number": {
+                      "maximum": 65535,
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "number"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "phase": {
+          "description": "Determines where in the filter chain this `WasmPlugin` is to be injected.\n\nValid Options: AUTHN, AUTHZ, STATS",
+          "enum": [
+            "UNSPECIFIED_PHASE",
+            "AUTHN",
+            "AUTHZ",
+            "STATS"
+          ],
+          "type": "string"
+        },
+        "pluginConfig": {
+          "description": "The configuration that will be passed on to the plugin.",
+          "type": "object"
+        },
+        "pluginName": {
+          "description": "The plugin name to be used in the Envoy configuration (used to be called `rootID`).",
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "priority": {
+          "description": "Determines ordering of `WasmPlugins` in the same `phase`.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "selector": {
+          "description": "Criteria used to select the specific set of pods/VMs on which this plugin configuration should be applied.",
+          "properties": {
+            "matchLabels": {
+              "additionalProperties": {
+                "maxLength": 63,
+                "type": "string"
+              },
+              "description": "One or more labels that indicate a specific set of pods/VMs on which a policy should be applied.",
+              "maxProperties": 4096,
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "sha256": {
+          "description": "SHA256 checksum that will be used to verify Wasm module or OCI container.",
+          "pattern": "(^$|^[a-f0-9]{64}$)",
+          "type": "string"
+        },
+        "targetRef": {
+          "properties": {
+            "group": {
+              "description": "group is the group of the target resource.",
+              "maxLength": 253,
+              "pattern": "^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$",
+              "type": "string"
+            },
+            "kind": {
+              "description": "kind is kind of the target resource.",
+              "maxLength": 63,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$",
+              "type": "string"
+            },
+            "name": {
+              "description": "name is the name of the target resource.",
+              "maxLength": 253,
+              "minLength": 1,
+              "type": "string"
+            },
+            "namespace": {
+              "description": "namespace is the namespace of the referent.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "name"
+          ],
+          "type": "object"
+        },
+        "targetRefs": {
+          "description": "Optional.",
+          "items": {
+            "properties": {
+              "group": {
+                "description": "group is the group of the target resource.",
+                "maxLength": 253,
+                "pattern": "^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$",
+                "type": "string"
+              },
+              "kind": {
+                "description": "kind is kind of the target resource.",
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$",
+                "type": "string"
+              },
+              "name": {
+                "description": "name is the name of the target resource.",
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              },
+              "namespace": {
+                "description": "namespace is the namespace of the referent.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "name"
+            ],
+            "type": "object"
+          },
+          "maxItems": 16,
+          "type": "array"
+        },
+        "type": {
+          "description": "Specifies the type of Wasm Extension to be used.\n\nValid Options: HTTP, NETWORK",
+          "enum": [
+            "UNSPECIFIED_PLUGIN_TYPE",
+            "HTTP",
+            "NETWORK"
+          ],
+          "type": "string"
+        },
+        "url": {
+          "description": "URL of a Wasm module or OCI container.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "verificationKey": {
+          "type": "string"
+        },
+        "vmConfig": {
+          "description": "Configuration for a Wasm VM.",
+          "properties": {
+            "env": {
+              "description": "Specifies environment variables to be injected to this VM.",
+              "items": {
+                "properties": {
+                  "name": {
+                    "description": "Name of the environment variable.",
+                    "maxLength": 256,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "value": {
+                    "description": "Value for the environment variable.",
+                    "maxLength": 2048,
+                    "type": "string"
+                  },
+                  "valueFrom": {
+                    "description": "Source for the environment variable's value.\n\nValid Options: INLINE, HOST",
+                    "enum": [
+                      "INLINE",
+                      "HOST"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "maxItems": 256,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "conditions": {
+          "description": "Current service state of the resource.",
+          "items": {
+            "properties": {
+              "lastProbeTime": {
+                "description": "Last time we probed the condition.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "lastTransitionTime": {
+                "description": "Last time the condition transitioned from one status to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "Human-readable message indicating details about last transition.",
+                "type": "string"
+              },
+              "reason": {
+                "description": "Unique, one-word, CamelCase reason for the condition's last transition.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status is the status of the condition.",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type is the type of the condition.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Resource Generation to which the Reconciled Condition refers."
+        },
+        "validationMessages": {
+          "description": "Includes any errors or warnings detected by Istio's analyzers.",
+          "items": {
+            "properties": {
+              "documentationUrl": {
+                "description": "A url pointing to the Istio documentation for this specific error type.",
+                "type": "string"
+              },
+              "level": {
+                "description": "Represents how severe a message is.\n\nValid Options: UNKNOWN, ERROR, WARNING, INFO",
+                "enum": [
+                  "UNKNOWN",
+                  "ERROR",
+                  "WARNING",
+                  "INFO"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "properties": {
+                  "code": {
+                    "description": "A 7 character code matching `^IST[0-9]{4}$` intended to uniquely identify the message type.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "A human-readable name for the message type.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "extensions.istio.io/v1alpha1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "WasmPlugin"
+      ]
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

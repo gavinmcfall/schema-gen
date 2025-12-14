@@ -1,0 +1,1542 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/ecs.aws.crossplane.io/v1alpha1/service.json",
+  "title": "Service",
+  "description": "Service is the Schema for the services API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.411803+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ServiceSpec defines the desired state of Service",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "ServiceParameters defines the desired state of Service",
+          "properties": {
+            "capacityProviderStrategy": {
+              "description": "The capacity provider strategy to use for the service.\n\n\nIf a capacityProviderStrategy is specified, the launchType parameter must\nbe omitted. If no capacityProviderStrategy or launchType is specified, the\ndefaultCapacityProviderStrategy for the cluster is used.\n\n\nA capacity provider strategy may contain a maximum of 6 capacity providers.",
+              "items": {
+                "properties": {
+                  "base": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "capacityProvider": {
+                    "type": "string"
+                  },
+                  "weight": {
+                    "format": "int64",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "cluster": {
+              "description": "The short name or full Amazon Resource Name (ARN) of the cluster on which\nto run your service. If you do not specify a cluster, the default cluster\nis assumed.",
+              "type": "string"
+            },
+            "clusterRef": {
+              "description": "A Reference to a named object.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "clusterSelector": {
+              "description": "A Selector selects an object.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "deploymentConfiguration": {
+              "description": "Optional deployment parameters that control how many tasks run during the\ndeployment and the ordering of stopping and starting tasks.",
+              "properties": {
+                "alarms": {
+                  "description": "One of the methods which provide a way for you to quickly identify when a\ndeployment has failed, and then to optionally roll back the failure to the\nlast working deployment.\n\n\nWhen the alarms are generated, Amazon ECS sets the service deployment to\nfailed. Set the rollback parameter to have Amazon ECS to roll back your service\nto the last completed deployment after a failure.\n\n\nYou can only use the DeploymentAlarms method to detect failures when the\nDeploymentController is set to ECS (rolling update).\n\n\nFor more information, see Rolling update (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html)\nin the Amazon Elastic Container Service Developer Guide .",
+                  "properties": {
+                    "alarmNames": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "enable": {
+                      "type": "boolean"
+                    },
+                    "rollback": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "deploymentCircuitBreaker": {
+                  "description": "The deployment circuit breaker can only be used for services using the rolling\nupdate (ECS) deployment type.\n\n\nThe deployment circuit breaker determines whether a service deployment will\nfail if the service can't reach a steady state. If it is turned on, a service\ndeployment will transition to a failed state and stop launching new tasks.\nYou can also configure Amazon ECS to roll back your service to the last completed\ndeployment after a failure. For more information, see Rolling update (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html)\nin the Amazon Elastic Container Service Developer Guide.\n\n\nFor more information about API failure reasons, see API failure reasons (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/api_failures_messages.html)\nin the Amazon Elastic Container Service Developer Guide.",
+                  "properties": {
+                    "enable": {
+                      "type": "boolean"
+                    },
+                    "rollback": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "maximumPercent": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "minimumHealthyPercent": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "deploymentController": {
+              "description": "The deployment controller to use for the service. If no deployment controller\nis specified, the default value of ECS is used.",
+              "properties": {
+                "type_": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "desiredCount": {
+              "description": "The number of instantiations of the specified task definition to place and\nkeep running in your service.\n\n\nThis is required if schedulingStrategy is REPLICA or isn't specified. If\nschedulingStrategy is DAEMON then this isn't required.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "enableECSManagedTags": {
+              "description": "Specifies whether to turn on Amazon ECS managed tags for the tasks within\nthe service. For more information, see Tagging your Amazon ECS resources\n(https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html)\nin the Amazon Elastic Container Service Developer Guide.\n\n\nWhen you use Amazon ECS managed tags, you need to set the propagateTags request\nparameter.",
+              "type": "boolean"
+            },
+            "enableExecuteCommand": {
+              "description": "Determines whether the execute command functionality is turned on for the\nservice. If true, this enables execute command functionality on all containers\nin the service tasks.",
+              "type": "boolean"
+            },
+            "forceDeletion": {
+              "description": "Force Service to be deleted, even with task Running or Pending",
+              "type": "boolean"
+            },
+            "healthCheckGracePeriodSeconds": {
+              "description": "The period of time, in seconds, that the Amazon ECS service scheduler ignores\nunhealthy Elastic Load Balancing target health checks after a task has first\nstarted. This is only used when your service is configured to use a load\nbalancer. If your service has a load balancer defined and you don't specify\na health check grace period value, the default value of 0 is used.\n\n\nIf you do not use an Elastic Load Balancing, we recommend that you use the\nstartPeriod in the task definition health check parameters. For more information,\nsee Health check (https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_HealthCheck.html).\n\n\nIf your service's tasks take a while to start and respond to Elastic Load\nBalancing health checks, you can specify a health check grace period of up\nto 2,147,483,647 seconds (about 69 years). During that time, the Amazon ECS\nservice scheduler ignores health check status. This grace period can prevent\nthe service scheduler from marking tasks as unhealthy and stopping them before\nthey have time to come up.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "launchType": {
+              "description": "The infrastructure that you run your service on. For more information, see\nAmazon ECS launch types (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_types.html)\nin the Amazon Elastic Container Service Developer Guide.\n\n\nThe FARGATE launch type runs your tasks on Fargate On-Demand infrastructure.\n\n\nFargate Spot infrastructure is available for use but a capacity provider\nstrategy must be used. For more information, see Fargate capacity providers\n(https://docs.aws.amazon.com/AmazonECS/latest/userguide/fargate-capacity-providers.html)\nin the Amazon ECS User Guide for Fargate.\n\n\nThe EC2 launch type runs your tasks on Amazon EC2 instances registered to\nyour cluster.\n\n\nThe EXTERNAL launch type runs your tasks on your on-premises server or virtual\nmachine (VM) capacity registered to your cluster.\n\n\nA service can use either a launch type or a capacity provider strategy. If\na launchType is specified, the capacityProviderStrategy parameter must be\nomitted.",
+              "type": "string"
+            },
+            "loadBalancers": {
+              "description": "A load balancer object representing the load balancers to use with your service.\nFor more information, see Service Load Balancing (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-load-balancing.html)\nin the Amazon Elastic Container Service Developer Guide.\n\n\nIf the service is using the rolling update (ECS) deployment controller and\nusing either an Application Load Balancer or Network Load Balancer, you must\nspecify one or more target group ARNs to attach to the service. The service-linked\nrole is required for services that make use of multiple target groups. For\nmore information, see Using service-linked roles for Amazon ECS (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/using-service-linked-roles.html)\nin the Amazon Elastic Container Service Developer Guide.\n\n\nIf the service is using the CODE_DEPLOY deployment controller, the service\nis required to use either an Application Load Balancer or Network Load Balancer.\nWhen creating an CodeDeploy deployment group, you specify two target groups\n(referred to as a targetGroupPair). During a deployment, CodeDeploy determines\nwhich task set in your service has the status PRIMARY and associates one\ntarget group with it, and then associates the other target group with the\nreplacement task set. The load balancer can also have up to two listeners:\na required listener for production traffic and an optional listener that\nallows you perform validation tests with Lambda functions before routing\nproduction traffic to it.\n\n\nAfter you create a service using the ECS deployment controller, the load\nbalancer name or target group ARN, container name, and container port specified\nin the service definition are immutable. If you are using the CODE_DEPLOY\ndeployment controller, these values can be changed when updating the service.\n\n\nFor Application Load Balancers and Network Load Balancers, this object must\ncontain the load balancer target group ARN, the container name (as it appears\nin a container definition), and the container port to access from the load\nbalancer. The load balancer name parameter must be omitted. When a task from\nthis service is placed on a container instance, the container instance and\nport combination is registered as a target in the target group specified\nhere.\n\n\nFor Classic Load Balancers, this object must contain the load balancer name,\nthe container name (as it appears in a container definition), and the container\nport to access from the load balancer. The target group ARN parameter must\nbe omitted. When a task from this service is placed on a container instance,\nthe container instance is registered with the load balancer specified here.\n\n\nServices with tasks that use the awsvpc network mode (for example, those\nwith the Fargate launch type) only support Application Load Balancers and\nNetwork Load Balancers. Classic Load Balancers are not supported. Also, when\nyou create any target groups for these services, you must choose ip as the\ntarget type, not instance, because tasks that use the awsvpc network mode\nare associated with an elastic network interface, not an Amazon EC2 instance.",
+              "items": {
+                "description": "CustomLoadBalancer provides custom parameters for the LoadBalancer type",
+                "properties": {
+                  "containerName": {
+                    "description": "The name of the container (as it appears in a container definition) to associate\nwith the load balancer.",
+                    "type": "string"
+                  },
+                  "containerPort": {
+                    "description": "The port on the container to associate with the load balancer. This port\nmust correspond to a containerPort in the task definition the tasks in the\nservice are using. For tasks that use the EC2 launch type, the container\ninstance they're launched on must allow ingress traffic on the hostPort of\nthe port mapping.",
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "loadBalancerName": {
+                    "description": "The name of the load balancer to associate with the Amazon ECS service or\ntask set.\n\n\nA load balancer name is only specified when using a Classic Load Balancer.\nIf you are using an Application Load Balancer or a Network Load Balancer\nthe load balancer name parameter should be omitted.",
+                    "type": "string"
+                  },
+                  "loadBalancerNameRef": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "loadBalancerNameSelector": {
+                    "description": "A Selector selects an object.",
+                    "properties": {
+                      "matchControllerRef": {
+                        "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                        "type": "boolean"
+                      },
+                      "matchLabels": {
+                        "additionalProperties": {
+                          "type": "string"
+                        },
+                        "description": "MatchLabels ensures an object with matching labels is selected.",
+                        "type": "object"
+                      },
+                      "policy": {
+                        "description": "Policies for selection.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "targetGroupARN": {
+                    "description": "The full Amazon Resource Name (ARN) of the Elastic Load Balancing target\ngroup or groups associated with a service or task set.\n\n\nA target group ARN is only specified when using an Application Load Balancer\nor Network Load Balancer. If you're using a Classic Load Balancer, omit the\ntarget group ARN.\n\n\nFor services using the ECS deployment controller, you can specify one or\nmultiple target groups. For more information, see Registering multiple target\ngroups with a service (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/register-multiple-targetgroups.html)\nin the Amazon Elastic Container Service Developer Guide.\n\n\nFor services using the CODE_DEPLOY deployment controller, you're required\nto define two target groups for the load balancer. For more information,\nsee Blue/green deployment with CodeDeploy (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-bluegreen.html)\nin the Amazon Elastic Container Service Developer Guide.\n\n\nIf your service's task definition uses the awsvpc network mode, you must\nchoose ip as the target type, not instance. Do this when creating your target\ngroups because tasks that use the awsvpc network mode are associated with\nan elastic network interface, not an Amazon EC2 instance. This network mode\nis required for the Fargate launch type.",
+                    "type": "string"
+                  },
+                  "targetGroupARNRef": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "targetGroupARNSelector": {
+                    "description": "A Selector selects an object.",
+                    "properties": {
+                      "matchControllerRef": {
+                        "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                        "type": "boolean"
+                      },
+                      "matchLabels": {
+                        "additionalProperties": {
+                          "type": "string"
+                        },
+                        "description": "MatchLabels ensures an object with matching labels is selected.",
+                        "type": "object"
+                      },
+                      "policy": {
+                        "description": "Policies for selection.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "networkConfiguration": {
+              "description": "The network configuration for the service. This parameter is required for\ntask definitions that use the awsvpc network mode to receive their own elastic\nnetwork interface, and it is not supported for other network modes. For more\ninformation, see Task networking (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking.html)\nin the Amazon Elastic Container Service Developer Guide.",
+              "properties": {
+                "awsvpcConfiguration": {
+                  "description": "An object representing the networking details for a task or service.",
+                  "properties": {
+                    "assignPublicIP": {
+                      "type": "string"
+                    },
+                    "securityGroupRefs": {
+                      "items": {
+                        "description": "A Reference to a named object.",
+                        "properties": {
+                          "name": {
+                            "description": "Name of the referenced object.",
+                            "type": "string"
+                          },
+                          "policy": {
+                            "description": "Policies for referencing.",
+                            "properties": {
+                              "resolution": {
+                                "default": "Required",
+                                "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                "enum": [
+                                  "Required",
+                                  "Optional"
+                                ],
+                                "type": "string"
+                              },
+                              "resolve": {
+                                "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                "enum": [
+                                  "Always",
+                                  "IfNotPresent"
+                                ],
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "securityGroupSelector": {
+                      "description": "A Selector selects an object.",
+                      "properties": {
+                        "matchControllerRef": {
+                          "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                          "type": "boolean"
+                        },
+                        "matchLabels": {
+                          "additionalProperties": {
+                            "type": "string"
+                          },
+                          "description": "MatchLabels ensures an object with matching labels is selected.",
+                          "type": "object"
+                        },
+                        "policy": {
+                          "description": "Policies for selection.",
+                          "properties": {
+                            "resolution": {
+                              "default": "Required",
+                              "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                              "enum": [
+                                "Required",
+                                "Optional"
+                              ],
+                              "type": "string"
+                            },
+                            "resolve": {
+                              "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                              "enum": [
+                                "Always",
+                                "IfNotPresent"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "securityGroups": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "subnetRefs": {
+                      "items": {
+                        "description": "A Reference to a named object.",
+                        "properties": {
+                          "name": {
+                            "description": "Name of the referenced object.",
+                            "type": "string"
+                          },
+                          "policy": {
+                            "description": "Policies for referencing.",
+                            "properties": {
+                              "resolution": {
+                                "default": "Required",
+                                "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                "enum": [
+                                  "Required",
+                                  "Optional"
+                                ],
+                                "type": "string"
+                              },
+                              "resolve": {
+                                "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                "enum": [
+                                  "Always",
+                                  "IfNotPresent"
+                                ],
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "subnetSelector": {
+                      "description": "A Selector selects an object.",
+                      "properties": {
+                        "matchControllerRef": {
+                          "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                          "type": "boolean"
+                        },
+                        "matchLabels": {
+                          "additionalProperties": {
+                            "type": "string"
+                          },
+                          "description": "MatchLabels ensures an object with matching labels is selected.",
+                          "type": "object"
+                        },
+                        "policy": {
+                          "description": "Policies for selection.",
+                          "properties": {
+                            "resolution": {
+                              "default": "Required",
+                              "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                              "enum": [
+                                "Required",
+                                "Optional"
+                              ],
+                              "type": "string"
+                            },
+                            "resolve": {
+                              "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                              "enum": [
+                                "Always",
+                                "IfNotPresent"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "subnets": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "placementConstraints": {
+              "description": "An array of placement constraint objects to use for tasks in your service.\nYou can specify a maximum of 10 constraints for each task. This limit includes\nconstraints in the task definition and those specified at runtime.",
+              "items": {
+                "properties": {
+                  "expression": {
+                    "type": "string"
+                  },
+                  "type_": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "placementStrategy": {
+              "description": "The placement strategy objects to use for tasks in your service. You can\nspecify a maximum of 5 strategy rules for each service.",
+              "items": {
+                "properties": {
+                  "field": {
+                    "type": "string"
+                  },
+                  "type_": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "platformVersion": {
+              "description": "The platform version that your tasks in the service are running on. A platform\nversion is specified only for tasks using the Fargate launch type. If one\nisn't specified, the LATEST platform version is used. For more information,\nsee Fargate platform versions (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform_versions.html)\nin the Amazon Elastic Container Service Developer Guide.",
+              "type": "string"
+            },
+            "propagateTags": {
+              "description": "Specifies whether to propagate the tags from the task definition to the task.\nIf no value is specified, the tags aren't propagated. Tags can only be propagated\nto the task during task creation. To add tags to a task after task creation,\nuse the TagResource (https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_TagResource.html)\nAPI action.\n\n\nThe default is NONE.",
+              "type": "string"
+            },
+            "region": {
+              "description": "Region is which region the Service will be created.",
+              "type": "string"
+            },
+            "role": {
+              "description": "The name or full Amazon Resource Name (ARN) of the IAM role that allows Amazon\nECS to make calls to your load balancer on your behalf. This parameter is\nonly permitted if you are using a load balancer with your service and your\ntask definition doesn't use the awsvpc network mode. If you specify the role\nparameter, you must also specify a load balancer object with the loadBalancers\nparameter.\n\n\nIf your account has already created the Amazon ECS service-linked role, that\nrole is used for your service unless you specify a role here. The service-linked\nrole is required if your task definition uses the awsvpc network mode or\nif the service is configured to use service discovery, an external deployment\ncontroller, multiple target groups, or Elastic Inference accelerators in\nwhich case you don't specify a role here. For more information, see Using\nservice-linked roles for Amazon ECS (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/using-service-linked-roles.html)\nin the Amazon Elastic Container Service Developer Guide.\n\n\nIf your specified role has a path other than /, then you must either specify\nthe full role ARN (this is recommended) or prefix the role name with the\npath. For example, if a role with the name bar has a path of /foo/ then you\nwould specify /foo/bar as the role name. For more information, see Friendly\nnames and paths (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-friendly-names)\nin the IAM User Guide.",
+              "type": "string"
+            },
+            "schedulingStrategy": {
+              "description": "The scheduling strategy to use for the service. For more information, see\nServices (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html).\n\n\nThere are two service scheduler strategies available:\n\n\n   * REPLICA-The replica scheduling strategy places and maintains the desired\n   number of tasks across your cluster. By default, the service scheduler\n   spreads tasks across Availability Zones. You can use task placement strategies\n   and constraints to customize task placement decisions. This scheduler\n   strategy is required if the service uses the CODE_DEPLOY or EXTERNAL deployment\n   controller types.\n\n\n   * DAEMON-The daemon scheduling strategy deploys exactly one task on each\n   active container instance that meets all of the task placement constraints\n   that you specify in your cluster. The service scheduler also evaluates\n   the task placement constraints for running tasks and will stop tasks that\n   don't meet the placement constraints. When you're using this strategy,\n   you don't need to specify a desired number of tasks, a task placement\n   strategy, or use Service Auto Scaling policies. Tasks using the Fargate\n   launch type or the CODE_DEPLOY or EXTERNAL deployment controller types\n   don't support the DAEMON scheduling strategy.",
+              "type": "string"
+            },
+            "serviceConnectConfiguration": {
+              "description": "The configuration for this service to discover and connect to services, and\nbe discovered by, and connected from, other services within a namespace.\n\n\nTasks that run in a namespace can use short names to connect to services\nin the namespace. Tasks can connect to services across all of the clusters\nin the namespace. Tasks connect through a managed proxy container that collects\nlogs and metrics for increased visibility. Only the tasks that Amazon ECS\nservices create are supported with Service Connect. For more information,\nsee Service Connect (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect.html)\nin the Amazon Elastic Container Service Developer Guide.",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "logConfiguration": {
+                  "description": "The log configuration for the container. This parameter maps to LogConfig\nin the Create a container (https://docs.docker.com/engine/api/v1.35/#operation/ContainerCreate)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.35/)\nand the --log-driver option to docker run (https://docs.docker.com/engine/reference/commandline/run/).\n\n\nBy default, containers use the same logging driver that the Docker daemon\nuses. However, the container might use a different logging driver than the\nDocker daemon by specifying a log driver configuration in the container definition.\nFor more information about the options for different supported log drivers,\nsee Configure logging drivers (https://docs.docker.com/engine/admin/logging/overview/)\nin the Docker documentation.\n\n\nUnderstand the following when specifying a log configuration for your containers.\n\n\n   * Amazon ECS currently supports a subset of the logging drivers available\n   to the Docker daemon. Additional log drivers may be available in future\n   releases of the Amazon ECS container agent. For tasks on Fargate, the\n   supported log drivers are awslogs, splunk, and awsfirelens. For tasks\n   hosted on Amazon EC2 instances, the supported log drivers are awslogs,\n   fluentd, gelf, json-file, journald, logentries,syslog, splunk, and awsfirelens.\n\n\n   * This parameter requires version 1.18 of the Docker Remote API or greater\n   on your container instance.\n\n\n   * For tasks that are hosted on Amazon EC2 instances, the Amazon ECS container\n   agent must register the available logging drivers with the ECS_AVAILABLE_LOGGING_DRIVERS\n   environment variable before containers placed on that instance can use\n   these log configuration options. For more information, see Amazon ECS\n   container agent configuration (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html)\n   in the Amazon Elastic Container Service Developer Guide.\n\n\n   * For tasks that are on Fargate, because you don't have access to the\n   underlying infrastructure your tasks are hosted on, any additional software\n   needed must be installed outside of the task. For example, the Fluentd\n   output aggregators or a remote host running Logstash to send Gelf logs\n   to.",
+                  "properties": {
+                    "logDriver": {
+                      "type": "string"
+                    },
+                    "options": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "type": "object"
+                    },
+                    "secretOptions": {
+                      "items": {
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "valueFrom": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                "namespace": {
+                  "type": "string"
+                },
+                "services": {
+                  "items": {
+                    "properties": {
+                      "clientAliases": {
+                        "items": {
+                          "properties": {
+                            "dnsName": {
+                              "type": "string"
+                            },
+                            "port": {
+                              "format": "int64",
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "discoveryName": {
+                        "type": "string"
+                      },
+                      "ingressPortOverride": {
+                        "format": "int64",
+                        "type": "integer"
+                      },
+                      "portName": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "serviceRegistries": {
+              "description": "The details of the service discovery registry to associate with this service.\nFor more information, see Service discovery (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html).\n\n\nEach service may be associated with one service registry. Multiple service\nregistries for each service isn't supported.",
+              "items": {
+                "properties": {
+                  "containerName": {
+                    "type": "string"
+                  },
+                  "containerPort": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "port": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "registryARN": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "tags": {
+              "description": "The metadata that you apply to the service to help you categorize and organize\nthem. Each tag consists of a key and an optional value, both of which you\ndefine. When a service is deleted, the tags are deleted as well.\n\n\nThe following basic restrictions apply to tags:\n\n\n   * Maximum number of tags per resource - 50\n\n\n   * For each resource, each tag key must be unique, and each tag key can\n   have only one value.\n\n\n   * Maximum key length - 128 Unicode characters in UTF-8\n\n\n   * Maximum value length - 256 Unicode characters in UTF-8\n\n\n   * If your tagging schema is used across multiple services and resources,\n   remember that other services may have restrictions on allowed characters.\n   Generally allowed characters are: letters, numbers, and spaces representable\n   in UTF-8, and the following characters: + - = . _ : / @.\n\n\n   * Tag keys and values are case-sensitive.\n\n\n   * Do not use aws:, AWS:, or any upper or lowercase combination of such\n   as a prefix for either keys or values as it is reserved for Amazon Web\n   Services use. You cannot edit or delete tag keys or values with this prefix.\n   Tags with this prefix do not count against your tags per resource limit.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "taskDefinition": {
+              "description": "The family and revision (family:revision) or full ARN of the task definition\nto run in your service. If a revision is not specified, the latest ACTIVE\nrevision is used.\n\n\nA task definition must be specified if the service is using either the ECS\nor CODE_DEPLOY deployment controllers.",
+              "type": "string"
+            },
+            "taskDefinitionRef": {
+              "description": "A Reference to a named object.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "taskDefinitionSelector": {
+              "description": "A Selector selects an object.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "ServiceStatus defines the observed state of Service.",
+      "properties": {
+        "atProvider": {
+          "description": "ServiceObservation defines the observed state of Service",
+          "properties": {
+            "clusterARN": {
+              "description": "The Amazon Resource Name (ARN) of the cluster that hosts the service.",
+              "type": "string"
+            },
+            "createdAt": {
+              "description": "The Unix timestamp for the time when the service was created.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The principal that created the service.",
+              "type": "string"
+            },
+            "deployments": {
+              "description": "The current state of deployments for the service.",
+              "items": {
+                "properties": {
+                  "capacityProviderStrategy": {
+                    "items": {
+                      "properties": {
+                        "base": {
+                          "format": "int64",
+                          "type": "integer"
+                        },
+                        "capacityProvider": {
+                          "type": "string"
+                        },
+                        "weight": {
+                          "format": "int64",
+                          "type": "integer"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "createdAt": {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "desiredCount": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "failedTasks": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "launchType": {
+                    "type": "string"
+                  },
+                  "networkConfiguration": {
+                    "description": "The network configuration for a task or service.",
+                    "properties": {
+                      "awsVPCConfiguration": {
+                        "description": "An object representing the networking details for a task or service.",
+                        "properties": {
+                          "assignPublicIP": {
+                            "type": "string"
+                          },
+                          "securityGroups": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "subnets": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "pendingCount": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "platformFamily": {
+                    "type": "string"
+                  },
+                  "platformVersion": {
+                    "type": "string"
+                  },
+                  "rolloutState": {
+                    "type": "string"
+                  },
+                  "rolloutStateReason": {
+                    "type": "string"
+                  },
+                  "runningCount": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "serviceConnectConfiguration": {
+                    "description": "The Service Connect configuration of your Amazon ECS service. The configuration\nfor this service to discover and connect to services, and be discovered by,\nand connected from, other services within a namespace.\n\n\nTasks that run in a namespace can use short names to connect to services\nin the namespace. Tasks can connect to services across all of the clusters\nin the namespace. Tasks connect through a managed proxy container that collects\nlogs and metrics for increased visibility. Only the tasks that Amazon ECS\nservices create are supported with Service Connect. For more information,\nsee Service Connect (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect.html)\nin the Amazon Elastic Container Service Developer Guide.",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "logConfiguration": {
+                        "description": "The log configuration for the container. This parameter maps to LogConfig\nin the Create a container (https://docs.docker.com/engine/api/v1.35/#operation/ContainerCreate)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.35/)\nand the --log-driver option to docker run (https://docs.docker.com/engine/reference/commandline/run/).\n\n\nBy default, containers use the same logging driver that the Docker daemon\nuses. However, the container might use a different logging driver than the\nDocker daemon by specifying a log driver configuration in the container definition.\nFor more information about the options for different supported log drivers,\nsee Configure logging drivers (https://docs.docker.com/engine/admin/logging/overview/)\nin the Docker documentation.\n\n\nUnderstand the following when specifying a log configuration for your containers.\n\n\n   * Amazon ECS currently supports a subset of the logging drivers available\n   to the Docker daemon. Additional log drivers may be available in future\n   releases of the Amazon ECS container agent. For tasks on Fargate, the\n   supported log drivers are awslogs, splunk, and awsfirelens. For tasks\n   hosted on Amazon EC2 instances, the supported log drivers are awslogs,\n   fluentd, gelf, json-file, journald, logentries,syslog, splunk, and awsfirelens.\n\n\n   * This parameter requires version 1.18 of the Docker Remote API or greater\n   on your container instance.\n\n\n   * For tasks that are hosted on Amazon EC2 instances, the Amazon ECS container\n   agent must register the available logging drivers with the ECS_AVAILABLE_LOGGING_DRIVERS\n   environment variable before containers placed on that instance can use\n   these log configuration options. For more information, see Amazon ECS\n   container agent configuration (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html)\n   in the Amazon Elastic Container Service Developer Guide.\n\n\n   * For tasks that are on Fargate, because you don't have access to the\n   underlying infrastructure your tasks are hosted on, any additional software\n   needed must be installed outside of the task. For example, the Fluentd\n   output aggregators or a remote host running Logstash to send Gelf logs\n   to.",
+                        "properties": {
+                          "logDriver": {
+                            "type": "string"
+                          },
+                          "options": {
+                            "additionalProperties": {
+                              "type": "string"
+                            },
+                            "type": "object"
+                          },
+                          "secretOptions": {
+                            "items": {
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "valueFrom": {
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "namespace": {
+                        "type": "string"
+                      },
+                      "services": {
+                        "items": {
+                          "properties": {
+                            "clientAliases": {
+                              "items": {
+                                "properties": {
+                                  "dnsName": {
+                                    "type": "string"
+                                  },
+                                  "port": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "discoveryName": {
+                              "type": "string"
+                            },
+                            "ingressPortOverride": {
+                              "format": "int64",
+                              "type": "integer"
+                            },
+                            "portName": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "serviceConnectResources": {
+                    "items": {
+                      "properties": {
+                        "discoveryARN": {
+                          "type": "string"
+                        },
+                        "discoveryName": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "taskDefinition": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "events": {
+              "description": "The event stream for your service. A maximum of 100 of the latest events\nare displayed.",
+              "items": {
+                "properties": {
+                  "createdAt": {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "loadBalancers": {
+              "description": "A list of Elastic Load Balancing load balancer objects. It contains the load\nbalancer name, the container name, and the container port to access from\nthe load balancer. The container name is as it appears in a container definition.",
+              "items": {
+                "properties": {
+                  "containerName": {
+                    "type": "string"
+                  },
+                  "containerPort": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "loadBalancerName": {
+                    "type": "string"
+                  },
+                  "targetGroupARN": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "networkConfiguration": {
+              "description": "The VPC subnet and security group configuration for tasks that receive their\nown elastic network interface by using the awsvpc networking mode.",
+              "properties": {
+                "awsVPCConfiguration": {
+                  "description": "An object representing the networking details for a task or service.",
+                  "properties": {
+                    "assignPublicIP": {
+                      "type": "string"
+                    },
+                    "securityGroups": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "subnets": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "pendingCount": {
+              "description": "The number of tasks in the cluster that are in the PENDING state.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "platformFamily": {
+              "description": "The operating system that your tasks in the service run on. A platform family\nis specified only for tasks using the Fargate launch type.\n\n\nAll tasks that run as part of this service must use the same platformFamily\nvalue as the service (for example, LINUX).",
+              "type": "string"
+            },
+            "roleARN": {
+              "description": "The ARN of the IAM role that's associated with the service. It allows the\nAmazon ECS container agent to register container instances with an Elastic\nLoad Balancing load balancer.",
+              "type": "string"
+            },
+            "runningCount": {
+              "description": "The number of tasks in the cluster that are in the RUNNING state.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "serviceARN": {
+              "description": "The ARN that identifies the service. For more information about the ARN format,\nsee Amazon Resource Name (ARN) (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-account-settings.html#ecs-resource-ids)\nin the Amazon ECS Developer Guide.",
+              "type": "string"
+            },
+            "serviceName": {
+              "description": "The name of your service. Up to 255 letters (uppercase and lowercase), numbers,\nunderscores, and hyphens are allowed. Service names must be unique within\na cluster. However, you can have similarly named services in multiple clusters\nwithin a Region or across multiple Regions.",
+              "type": "string"
+            },
+            "status": {
+              "description": "The status of the service. The valid values are ACTIVE, DRAINING, or INACTIVE.",
+              "type": "string"
+            },
+            "taskDefinition": {
+              "description": "The task definition to use for tasks in the service. This value is specified\nwhen the service is created with CreateService, and it can be modified with\nUpdateService.",
+              "type": "string"
+            },
+            "taskSets": {
+              "description": "Information about a set of Amazon ECS tasks in either an CodeDeploy or an\nEXTERNAL deployment. An Amazon ECS task set includes details such as the\ndesired number of tasks, how many tasks are running, and whether the task\nset serves production traffic.",
+              "items": {
+                "properties": {
+                  "capacityProviderStrategy": {
+                    "items": {
+                      "properties": {
+                        "base": {
+                          "format": "int64",
+                          "type": "integer"
+                        },
+                        "capacityProvider": {
+                          "type": "string"
+                        },
+                        "weight": {
+                          "format": "int64",
+                          "type": "integer"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "clusterARN": {
+                    "type": "string"
+                  },
+                  "computedDesiredCount": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "createdAt": {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "externalID": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "launchType": {
+                    "type": "string"
+                  },
+                  "loadBalancers": {
+                    "items": {
+                      "properties": {
+                        "containerName": {
+                          "type": "string"
+                        },
+                        "containerPort": {
+                          "format": "int64",
+                          "type": "integer"
+                        },
+                        "loadBalancerName": {
+                          "type": "string"
+                        },
+                        "targetGroupARN": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "networkConfiguration": {
+                    "description": "The network configuration for a task or service.",
+                    "properties": {
+                      "awsVPCConfiguration": {
+                        "description": "An object representing the networking details for a task or service.",
+                        "properties": {
+                          "assignPublicIP": {
+                            "type": "string"
+                          },
+                          "securityGroups": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "subnets": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "pendingCount": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "platformFamily": {
+                    "type": "string"
+                  },
+                  "platformVersion": {
+                    "type": "string"
+                  },
+                  "runningCount": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "scale": {
+                    "description": "A floating-point percentage of the desired number of tasks to place and keep\nrunning in the task set.",
+                    "properties": {
+                      "unit": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "serviceARN": {
+                    "type": "string"
+                  },
+                  "serviceRegistries": {
+                    "items": {
+                      "properties": {
+                        "containerName": {
+                          "type": "string"
+                        },
+                        "containerPort": {
+                          "format": "int64",
+                          "type": "integer"
+                        },
+                        "port": {
+                          "format": "int64",
+                          "type": "integer"
+                        },
+                        "registryARN": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "stabilityStatus": {
+                    "type": "string"
+                  },
+                  "stabilityStatusAt": {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "startedBy": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "taskDefinition": {
+                    "type": "string"
+                  },
+                  "taskSetARN": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

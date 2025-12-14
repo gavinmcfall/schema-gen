@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/neuvector.com/v1/nvadmissioncontrolsecurityrule.json",
+  "title": "NvAdmissionControlSecurityRule",
+  "description": "NvAdmissionControlSecurityRule is the Schema for the nvadmissioncontrolsecurityrules API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "neuvector",
+    "sourceVersion": "2.8.3",
+    "extractedAt": "2025-12-14T02:23:03.470792+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "properties": {
+        "config": {
+          "properties": {
+            "client_mode": {
+              "enum": [
+                "service",
+                "url"
+              ],
+              "type": "string"
+            },
+            "enable": {
+              "type": "boolean"
+            },
+            "mode": {
+              "enum": [
+                "monitor",
+                "protect"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "enable",
+            "mode",
+            "client_mode"
+          ],
+          "type": "object"
+        },
+        "rules": {
+          "items": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "allow",
+                  "deny"
+                ],
+                "type": "string"
+              },
+              "comment": {
+                "type": "string"
+              },
+              "containers": {
+                "items": {
+                  "enum": [
+                    "containers",
+                    "init_containers",
+                    "ephemeral_containers"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "criteria": {
+                "items": {
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "op": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "sub_criteria": {
+                      "items": {
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "op": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "op",
+                          "value"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "template_kind": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "value_type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "op",
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "disabled": {
+                "type": "boolean"
+              },
+              "id": {
+                "type": "integer"
+              },
+              "rule_mode": {
+                "enum": [
+                  "",
+                  "monitor",
+                  "protect"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "action",
+              "criteria"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "neuvector.com/v1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "NvAdmissionControlSecurityRule"
+      ]
+    }
+  }
+}

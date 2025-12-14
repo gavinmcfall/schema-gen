@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/crd.projectcalico.org/v1/bgpfilter.json",
+  "title": "BGPFilter",
+  "description": "BGPFilter is the Schema for the bgpfilters API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "calico",
+    "sourceVersion": "3.29.1",
+    "extractedAt": "2025-12-14T02:18:36.651158+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "BGPFilterSpec contains the IPv4 and IPv6 filter rules of the BGP Filter.",
+      "properties": {
+        "exportV4": {
+          "description": "The ordered set of IPv4 BGPFilter rules acting on exporting routes to a peer.",
+          "items": {
+            "description": "BGPFilterRuleV4 defines a BGP filter rule consisting a single IPv4 CIDR block and a filter action for this CIDR.",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "cidr": {
+                "type": "string"
+              },
+              "interface": {
+                "type": "string"
+              },
+              "matchOperator": {
+                "type": "string"
+              },
+              "prefixLength": {
+                "properties": {
+                  "max": {
+                    "format": "int32",
+                    "maximum": 32,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "min": {
+                    "format": "int32",
+                    "maximum": 32,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "source": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "exportV6": {
+          "description": "The ordered set of IPv6 BGPFilter rules acting on exporting routes to a peer.",
+          "items": {
+            "description": "BGPFilterRuleV6 defines a BGP filter rule consisting a single IPv6 CIDR block and a filter action for this CIDR.",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "cidr": {
+                "type": "string"
+              },
+              "interface": {
+                "type": "string"
+              },
+              "matchOperator": {
+                "type": "string"
+              },
+              "prefixLength": {
+                "properties": {
+                  "max": {
+                    "format": "int32",
+                    "maximum": 128,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "min": {
+                    "format": "int32",
+                    "maximum": 128,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "source": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "importV4": {
+          "description": "The ordered set of IPv4 BGPFilter rules acting on importing routes from a peer.",
+          "items": {
+            "description": "BGPFilterRuleV4 defines a BGP filter rule consisting a single IPv4 CIDR block and a filter action for this CIDR.",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "cidr": {
+                "type": "string"
+              },
+              "interface": {
+                "type": "string"
+              },
+              "matchOperator": {
+                "type": "string"
+              },
+              "prefixLength": {
+                "properties": {
+                  "max": {
+                    "format": "int32",
+                    "maximum": 32,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "min": {
+                    "format": "int32",
+                    "maximum": 32,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "source": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "importV6": {
+          "description": "The ordered set of IPv6 BGPFilter rules acting on importing routes from a peer.",
+          "items": {
+            "description": "BGPFilterRuleV6 defines a BGP filter rule consisting a single IPv6 CIDR block and a filter action for this CIDR.",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "cidr": {
+                "type": "string"
+              },
+              "interface": {
+                "type": "string"
+              },
+              "matchOperator": {
+                "type": "string"
+              },
+              "prefixLength": {
+                "properties": {
+                  "max": {
+                    "format": "int32",
+                    "maximum": 128,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "min": {
+                    "format": "int32",
+                    "maximum": 128,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "source": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

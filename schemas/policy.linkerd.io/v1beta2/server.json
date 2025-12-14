@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/policy.linkerd.io/v1beta2/server.json",
+  "title": "Server",
+  "description": "Server is the Schema for the servers API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "linkerd-crds",
+    "sourceVersion": "2025.12.2",
+    "extractedAt": "2025-12-14T02:18:13.692984+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "oneOf": [
+        {
+          "required": [
+            "podSelector"
+          ]
+        },
+        {
+          "required": [
+            "externalWorkloadSelector"
+          ]
+        }
+      ],
+      "properties": {
+        "externalWorkloadSelector": {
+          "description": "Selects ExternalWorkloads in the same namespace.\nThe result of matchLabels and matchExpressions are ANDed. Selects all if empty.",
+          "properties": {
+            "matchExpressions": {
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "operator": {
+                    "enum": [
+                      "In",
+                      "NotIn",
+                      "Exists",
+                      "DoesNotExist"
+                    ],
+                    "type": "string"
+                  },
+                  "values": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "key",
+                  "operator"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "matchLabels": {
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "podSelector": {
+          "description": "Selects pods in the same namespace.\nThe result of matchLabels and matchExpressions are ANDed. Selects all if empty.",
+          "properties": {
+            "matchExpressions": {
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "operator": {
+                    "enum": [
+                      "In",
+                      "NotIn",
+                      "Exists",
+                      "DoesNotExist"
+                    ],
+                    "type": "string"
+                  },
+                  "values": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "key",
+                  "operator"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "matchLabels": {
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "port": {
+          "description": "A port name or number. Must exist in a pod spec."
+        },
+        "proxyProtocol": {
+          "default": "unknown",
+          "description": "Configures protocol discovery for inbound connections.\nSupersedes the `config.linkerd.io/opaque-ports` annotation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "port"
+      ],
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "policy.linkerd.io/v1beta2"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "Server"
+      ]
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

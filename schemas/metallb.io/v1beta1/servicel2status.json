@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/metallb.io/v1beta1/servicel2status.json",
+  "title": "ServiceL2Status",
+  "description": "ServiceL2Status is the Schema for the servicel2statuss API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "metallb",
+    "sourceVersion": "0.14.9",
+    "extractedAt": "2025-12-14T02:18:29.303983+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ServiceL2StatusSpec defines the desired state of ServiceL2Status.",
+      "type": "object"
+    },
+    "status": {
+      "description": "MetalLBServiceL2Status defines the observed state of ServiceL2Status.",
+      "properties": {
+        "interfaces": {
+          "description": "Interfaces indicates the interfaces that receive the directed traffic",
+          "items": {
+            "description": "InterfaceInfo defines interface info of layer2 announcement.",
+            "properties": {
+              "name": {
+                "description": "Name the name of network interface card",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "node": {
+          "description": "Node indicates the node that receives the directed traffic",
+          "type": "string"
+        },
+        "serviceName": {
+          "description": "ServiceName indicates the service this status represents",
+          "type": "string"
+        },
+        "serviceNamespace": {
+          "description": "ServiceNamespace indicates the namespace of the service",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

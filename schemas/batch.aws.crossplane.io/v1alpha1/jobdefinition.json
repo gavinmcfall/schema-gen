@@ -1,0 +1,1791 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/batch.aws.crossplane.io/v1alpha1/jobdefinition.json",
+  "title": "JobDefinition",
+  "description": "JobDefinition is the Schema for the jobdefinitions API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.363638+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "A JobDefinitionSpec defines the desired state of a JobDefinition.",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "JobDefinitionParameters define the desired state of a Batch JobDefinition",
+          "properties": {
+            "containerProperties": {
+              "description": "An object with various properties specific to single-node container-based\njobs. If the job definition's type parameter is container, then you must\nspecify either containerProperties or nodeProperties.\n\n\nIf the job runs on Fargate resources, then you must not specify nodeProperties;\nuse only containerProperties.",
+              "properties": {
+                "command": {
+                  "description": "The command that's passed to the container. This parameter maps to Cmd in\nthe Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the COMMAND parameter to docker run (https://docs.docker.com/engine/reference/run/).\nFor more information, see https://docs.docker.com/engine/reference/builder/#cmd\n(https://docs.docker.com/engine/reference/builder/#cmd).",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "environment": {
+                  "description": "The environment variables to pass to a container. This parameter maps to\nEnv in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --env option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nWe don't recommend using plaintext environment variables for sensitive information,\nsuch as credential data.\n\n\nEnvironment variables must not start with AWS_BATCH; this naming convention\nis reserved for variables that are set by the Batch service.",
+                  "items": {
+                    "description": "KeyValuePair defines a key-value pair object.",
+                    "properties": {
+                      "name": {
+                        "description": "The name of the key-value pair. For environment variables, this is the name\nof the environment variable.",
+                        "type": "string"
+                      },
+                      "value": {
+                        "description": "The value of the key-value pair. For environment variables, this is the value\nof the environment variable.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "executionRoleARNRef": {
+                  "description": "ExecutionRoleARNRef is a reference to an ARN of the IAM role used to set\nthe ExecutionRoleARN.",
+                  "properties": {
+                    "name": {
+                      "description": "Name of the referenced object.",
+                      "type": "string"
+                    },
+                    "policy": {
+                      "description": "Policies for referencing.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                },
+                "executionRoleARNSelector": {
+                  "description": "ExecutionRoleARNSelector selects references to an ARN of the IAM role used\nto set the ExecutionRoleARN.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "executionRoleArn": {
+                  "description": "The Amazon Resource Name (ARN) of the execution role that Batch can assume.\nFor jobs that run on Fargate resources, you must provide an execution role.\nFor more information, see Batch execution IAM role (https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html)\nin the Batch User Guide.",
+                  "type": "string"
+                },
+                "fargatePlatformConfiguration": {
+                  "description": "The platform configuration for jobs that are running on Fargate resources.\nJobs that are running on EC2 resources must not specify this parameter.",
+                  "properties": {
+                    "platformVersion": {
+                      "description": "The Fargate platform version where the jobs are running. A platform version\nis specified only for jobs that are running on Fargate resources. If one\nisn't specified, the LATEST platform version is used by default. This uses\na recent, approved version of the Fargate platform for compute resources.\nFor more information, see Fargate platform versions (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform_versions.html)\nin the Amazon Elastic Container Service Developer Guide.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "image": {
+                  "description": "The image used to start a container. This string is passed directly to the\nDocker daemon. Images in the Docker Hub registry are available by default.\nOther repositories are specified with repository-url/image:tag . Up to 255\nletters (uppercase and lowercase), numbers, hyphens, underscores, colons,\nperiods, forward slashes, and number signs are allowed. This parameter maps\nto Image in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the IMAGE parameter of docker run (https://docs.docker.com/engine/reference/run/).\n\n\nDocker image architecture must match the processor architecture of the compute\nresources that they're scheduled on. For example, ARM-based Docker images\ncan only run on ARM-based compute resources.\n\n\n   * Images in Amazon ECR repositories use the full registry and repository\n   URI (for example, 012345678910.dkr.ecr.<region-name>.amazonaws.com/<repository-name>).\n\n\n   * Images in official repositories on Docker Hub use a single name (for\n   example, ubuntu or mongo).\n\n\n   * Images in other repositories on Docker Hub are qualified with an organization\n   name (for example, amazon/amazon-ecs-agent).\n\n\n   * Images in other online repositories are qualified further by a domain\n   name (for example, quay.io/assemblyline/ubuntu).",
+                  "type": "string"
+                },
+                "instanceType": {
+                  "description": "The instance type to use for a multi-node parallel job. All node groups in\na multi-node parallel job must use the same instance type.\n\n\nThis parameter isn't applicable to single-node container jobs or jobs that\nrun on Fargate resources, and shouldn't be provided.",
+                  "type": "string"
+                },
+                "jobRoleARNRef": {
+                  "description": "JobRoleARNRef is a reference to an ARN of the IAM role used to set\nthe JobRoleARN.",
+                  "properties": {
+                    "name": {
+                      "description": "Name of the referenced object.",
+                      "type": "string"
+                    },
+                    "policy": {
+                      "description": "Policies for referencing.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": "object"
+                },
+                "jobRoleARNSelector": {
+                  "description": "JobRoleARNSelector selects references to an ARN of the IAM role used\nto set the JobRoleARN.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "jobRoleArn": {
+                  "description": "The Amazon Resource Name (ARN) of the IAM role that the container can assume\nfor Amazon Web Services permissions. For more information, see IAM Roles\nfor Tasks (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)\nin the Amazon Elastic Container Service Developer Guide.",
+                  "type": "string"
+                },
+                "linuxParameters": {
+                  "description": "Linux-specific modifications that are applied to the container, such as details\nfor device mappings.",
+                  "properties": {
+                    "devices": {
+                      "description": "Any host devices to expose to the container. This parameter maps to Devices\nin the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --device option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                      "items": {
+                        "description": "Device defines a container instance host device.\n\n\nThis object isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                        "properties": {
+                          "containerPath": {
+                            "description": "The path inside the container that's used to expose the host device. By default,\nthe hostPath value is used.",
+                            "type": "string"
+                          },
+                          "hostPath": {
+                            "description": "The path for the device on the host container instance.\n\n\nHostPath is a required field",
+                            "type": "string"
+                          },
+                          "permissions": {
+                            "description": "The explicit permissions to provide to the container for the device. By default,\nthe container has permissions for read, write, and mknod for the device.",
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "hostPath"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "initProcessEnabled": {
+                      "description": "If true, run an init process inside the container that forwards signals and\nreaps processes. This parameter maps to the --init option to docker run (https://docs.docker.com/engine/reference/run/).\nThis parameter requires version 1.25 of the Docker Remote API or greater\non your container instance. To check the Docker Remote API version on your\ncontainer instance, log into your container instance and run the following\ncommand: sudo docker version | grep \"Server API version\"",
+                      "type": "boolean"
+                    },
+                    "maxSwap": {
+                      "description": "The total amount of swap memory (in MiB) a container can use. This parameter\nis translated to the --memory-swap option to docker run (https://docs.docker.com/engine/reference/run/)\nwhere the value is the sum of the container memory plus the maxSwap value.\nFor more information, see --memory-swap details (https://docs.docker.com/config/containers/resource_constraints/#--memory-swap-details)\nin the Docker documentation.\n\n\nIf a maxSwap value of 0 is specified, the container doesn't use swap. Accepted\nvalues are 0 or any positive integer. If the maxSwap parameter is omitted,\nthe container doesn't use the swap configuration for the container instance\nit is running on. A maxSwap value must be set for the swappiness parameter\nto be used.\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "sharedMemorySize": {
+                      "description": "The value for the size (in MiB) of the /dev/shm volume. This parameter maps\nto the --shm-size option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "swappiness": {
+                      "description": "This allows you to tune a container's memory swappiness behavior. A swappiness\nvalue of 0 causes swapping not to happen unless absolutely necessary. A swappiness\nvalue of 100 causes pages to be swapped very aggressively. Accepted values\nare whole numbers between 0 and 100. If the swappiness parameter isn't specified,\na default value of 60 is used. If a value isn't specified for maxSwap, then\nthis parameter is ignored. If maxSwap is set to 0, the container doesn't\nuse swap. This parameter maps to the --memory-swappiness option to docker\nrun (https://docs.docker.com/engine/reference/run/).\n\n\nConsider the following when you use a per-container swap configuration.\n\n\n   * Swap space must be enabled and allocated on the container instance for\n   the containers to use. The Amazon ECS optimized AMIs don't have swap enabled\n   by default. You must enable swap on the instance to use this feature.\n   For more information, see Instance Store Swap Volumes (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-store-swap-volumes.html)\n   in the Amazon EC2 User Guide for Linux Instances or How do I allocate\n   memory to work as swap space in an Amazon EC2 instance by using a swap\n   file? (http://aws.amazon.com/premiumsupport/knowledge-center/ec2-memory-swap-file/)\n\n\n   * The swap space parameters are only supported for job definitions using\n   EC2 resources.\n\n\n   * If the maxSwap and swappiness parameters are omitted from a job definition,\n   each container will have a default swappiness value of 60, and the total\n   swap usage will be limited to two times the memory reservation of the\n   container.\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "tmpfs": {
+                      "description": "The container path, mount options, and size (in MiB) of the tmpfs mount.\nThis parameter maps to the --tmpfs option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                      "items": {
+                        "description": "Tmpfs defines the container path, mount options, and size of the tmpfs mount.\n\n\nThis object isn't applicable to jobs that are running on Fargate resources.",
+                        "properties": {
+                          "containerPath": {
+                            "description": "The absolute file path in the container where the tmpfs volume is mounted.\n\n\nContainerPath is a required field",
+                            "type": "string"
+                          },
+                          "mountOptions": {
+                            "description": "The list of tmpfs volume mount options.\n\n\nValid values: \"defaults\" | \"ro\" | \"rw\" | \"suid\" | \"nosuid\" | \"dev\" | \"nodev\"\n| \"exec\" | \"noexec\" | \"sync\" | \"async\" | \"dirsync\" | \"remount\" | \"mand\" |\n\"nomand\" | \"atime\" | \"noatime\" | \"diratime\" | \"nodiratime\" | \"bind\" | \"rbind\"\n| \"unbindable\" | \"runbindable\" | \"private\" | \"rprivate\" | \"shared\" | \"rshared\"\n| \"slave\" | \"rslave\" | \"relatime\" | \"norelatime\" | \"strictatime\" | \"nostrictatime\"\n| \"mode\" | \"uid\" | \"gid\" | \"nr_inodes\" | \"nr_blocks\" | \"mpol\"",
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "size": {
+                            "description": "The size (in MiB) of the tmpfs volume.\n\n\nSize is a required field",
+                            "format": "int64",
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "containerPath",
+                          "size"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                "logConfiguration": {
+                  "description": "The log configuration specification for the container.\n\n\nThis parameter maps to LogConfig in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --log-driver option to docker run (https://docs.docker.com/engine/reference/run/).\nBy default, containers use the same logging driver that the Docker daemon\nuses. However the container might use a different logging driver than the\nDocker daemon by specifying a log driver with this parameter in the container\ndefinition. To use a different logging driver for a container, the log system\nmust be configured properly on the container instance (or on a different\nlog server for remote logging options). For more information on the options\nfor different supported log drivers, see Configure logging drivers (https://docs.docker.com/engine/admin/logging/overview/)\nin the Docker documentation.\n\n\nBatch currently supports a subset of the logging drivers available to the\nDocker daemon (shown in the LogConfiguration data type).\n\n\nThis parameter requires version 1.18 of the Docker Remote API or greater\non your container instance. To check the Docker Remote API version on your\ncontainer instance, log into your container instance and run the following\ncommand: sudo docker version | grep \"Server API version\"\n\n\nThe Amazon ECS container agent running on a container instance must register\nthe logging drivers available on that instance with the ECS_AVAILABLE_LOGGING_DRIVERS\nenvironment variable before containers placed on that instance can use these\nlog configuration options. For more information, see Amazon ECS Container\nAgent Configuration (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html)\nin the Amazon Elastic Container Service Developer Guide.",
+                  "properties": {
+                    "logDriver": {
+                      "description": "The log driver to use for the container. The valid values listed for this\nparameter are log drivers that the Amazon ECS container agent can communicate\nwith by default.\n\n\nThe supported log drivers are awslogs, fluentd, gelf, json-file, journald,\nlogentries, syslog, and splunk.\n\n\nJobs that are running on Fargate resources are restricted to the awslogs\nand splunk log drivers.\n\n\nawslogs\n\n\nSpecifies the Amazon CloudWatch Logs logging driver. For more information,\nsee Using the awslogs Log Driver (https://docs.aws.amazon.com/batch/latest/userguide/using_awslogs.html)\nin the Batch User Guide and Amazon CloudWatch Logs logging driver (https://docs.docker.com/config/containers/logging/awslogs/)\nin the Docker documentation.\n\n\nfluentd\n\n\nSpecifies the Fluentd logging driver. For more information, including usage\nand options, see Fluentd logging driver (https://docs.docker.com/config/containers/logging/fluentd/)\nin the Docker documentation.\n\n\ngelf\n\n\nSpecifies the Graylog Extended Format (GELF) logging driver. For more information,\nincluding usage and options, see Graylog Extended Format logging driver (https://docs.docker.com/config/containers/logging/gelf/)\nin the Docker documentation.\n\n\njournald\n\n\nSpecifies the journald logging driver. For more information, including usage\nand options, see Journald logging driver (https://docs.docker.com/config/containers/logging/journald/)\nin the Docker documentation.\n\n\njson-file\n\n\nSpecifies the JSON file logging driver. For more information, including usage\nand options, see JSON File logging driver (https://docs.docker.com/config/containers/logging/json-file/)\nin the Docker documentation.\n\n\nsplunk\n\n\nSpecifies the Splunk logging driver. For more information, including usage\nand options, see Splunk logging driver (https://docs.docker.com/config/containers/logging/splunk/)\nin the Docker documentation.\n\n\nsyslog\n\n\nSpecifies the syslog logging driver. For more information, including usage\nand options, see Syslog logging driver (https://docs.docker.com/config/containers/logging/syslog/)\nin the Docker documentation.\n\n\nIf you have a custom driver that's not listed earlier that you want to work\nwith the Amazon ECS container agent, you can fork the Amazon ECS container\nagent project that's available on GitHub (https://github.com/aws/amazon-ecs-agent)\nand customize it to work with that driver. We encourage you to submit pull\nrequests for changes that you want to have included. However, Amazon Web\nServices doesn't currently support running modified copies of this software.\n\n\nThis parameter requires version 1.18 of the Docker Remote API or greater\non your container instance. To check the Docker Remote API version on your\ncontainer instance, log into your container instance and run the following\ncommand: sudo docker version | grep \"Server API version\"\n\n\nLogDriver is a required field",
+                      "enum": [
+                        "json-file",
+                        "syslog",
+                        "journald",
+                        "gelf",
+                        "fluentd",
+                        "awslogs",
+                        "splunk"
+                      ],
+                      "type": "string"
+                    },
+                    "options": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "The configuration options to send to the log driver. This parameter requires\nversion 1.19 of the Docker Remote API or greater on your container instance.\nTo check the Docker Remote API version on your container instance, log into\nyour container instance and run the following command: sudo docker version\n| grep \"Server API version\"",
+                      "type": "object"
+                    },
+                    "secretOptions": {
+                      "description": "The secrets to pass to the log configuration. For more information, see Specifying\nSensitive Data (https://docs.aws.amazon.com/batch/latest/userguide/specifying-sensitive-data.html)\nin the Batch User Guide.",
+                      "items": {
+                        "description": "Secret defines the secret to expose to your container. Secrets can\nbe exposed to a container in the following ways:\n\n\n  - To inject sensitive data into your containers as environment variables,\n    use the secrets container definition parameter.\n\n\n  - To reference sensitive information in the log configuration of a container,\n    use the secretOptions container definition parameter.\n\n\nFor more information, see Specifying sensitive data (https://docs.aws.amazon.com/batch/latest/userguide/specifying-sensitive-data.html)\nin the Batch User Guide.",
+                        "properties": {
+                          "name": {
+                            "description": "The name of the secret.\n\n\nName is a required field",
+                            "type": "string"
+                          },
+                          "valueFrom": {
+                            "description": "The secret to expose to the container. The supported values are either the\nfull ARN of the Secrets Manager secret or the full ARN of the parameter in\nthe Amazon Web Services Systems Manager Parameter Store.\n\n\nIf the Amazon Web Services Systems Manager Parameter Store parameter exists\nin the same Region as the job you're launching, then you can use either the\nfull ARN or name of the parameter. If the parameter exists in a different\nRegion, then the full ARN must be specified.\n\n\nValueFrom is a required field",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "valueFrom"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "logDriver"
+                  ],
+                  "type": "object"
+                },
+                "mountPoints": {
+                  "description": "The mount points for data volumes in your container. This parameter maps\nto Volumes in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --volume option to docker run (https://docs.docker.com/engine/reference/run/).",
+                  "items": {
+                    "description": "MountPoint defines the details on a Docker volume mount point that's used in a job's container properties.\nThis parameter maps to Volumes in the Create a container (https://docs.docker.com/engine/reference/api/docker_remote_api_v1.19/#create-a-container)\nsection of the Docker Remote API and the --volume option to docker run.",
+                    "properties": {
+                      "containerPath": {
+                        "description": "The path on the container where the host volume is mounted.",
+                        "type": "string"
+                      },
+                      "readOnly": {
+                        "description": "If this value is true, the container has read-only access to the volume.\nOtherwise, the container can write to the volume. The default value is false.",
+                        "type": "boolean"
+                      },
+                      "sourceVolume": {
+                        "description": "The name of the volume to mount.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "networkConfiguration": {
+                  "description": "The network configuration for jobs that are running on Fargate resources.\nJobs that are running on EC2 resources must not specify this parameter.",
+                  "properties": {
+                    "assignPublicIp": {
+                      "description": "Indicates whether the job should have a public IP address. For a job that\nis running on Fargate resources in a private subnet to send outbound traffic\nto the internet (for example, to pull container images), the private subnet\nrequires a NAT gateway be attached to route requests to the internet. For\nmore information, see Amazon ECS task networking (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking.html).\nThe default value is \"DISABLED\".",
+                      "enum": [
+                        "ENABLED",
+                        "DISABLED"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "privileged": {
+                  "description": "When this parameter is true, the container is given elevated permissions\non the host container instance (similar to the root user). This parameter\nmaps to Privileged in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --privileged option to docker run (https://docs.docker.com/engine/reference/run/).\nThe default value is false.\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided, or specified as false.",
+                  "type": "boolean"
+                },
+                "readonlyRootFilesystem": {
+                  "description": "When this parameter is true, the container is given read-only access to its\nroot file system. This parameter maps to ReadonlyRootfs in the Create a container\n(https://docs.docker.com/engine/api/v1.23/#create-a-container) section of\nthe Docker Remote API (https://docs.docker.com/engine/api/v1.23/) and the\n--read-only option to docker run.",
+                  "type": "boolean"
+                },
+                "resourceRequirements": {
+                  "description": "The type and amount of resources to assign to a container. The supported\nresources include GPU, MEMORY, and VCPU.",
+                  "items": {
+                    "description": "ResourceRequirement defines the type and amount of a resource to assign to a container. The supported\nresources include GPU, MEMORY, and VCPU.",
+                    "properties": {
+                      "resourceType": {
+                        "description": "The type of resource to assign to a container. The supported resources include\nGPU, MEMORY, and VCPU.\n\n\nType is a required field",
+                        "enum": [
+                          "GPU",
+                          "MEMORY",
+                          "VCPU"
+                        ],
+                        "type": "string"
+                      },
+                      "value": {
+                        "description": "The quantity of the specified resource to reserve for the container. The\nvalues vary based on the type specified.\n\n\ntype=\"GPU\"\n\n\nThe number of physical GPUs to reserve for the container. The number of GPUs\nreserved for all containers in a job shouldn't exceed the number of available\nGPUs on the compute resource that the job is launched on.\n\n\nGPUs are not available for jobs that are running on Fargate resources.\n\n\ntype=\"MEMORY\"\n\n\nThe memory hard limit (in MiB) present to the container. This parameter is\nsupported for jobs that are running on EC2 resources. If your container attempts\nto exceed the memory specified, the container is terminated. This parameter\nmaps to Memory in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --memory option to docker run (https://docs.docker.com/engine/reference/run/).\nYou must specify at least 4 MiB of memory for a job. This is required but\ncan be specified in several places for multi-node parallel (MNP) jobs. It\nmust be specified for each node at least once. This parameter maps to Memory\nin the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --memory option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nIf you're trying to maximize your resource utilization by providing your\njobs as much memory as possible for a particular instance type, see Memory\nManagement (https://docs.aws.amazon.com/batch/latest/userguide/memory-management.html)\nin the Batch User Guide.\n\n\nFor jobs that are running on Fargate resources, then value is the hard limit\n(in MiB), and must match one of the supported values and the VCPU values\nmust be one of the values supported for that memory value.\n\n\nvalue = 512\n\n\nVCPU = 0.25\n\n\nvalue = 1024\n\n\nVCPU = 0.25 or 0.5\n\n\nvalue = 2048\n\n\nVCPU = 0.25, 0.5, or 1\n\n\nvalue = 3072\n\n\nVCPU = 0.5, or 1\n\n\nvalue = 4096\n\n\nVCPU = 0.5, 1, or 2\n\n\nvalue = 5120, 6144, or 7168\n\n\nVCPU = 1 or 2\n\n\nvalue = 8192\n\n\nVCPU = 1, 2, or 4\n\n\nvalue = 9216, 10240, 11264, 12288, 13312, 14336, 15360, or 16384\n\n\nVCPU = 2 or 4\n\n\nvalue = 17408, 18432, 19456, 20480, 21504, 22528, 23552, 24576, 25600, 26624,\n27648, 28672, 29696, or 30720\n\n\nVCPU = 4\n\n\ntype=\"VCPU\"\n\n\nThe number of vCPUs reserved for the container. This parameter maps to CpuShares\nin the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --cpu-shares option to docker run (https://docs.docker.com/engine/reference/run/).\nEach vCPU is equivalent to 1,024 CPU shares. For EC2 resources, you must\nspecify at least one vCPU. This is required but can be specified in several\nplaces; it must be specified for each node at least once.\n\n\nFor jobs that are running on Fargate resources, then value must match one\nof the supported values and the MEMORY values must be one of the values supported\nfor that VCPU value. The supported values are 0.25, 0.5, 1, 2, and 4\n\n\nvalue = 0.25\n\n\nMEMORY = 512, 1024, or 2048\n\n\nvalue = 0.5\n\n\nMEMORY = 1024, 2048, 3072, or 4096\n\n\nvalue = 1\n\n\nMEMORY = 2048, 3072, 4096, 5120, 6144, 7168, or 8192\n\n\nvalue = 2\n\n\nMEMORY = 4096, 5120, 6144, 7168, 8192, 9216, 10240, 11264, 12288, 13312,\n14336, 15360, or 16384\n\n\nvalue = 4\n\n\nMEMORY = 8192, 9216, 10240, 11264, 12288, 13312, 14336, 15360, 16384, 17408,\n18432, 19456, 20480, 21504, 22528, 23552, 24576, 25600, 26624, 27648, 28672,\n29696, or 30720\n\n\nValue is a required field",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "resourceType",
+                      "value"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "secrets": {
+                  "description": "The secrets for the container. For more information, see Specifying sensitive\ndata (https://docs.aws.amazon.com/batch/latest/userguide/specifying-sensitive-data.html)\nin the Batch User Guide.",
+                  "items": {
+                    "description": "Secret defines the secret to expose to your container. Secrets can\nbe exposed to a container in the following ways:\n\n\n  - To inject sensitive data into your containers as environment variables,\n    use the secrets container definition parameter.\n\n\n  - To reference sensitive information in the log configuration of a container,\n    use the secretOptions container definition parameter.\n\n\nFor more information, see Specifying sensitive data (https://docs.aws.amazon.com/batch/latest/userguide/specifying-sensitive-data.html)\nin the Batch User Guide.",
+                    "properties": {
+                      "name": {
+                        "description": "The name of the secret.\n\n\nName is a required field",
+                        "type": "string"
+                      },
+                      "valueFrom": {
+                        "description": "The secret to expose to the container. The supported values are either the\nfull ARN of the Secrets Manager secret or the full ARN of the parameter in\nthe Amazon Web Services Systems Manager Parameter Store.\n\n\nIf the Amazon Web Services Systems Manager Parameter Store parameter exists\nin the same Region as the job you're launching, then you can use either the\nfull ARN or name of the parameter. If the parameter exists in a different\nRegion, then the full ARN must be specified.\n\n\nValueFrom is a required field",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "valueFrom"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "ulimits": {
+                  "description": "A list of ulimits to set in the container. This parameter maps to Ulimits\nin the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --ulimit option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                  "items": {
+                    "description": "Ulimit defines the ulimit settings to pass to the container.\n\n\nThis object isn't applicable to jobs that are running on Fargate resources.",
+                    "properties": {
+                      "hardLimit": {
+                        "description": "The hard limit for the ulimit type.\n\n\nHardLimit is a required field",
+                        "format": "int64",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "The type of the ulimit.\n\n\nName is a required field",
+                        "type": "string"
+                      },
+                      "softLimit": {
+                        "description": "The soft limit for the ulimit type.\n\n\nSoftLimit is a required field",
+                        "format": "int64",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "hardLimit",
+                      "name",
+                      "softLimit"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "user": {
+                  "description": "The user name to use inside the container. This parameter maps to User in\nthe Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --user option to docker run (https://docs.docker.com/engine/reference/run/).",
+                  "type": "string"
+                },
+                "volumes": {
+                  "description": "A list of data volumes used in a job.",
+                  "items": {
+                    "description": "Volume defines a data volume used in a job's container properties.",
+                    "properties": {
+                      "efsVolumeConfiguration": {
+                        "description": "This parameter is specified when you are using an Amazon Elastic File System\nfile system for job storage. Jobs that are running on Fargate resources must\nspecify a platformVersion of at least 1.4.0.",
+                        "properties": {
+                          "authorizationConfig": {
+                            "description": "The authorization configuration details for the Amazon EFS file system.",
+                            "properties": {
+                              "accessPointId": {
+                                "description": "The Amazon EFS access point ID to use. If an access point is specified, the\nroot directory value specified in the EFSVolumeConfiguration must either\nbe omitted or set to / which will enforce the path set on the EFS access\npoint. If an access point is used, transit encryption must be enabled in\nthe EFSVolumeConfiguration. For more information, see Working with Amazon\nEFS Access Points (https://docs.aws.amazon.com/efs/latest/ug/efs-access-points.html)\nin the Amazon Elastic File System User Guide.",
+                                "type": "string"
+                              },
+                              "accessPointIdRef": {
+                                "description": "AccessPointIDRef are references to AccessPoint used to set\nthe AccessPointID.",
+                                "properties": {
+                                  "name": {
+                                    "description": "Name of the referenced object.",
+                                    "type": "string"
+                                  },
+                                  "policy": {
+                                    "description": "Policies for referencing.",
+                                    "properties": {
+                                      "resolution": {
+                                        "default": "Required",
+                                        "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                        "enum": [
+                                          "Required",
+                                          "Optional"
+                                        ],
+                                        "type": "string"
+                                      },
+                                      "resolve": {
+                                        "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                        "enum": [
+                                          "Always",
+                                          "IfNotPresent"
+                                        ],
+                                        "type": "string"
+                                      }
+                                    },
+                                    "type": "object"
+                                  }
+                                },
+                                "required": [
+                                  "name"
+                                ],
+                                "type": "object"
+                              },
+                              "accessPointIdSelector": {
+                                "description": "AccessPointIDSelector selects references to AccessPoint used\nto set the AccessPointID.",
+                                "properties": {
+                                  "matchControllerRef": {
+                                    "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                    "type": "boolean"
+                                  },
+                                  "matchLabels": {
+                                    "additionalProperties": {
+                                      "type": "string"
+                                    },
+                                    "description": "MatchLabels ensures an object with matching labels is selected.",
+                                    "type": "object"
+                                  },
+                                  "policy": {
+                                    "description": "Policies for selection.",
+                                    "properties": {
+                                      "resolution": {
+                                        "default": "Required",
+                                        "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                        "enum": [
+                                          "Required",
+                                          "Optional"
+                                        ],
+                                        "type": "string"
+                                      },
+                                      "resolve": {
+                                        "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                        "enum": [
+                                          "Always",
+                                          "IfNotPresent"
+                                        ],
+                                        "type": "string"
+                                      }
+                                    },
+                                    "type": "object"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "iam": {
+                                "description": "Whether or not to use the Batch job IAM role defined in a job definition\nwhen mounting the Amazon EFS file system. If enabled, transit encryption\nmust be enabled in the EFSVolumeConfiguration. If this parameter is omitted,\nthe default value of DISABLED is used. For more information, see Using Amazon\nEFS Access Points (https://docs.aws.amazon.com/batch/latest/userguide/efs-volumes.html#efs-volume-accesspoints)\nin the Batch User Guide. EFS IAM authorization requires that TransitEncryption\nbe ENABLED and that a JobRoleArn is specified.",
+                                "enum": [
+                                  "ENABLED",
+                                  "DISABLED"
+                                ],
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "fileSystemId": {
+                            "description": "The Amazon EFS file system ID to use.\n\n\nFileSystemID is a required field",
+                            "type": "string"
+                          },
+                          "fileSystemIdRef": {
+                            "description": "FileSystemIDRef are references to Filesystem used to set\nthe FileSystemID.",
+                            "properties": {
+                              "name": {
+                                "description": "Name of the referenced object.",
+                                "type": "string"
+                              },
+                              "policy": {
+                                "description": "Policies for referencing.",
+                                "properties": {
+                                  "resolution": {
+                                    "default": "Required",
+                                    "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                    "enum": [
+                                      "Required",
+                                      "Optional"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "resolve": {
+                                    "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                    "enum": [
+                                      "Always",
+                                      "IfNotPresent"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            },
+                            "required": [
+                              "name"
+                            ],
+                            "type": "object"
+                          },
+                          "fileSystemIdSelector": {
+                            "description": "FileSystemIDSelector selects references to Filesystem used\nto set the FileSystemID.",
+                            "properties": {
+                              "matchControllerRef": {
+                                "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                "type": "boolean"
+                              },
+                              "matchLabels": {
+                                "additionalProperties": {
+                                  "type": "string"
+                                },
+                                "description": "MatchLabels ensures an object with matching labels is selected.",
+                                "type": "object"
+                              },
+                              "policy": {
+                                "description": "Policies for selection.",
+                                "properties": {
+                                  "resolution": {
+                                    "default": "Required",
+                                    "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                    "enum": [
+                                      "Required",
+                                      "Optional"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "resolve": {
+                                    "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                    "enum": [
+                                      "Always",
+                                      "IfNotPresent"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "rootDirectory": {
+                            "description": "The directory within the Amazon EFS file system to mount as the root directory\ninside the host. If this parameter is omitted, the root of the Amazon EFS\nvolume is used instead. Specifying / has the same effect as omitting this\nparameter. The maximum length is 4,096 characters.\n\n\nIf an EFS access point is specified in the authorizationConfig, the root\ndirectory parameter must either be omitted or set to /, which enforces the\npath set on the Amazon EFS access point.",
+                            "type": "string"
+                          },
+                          "transitEncryption": {
+                            "description": "Determines whether to enable encryption for Amazon EFS data in transit between\nthe Amazon ECS host and the Amazon EFS server. Transit encryption must be\nenabled if Amazon EFS IAM authorization is used. If this parameter is omitted,\nthe default value of DISABLED is used. For more information, see Encrypting\ndata in transit (https://docs.aws.amazon.com/efs/latest/ug/encryption-in-transit.html)\nin the Amazon Elastic File System User Guide.",
+                            "enum": [
+                              "ENABLED",
+                              "DISABLED"
+                            ],
+                            "type": "string"
+                          },
+                          "transitEncryptionPort": {
+                            "description": "The port to use when sending encrypted data between the Amazon ECS host and\nthe Amazon EFS server. If you don't specify a transit encryption port, it\nuses the port selection strategy that the Amazon EFS mount helper uses. The\nvalue must be between 0 and 65,535. For more information, see EFS Mount Helper\n(https://docs.aws.amazon.com/efs/latest/ug/efs-mount-helper.html) in the\nAmazon Elastic File System User Guide.",
+                            "format": "int64",
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "host": {
+                        "description": "The contents of the host parameter determine whether your data volume persists\non the host container instance and where it is stored. If the host parameter\nis empty, then the Docker daemon assigns a host path for your data volume.\nHowever, the data isn't guaranteed to persist after the containers associated\nwith it stop running.\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                        "properties": {
+                          "sourcePath": {
+                            "description": "The path on the host container instance that's presented to the container.\nIf this parameter is empty, then the Docker daemon has assigned a host path\nfor you. If this parameter contains a file location, then the data volume\npersists at the specified location on the host container instance until you\ndelete it manually. If the source path location doesn't exist on the host\ncontainer instance, the Docker daemon creates it. If the location does exist,\nthe contents of the source path folder are exported.\n\n\nThis parameter isn't applicable to jobs that run on Fargate resources and\nshouldn't be provided.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "name": {
+                        "description": "The name of the volume. Up to 255 letters (uppercase and lowercase), numbers,\nhyphens, and underscores are allowed. This name is referenced in the sourceVolume\nparameter of container definition mountPoints.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "jobDefinitionType": {
+              "description": "The type of job definition. For more information about multi-node parallel\njobs, see Creating a multi-node parallel job definition (https://docs.aws.amazon.com/batch/latest/userguide/multi-node-job-def.html)\nin the Batch User Guide.\n\n\nIf the job is run on Fargate resources, then multinode isn't supported.\n\n\nType is a required field",
+              "enum": [
+                "container",
+                "multinode"
+              ],
+              "type": "string"
+            },
+            "nodeProperties": {
+              "description": "An object with various properties specific to multi-node parallel jobs.\n\n\nIf the job runs on Fargate resources, then you must not specify nodeProperties;\nuse containerProperties instead.",
+              "properties": {
+                "mainNode": {
+                  "description": "Specifies the node index for the main node of a multi-node parallel job.\nThis node index value must be fewer than the number of nodes.\n\n\nMainNode is a required field",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "nodeRangeProperties": {
+                  "description": "A list of node ranges and their properties associated with a multi-node parallel\njob.\n\n\nNodeRangeProperties is a required field",
+                  "items": {
+                    "description": "NodeRangeProperty defines the properties of the node range for a multi-node parallel job.",
+                    "properties": {
+                      "container": {
+                        "description": "The container details for the node range.",
+                        "properties": {
+                          "command": {
+                            "description": "The command that's passed to the container. This parameter maps to Cmd in\nthe Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the COMMAND parameter to docker run (https://docs.docker.com/engine/reference/run/).\nFor more information, see https://docs.docker.com/engine/reference/builder/#cmd\n(https://docs.docker.com/engine/reference/builder/#cmd).",
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "environment": {
+                            "description": "The environment variables to pass to a container. This parameter maps to\nEnv in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --env option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nWe don't recommend using plaintext environment variables for sensitive information,\nsuch as credential data.\n\n\nEnvironment variables must not start with AWS_BATCH; this naming convention\nis reserved for variables that are set by the Batch service.",
+                            "items": {
+                              "description": "KeyValuePair defines a key-value pair object.",
+                              "properties": {
+                                "name": {
+                                  "description": "The name of the key-value pair. For environment variables, this is the name\nof the environment variable.",
+                                  "type": "string"
+                                },
+                                "value": {
+                                  "description": "The value of the key-value pair. For environment variables, this is the value\nof the environment variable.",
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "executionRoleARNRef": {
+                            "description": "ExecutionRoleARNRef is a reference to an ARN of the IAM role used to set\nthe ExecutionRoleARN.",
+                            "properties": {
+                              "name": {
+                                "description": "Name of the referenced object.",
+                                "type": "string"
+                              },
+                              "policy": {
+                                "description": "Policies for referencing.",
+                                "properties": {
+                                  "resolution": {
+                                    "default": "Required",
+                                    "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                    "enum": [
+                                      "Required",
+                                      "Optional"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "resolve": {
+                                    "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                    "enum": [
+                                      "Always",
+                                      "IfNotPresent"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            },
+                            "required": [
+                              "name"
+                            ],
+                            "type": "object"
+                          },
+                          "executionRoleARNSelector": {
+                            "description": "ExecutionRoleARNSelector selects references to an ARN of the IAM role used\nto set the ExecutionRoleARN.",
+                            "properties": {
+                              "matchControllerRef": {
+                                "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                "type": "boolean"
+                              },
+                              "matchLabels": {
+                                "additionalProperties": {
+                                  "type": "string"
+                                },
+                                "description": "MatchLabels ensures an object with matching labels is selected.",
+                                "type": "object"
+                              },
+                              "policy": {
+                                "description": "Policies for selection.",
+                                "properties": {
+                                  "resolution": {
+                                    "default": "Required",
+                                    "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                    "enum": [
+                                      "Required",
+                                      "Optional"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "resolve": {
+                                    "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                    "enum": [
+                                      "Always",
+                                      "IfNotPresent"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "executionRoleArn": {
+                            "description": "The Amazon Resource Name (ARN) of the execution role that Batch can assume.\nFor jobs that run on Fargate resources, you must provide an execution role.\nFor more information, see Batch execution IAM role (https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html)\nin the Batch User Guide.",
+                            "type": "string"
+                          },
+                          "fargatePlatformConfiguration": {
+                            "description": "The platform configuration for jobs that are running on Fargate resources.\nJobs that are running on EC2 resources must not specify this parameter.",
+                            "properties": {
+                              "platformVersion": {
+                                "description": "The Fargate platform version where the jobs are running. A platform version\nis specified only for jobs that are running on Fargate resources. If one\nisn't specified, the LATEST platform version is used by default. This uses\na recent, approved version of the Fargate platform for compute resources.\nFor more information, see Fargate platform versions (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform_versions.html)\nin the Amazon Elastic Container Service Developer Guide.",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "image": {
+                            "description": "The image used to start a container. This string is passed directly to the\nDocker daemon. Images in the Docker Hub registry are available by default.\nOther repositories are specified with repository-url/image:tag . Up to 255\nletters (uppercase and lowercase), numbers, hyphens, underscores, colons,\nperiods, forward slashes, and number signs are allowed. This parameter maps\nto Image in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the IMAGE parameter of docker run (https://docs.docker.com/engine/reference/run/).\n\n\nDocker image architecture must match the processor architecture of the compute\nresources that they're scheduled on. For example, ARM-based Docker images\ncan only run on ARM-based compute resources.\n\n\n   * Images in Amazon ECR repositories use the full registry and repository\n   URI (for example, 012345678910.dkr.ecr.<region-name>.amazonaws.com/<repository-name>).\n\n\n   * Images in official repositories on Docker Hub use a single name (for\n   example, ubuntu or mongo).\n\n\n   * Images in other repositories on Docker Hub are qualified with an organization\n   name (for example, amazon/amazon-ecs-agent).\n\n\n   * Images in other online repositories are qualified further by a domain\n   name (for example, quay.io/assemblyline/ubuntu).",
+                            "type": "string"
+                          },
+                          "instanceType": {
+                            "description": "The instance type to use for a multi-node parallel job. All node groups in\na multi-node parallel job must use the same instance type.\n\n\nThis parameter isn't applicable to single-node container jobs or jobs that\nrun on Fargate resources, and shouldn't be provided.",
+                            "type": "string"
+                          },
+                          "jobRoleARNRef": {
+                            "description": "JobRoleARNRef is a reference to an ARN of the IAM role used to set\nthe JobRoleARN.",
+                            "properties": {
+                              "name": {
+                                "description": "Name of the referenced object.",
+                                "type": "string"
+                              },
+                              "policy": {
+                                "description": "Policies for referencing.",
+                                "properties": {
+                                  "resolution": {
+                                    "default": "Required",
+                                    "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                    "enum": [
+                                      "Required",
+                                      "Optional"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "resolve": {
+                                    "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                    "enum": [
+                                      "Always",
+                                      "IfNotPresent"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            },
+                            "required": [
+                              "name"
+                            ],
+                            "type": "object"
+                          },
+                          "jobRoleARNSelector": {
+                            "description": "JobRoleARNSelector selects references to an ARN of the IAM role used\nto set the JobRoleARN.",
+                            "properties": {
+                              "matchControllerRef": {
+                                "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                "type": "boolean"
+                              },
+                              "matchLabels": {
+                                "additionalProperties": {
+                                  "type": "string"
+                                },
+                                "description": "MatchLabels ensures an object with matching labels is selected.",
+                                "type": "object"
+                              },
+                              "policy": {
+                                "description": "Policies for selection.",
+                                "properties": {
+                                  "resolution": {
+                                    "default": "Required",
+                                    "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                    "enum": [
+                                      "Required",
+                                      "Optional"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "resolve": {
+                                    "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                    "enum": [
+                                      "Always",
+                                      "IfNotPresent"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "jobRoleArn": {
+                            "description": "The Amazon Resource Name (ARN) of the IAM role that the container can assume\nfor Amazon Web Services permissions. For more information, see IAM Roles\nfor Tasks (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)\nin the Amazon Elastic Container Service Developer Guide.",
+                            "type": "string"
+                          },
+                          "linuxParameters": {
+                            "description": "Linux-specific modifications that are applied to the container, such as details\nfor device mappings.",
+                            "properties": {
+                              "devices": {
+                                "description": "Any host devices to expose to the container. This parameter maps to Devices\nin the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --device option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                                "items": {
+                                  "description": "Device defines a container instance host device.\n\n\nThis object isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                                  "properties": {
+                                    "containerPath": {
+                                      "description": "The path inside the container that's used to expose the host device. By default,\nthe hostPath value is used.",
+                                      "type": "string"
+                                    },
+                                    "hostPath": {
+                                      "description": "The path for the device on the host container instance.\n\n\nHostPath is a required field",
+                                      "type": "string"
+                                    },
+                                    "permissions": {
+                                      "description": "The explicit permissions to provide to the container for the device. By default,\nthe container has permissions for read, write, and mknod for the device.",
+                                      "items": {
+                                        "type": "string"
+                                      },
+                                      "type": "array"
+                                    }
+                                  },
+                                  "required": [
+                                    "hostPath"
+                                  ],
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "initProcessEnabled": {
+                                "description": "If true, run an init process inside the container that forwards signals and\nreaps processes. This parameter maps to the --init option to docker run (https://docs.docker.com/engine/reference/run/).\nThis parameter requires version 1.25 of the Docker Remote API or greater\non your container instance. To check the Docker Remote API version on your\ncontainer instance, log into your container instance and run the following\ncommand: sudo docker version | grep \"Server API version\"",
+                                "type": "boolean"
+                              },
+                              "maxSwap": {
+                                "description": "The total amount of swap memory (in MiB) a container can use. This parameter\nis translated to the --memory-swap option to docker run (https://docs.docker.com/engine/reference/run/)\nwhere the value is the sum of the container memory plus the maxSwap value.\nFor more information, see --memory-swap details (https://docs.docker.com/config/containers/resource_constraints/#--memory-swap-details)\nin the Docker documentation.\n\n\nIf a maxSwap value of 0 is specified, the container doesn't use swap. Accepted\nvalues are 0 or any positive integer. If the maxSwap parameter is omitted,\nthe container doesn't use the swap configuration for the container instance\nit is running on. A maxSwap value must be set for the swappiness parameter\nto be used.\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                                "format": "int64",
+                                "type": "integer"
+                              },
+                              "sharedMemorySize": {
+                                "description": "The value for the size (in MiB) of the /dev/shm volume. This parameter maps\nto the --shm-size option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                                "format": "int64",
+                                "type": "integer"
+                              },
+                              "swappiness": {
+                                "description": "This allows you to tune a container's memory swappiness behavior. A swappiness\nvalue of 0 causes swapping not to happen unless absolutely necessary. A swappiness\nvalue of 100 causes pages to be swapped very aggressively. Accepted values\nare whole numbers between 0 and 100. If the swappiness parameter isn't specified,\na default value of 60 is used. If a value isn't specified for maxSwap, then\nthis parameter is ignored. If maxSwap is set to 0, the container doesn't\nuse swap. This parameter maps to the --memory-swappiness option to docker\nrun (https://docs.docker.com/engine/reference/run/).\n\n\nConsider the following when you use a per-container swap configuration.\n\n\n   * Swap space must be enabled and allocated on the container instance for\n   the containers to use. The Amazon ECS optimized AMIs don't have swap enabled\n   by default. You must enable swap on the instance to use this feature.\n   For more information, see Instance Store Swap Volumes (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-store-swap-volumes.html)\n   in the Amazon EC2 User Guide for Linux Instances or How do I allocate\n   memory to work as swap space in an Amazon EC2 instance by using a swap\n   file? (http://aws.amazon.com/premiumsupport/knowledge-center/ec2-memory-swap-file/)\n\n\n   * The swap space parameters are only supported for job definitions using\n   EC2 resources.\n\n\n   * If the maxSwap and swappiness parameters are omitted from a job definition,\n   each container will have a default swappiness value of 60, and the total\n   swap usage will be limited to two times the memory reservation of the\n   container.\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                                "format": "int64",
+                                "type": "integer"
+                              },
+                              "tmpfs": {
+                                "description": "The container path, mount options, and size (in MiB) of the tmpfs mount.\nThis parameter maps to the --tmpfs option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                                "items": {
+                                  "description": "Tmpfs defines the container path, mount options, and size of the tmpfs mount.\n\n\nThis object isn't applicable to jobs that are running on Fargate resources.",
+                                  "properties": {
+                                    "containerPath": {
+                                      "description": "The absolute file path in the container where the tmpfs volume is mounted.\n\n\nContainerPath is a required field",
+                                      "type": "string"
+                                    },
+                                    "mountOptions": {
+                                      "description": "The list of tmpfs volume mount options.\n\n\nValid values: \"defaults\" | \"ro\" | \"rw\" | \"suid\" | \"nosuid\" | \"dev\" | \"nodev\"\n| \"exec\" | \"noexec\" | \"sync\" | \"async\" | \"dirsync\" | \"remount\" | \"mand\" |\n\"nomand\" | \"atime\" | \"noatime\" | \"diratime\" | \"nodiratime\" | \"bind\" | \"rbind\"\n| \"unbindable\" | \"runbindable\" | \"private\" | \"rprivate\" | \"shared\" | \"rshared\"\n| \"slave\" | \"rslave\" | \"relatime\" | \"norelatime\" | \"strictatime\" | \"nostrictatime\"\n| \"mode\" | \"uid\" | \"gid\" | \"nr_inodes\" | \"nr_blocks\" | \"mpol\"",
+                                      "items": {
+                                        "type": "string"
+                                      },
+                                      "type": "array"
+                                    },
+                                    "size": {
+                                      "description": "The size (in MiB) of the tmpfs volume.\n\n\nSize is a required field",
+                                      "format": "int64",
+                                      "type": "integer"
+                                    }
+                                  },
+                                  "required": [
+                                    "containerPath",
+                                    "size"
+                                  ],
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "logConfiguration": {
+                            "description": "The log configuration specification for the container.\n\n\nThis parameter maps to LogConfig in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --log-driver option to docker run (https://docs.docker.com/engine/reference/run/).\nBy default, containers use the same logging driver that the Docker daemon\nuses. However the container might use a different logging driver than the\nDocker daemon by specifying a log driver with this parameter in the container\ndefinition. To use a different logging driver for a container, the log system\nmust be configured properly on the container instance (or on a different\nlog server for remote logging options). For more information on the options\nfor different supported log drivers, see Configure logging drivers (https://docs.docker.com/engine/admin/logging/overview/)\nin the Docker documentation.\n\n\nBatch currently supports a subset of the logging drivers available to the\nDocker daemon (shown in the LogConfiguration data type).\n\n\nThis parameter requires version 1.18 of the Docker Remote API or greater\non your container instance. To check the Docker Remote API version on your\ncontainer instance, log into your container instance and run the following\ncommand: sudo docker version | grep \"Server API version\"\n\n\nThe Amazon ECS container agent running on a container instance must register\nthe logging drivers available on that instance with the ECS_AVAILABLE_LOGGING_DRIVERS\nenvironment variable before containers placed on that instance can use these\nlog configuration options. For more information, see Amazon ECS Container\nAgent Configuration (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html)\nin the Amazon Elastic Container Service Developer Guide.",
+                            "properties": {
+                              "logDriver": {
+                                "description": "The log driver to use for the container. The valid values listed for this\nparameter are log drivers that the Amazon ECS container agent can communicate\nwith by default.\n\n\nThe supported log drivers are awslogs, fluentd, gelf, json-file, journald,\nlogentries, syslog, and splunk.\n\n\nJobs that are running on Fargate resources are restricted to the awslogs\nand splunk log drivers.\n\n\nawslogs\n\n\nSpecifies the Amazon CloudWatch Logs logging driver. For more information,\nsee Using the awslogs Log Driver (https://docs.aws.amazon.com/batch/latest/userguide/using_awslogs.html)\nin the Batch User Guide and Amazon CloudWatch Logs logging driver (https://docs.docker.com/config/containers/logging/awslogs/)\nin the Docker documentation.\n\n\nfluentd\n\n\nSpecifies the Fluentd logging driver. For more information, including usage\nand options, see Fluentd logging driver (https://docs.docker.com/config/containers/logging/fluentd/)\nin the Docker documentation.\n\n\ngelf\n\n\nSpecifies the Graylog Extended Format (GELF) logging driver. For more information,\nincluding usage and options, see Graylog Extended Format logging driver (https://docs.docker.com/config/containers/logging/gelf/)\nin the Docker documentation.\n\n\njournald\n\n\nSpecifies the journald logging driver. For more information, including usage\nand options, see Journald logging driver (https://docs.docker.com/config/containers/logging/journald/)\nin the Docker documentation.\n\n\njson-file\n\n\nSpecifies the JSON file logging driver. For more information, including usage\nand options, see JSON File logging driver (https://docs.docker.com/config/containers/logging/json-file/)\nin the Docker documentation.\n\n\nsplunk\n\n\nSpecifies the Splunk logging driver. For more information, including usage\nand options, see Splunk logging driver (https://docs.docker.com/config/containers/logging/splunk/)\nin the Docker documentation.\n\n\nsyslog\n\n\nSpecifies the syslog logging driver. For more information, including usage\nand options, see Syslog logging driver (https://docs.docker.com/config/containers/logging/syslog/)\nin the Docker documentation.\n\n\nIf you have a custom driver that's not listed earlier that you want to work\nwith the Amazon ECS container agent, you can fork the Amazon ECS container\nagent project that's available on GitHub (https://github.com/aws/amazon-ecs-agent)\nand customize it to work with that driver. We encourage you to submit pull\nrequests for changes that you want to have included. However, Amazon Web\nServices doesn't currently support running modified copies of this software.\n\n\nThis parameter requires version 1.18 of the Docker Remote API or greater\non your container instance. To check the Docker Remote API version on your\ncontainer instance, log into your container instance and run the following\ncommand: sudo docker version | grep \"Server API version\"\n\n\nLogDriver is a required field",
+                                "enum": [
+                                  "json-file",
+                                  "syslog",
+                                  "journald",
+                                  "gelf",
+                                  "fluentd",
+                                  "awslogs",
+                                  "splunk"
+                                ],
+                                "type": "string"
+                              },
+                              "options": {
+                                "additionalProperties": {
+                                  "type": "string"
+                                },
+                                "description": "The configuration options to send to the log driver. This parameter requires\nversion 1.19 of the Docker Remote API or greater on your container instance.\nTo check the Docker Remote API version on your container instance, log into\nyour container instance and run the following command: sudo docker version\n| grep \"Server API version\"",
+                                "type": "object"
+                              },
+                              "secretOptions": {
+                                "description": "The secrets to pass to the log configuration. For more information, see Specifying\nSensitive Data (https://docs.aws.amazon.com/batch/latest/userguide/specifying-sensitive-data.html)\nin the Batch User Guide.",
+                                "items": {
+                                  "description": "Secret defines the secret to expose to your container. Secrets can\nbe exposed to a container in the following ways:\n\n\n  - To inject sensitive data into your containers as environment variables,\n    use the secrets container definition parameter.\n\n\n  - To reference sensitive information in the log configuration of a container,\n    use the secretOptions container definition parameter.\n\n\nFor more information, see Specifying sensitive data (https://docs.aws.amazon.com/batch/latest/userguide/specifying-sensitive-data.html)\nin the Batch User Guide.",
+                                  "properties": {
+                                    "name": {
+                                      "description": "The name of the secret.\n\n\nName is a required field",
+                                      "type": "string"
+                                    },
+                                    "valueFrom": {
+                                      "description": "The secret to expose to the container. The supported values are either the\nfull ARN of the Secrets Manager secret or the full ARN of the parameter in\nthe Amazon Web Services Systems Manager Parameter Store.\n\n\nIf the Amazon Web Services Systems Manager Parameter Store parameter exists\nin the same Region as the job you're launching, then you can use either the\nfull ARN or name of the parameter. If the parameter exists in a different\nRegion, then the full ARN must be specified.\n\n\nValueFrom is a required field",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "valueFrom"
+                                  ],
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              }
+                            },
+                            "required": [
+                              "logDriver"
+                            ],
+                            "type": "object"
+                          },
+                          "mountPoints": {
+                            "description": "The mount points for data volumes in your container. This parameter maps\nto Volumes in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --volume option to docker run (https://docs.docker.com/engine/reference/run/).",
+                            "items": {
+                              "description": "MountPoint defines the details on a Docker volume mount point that's used in a job's container properties.\nThis parameter maps to Volumes in the Create a container (https://docs.docker.com/engine/reference/api/docker_remote_api_v1.19/#create-a-container)\nsection of the Docker Remote API and the --volume option to docker run.",
+                              "properties": {
+                                "containerPath": {
+                                  "description": "The path on the container where the host volume is mounted.",
+                                  "type": "string"
+                                },
+                                "readOnly": {
+                                  "description": "If this value is true, the container has read-only access to the volume.\nOtherwise, the container can write to the volume. The default value is false.",
+                                  "type": "boolean"
+                                },
+                                "sourceVolume": {
+                                  "description": "The name of the volume to mount.",
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "networkConfiguration": {
+                            "description": "The network configuration for jobs that are running on Fargate resources.\nJobs that are running on EC2 resources must not specify this parameter.",
+                            "properties": {
+                              "assignPublicIp": {
+                                "description": "Indicates whether the job should have a public IP address. For a job that\nis running on Fargate resources in a private subnet to send outbound traffic\nto the internet (for example, to pull container images), the private subnet\nrequires a NAT gateway be attached to route requests to the internet. For\nmore information, see Amazon ECS task networking (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking.html).\nThe default value is \"DISABLED\".",
+                                "enum": [
+                                  "ENABLED",
+                                  "DISABLED"
+                                ],
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "privileged": {
+                            "description": "When this parameter is true, the container is given elevated permissions\non the host container instance (similar to the root user). This parameter\nmaps to Privileged in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --privileged option to docker run (https://docs.docker.com/engine/reference/run/).\nThe default value is false.\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided, or specified as false.",
+                            "type": "boolean"
+                          },
+                          "readonlyRootFilesystem": {
+                            "description": "When this parameter is true, the container is given read-only access to its\nroot file system. This parameter maps to ReadonlyRootfs in the Create a container\n(https://docs.docker.com/engine/api/v1.23/#create-a-container) section of\nthe Docker Remote API (https://docs.docker.com/engine/api/v1.23/) and the\n--read-only option to docker run.",
+                            "type": "boolean"
+                          },
+                          "resourceRequirements": {
+                            "description": "The type and amount of resources to assign to a container. The supported\nresources include GPU, MEMORY, and VCPU.",
+                            "items": {
+                              "description": "ResourceRequirement defines the type and amount of a resource to assign to a container. The supported\nresources include GPU, MEMORY, and VCPU.",
+                              "properties": {
+                                "resourceType": {
+                                  "description": "The type of resource to assign to a container. The supported resources include\nGPU, MEMORY, and VCPU.\n\n\nType is a required field",
+                                  "enum": [
+                                    "GPU",
+                                    "MEMORY",
+                                    "VCPU"
+                                  ],
+                                  "type": "string"
+                                },
+                                "value": {
+                                  "description": "The quantity of the specified resource to reserve for the container. The\nvalues vary based on the type specified.\n\n\ntype=\"GPU\"\n\n\nThe number of physical GPUs to reserve for the container. The number of GPUs\nreserved for all containers in a job shouldn't exceed the number of available\nGPUs on the compute resource that the job is launched on.\n\n\nGPUs are not available for jobs that are running on Fargate resources.\n\n\ntype=\"MEMORY\"\n\n\nThe memory hard limit (in MiB) present to the container. This parameter is\nsupported for jobs that are running on EC2 resources. If your container attempts\nto exceed the memory specified, the container is terminated. This parameter\nmaps to Memory in the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --memory option to docker run (https://docs.docker.com/engine/reference/run/).\nYou must specify at least 4 MiB of memory for a job. This is required but\ncan be specified in several places for multi-node parallel (MNP) jobs. It\nmust be specified for each node at least once. This parameter maps to Memory\nin the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --memory option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nIf you're trying to maximize your resource utilization by providing your\njobs as much memory as possible for a particular instance type, see Memory\nManagement (https://docs.aws.amazon.com/batch/latest/userguide/memory-management.html)\nin the Batch User Guide.\n\n\nFor jobs that are running on Fargate resources, then value is the hard limit\n(in MiB), and must match one of the supported values and the VCPU values\nmust be one of the values supported for that memory value.\n\n\nvalue = 512\n\n\nVCPU = 0.25\n\n\nvalue = 1024\n\n\nVCPU = 0.25 or 0.5\n\n\nvalue = 2048\n\n\nVCPU = 0.25, 0.5, or 1\n\n\nvalue = 3072\n\n\nVCPU = 0.5, or 1\n\n\nvalue = 4096\n\n\nVCPU = 0.5, 1, or 2\n\n\nvalue = 5120, 6144, or 7168\n\n\nVCPU = 1 or 2\n\n\nvalue = 8192\n\n\nVCPU = 1, 2, or 4\n\n\nvalue = 9216, 10240, 11264, 12288, 13312, 14336, 15360, or 16384\n\n\nVCPU = 2 or 4\n\n\nvalue = 17408, 18432, 19456, 20480, 21504, 22528, 23552, 24576, 25600, 26624,\n27648, 28672, 29696, or 30720\n\n\nVCPU = 4\n\n\ntype=\"VCPU\"\n\n\nThe number of vCPUs reserved for the container. This parameter maps to CpuShares\nin the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --cpu-shares option to docker run (https://docs.docker.com/engine/reference/run/).\nEach vCPU is equivalent to 1,024 CPU shares. For EC2 resources, you must\nspecify at least one vCPU. This is required but can be specified in several\nplaces; it must be specified for each node at least once.\n\n\nFor jobs that are running on Fargate resources, then value must match one\nof the supported values and the MEMORY values must be one of the values supported\nfor that VCPU value. The supported values are 0.25, 0.5, 1, 2, and 4\n\n\nvalue = 0.25\n\n\nMEMORY = 512, 1024, or 2048\n\n\nvalue = 0.5\n\n\nMEMORY = 1024, 2048, 3072, or 4096\n\n\nvalue = 1\n\n\nMEMORY = 2048, 3072, 4096, 5120, 6144, 7168, or 8192\n\n\nvalue = 2\n\n\nMEMORY = 4096, 5120, 6144, 7168, 8192, 9216, 10240, 11264, 12288, 13312,\n14336, 15360, or 16384\n\n\nvalue = 4\n\n\nMEMORY = 8192, 9216, 10240, 11264, 12288, 13312, 14336, 15360, 16384, 17408,\n18432, 19456, 20480, 21504, 22528, 23552, 24576, 25600, 26624, 27648, 28672,\n29696, or 30720\n\n\nValue is a required field",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "resourceType",
+                                "value"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "secrets": {
+                            "description": "The secrets for the container. For more information, see Specifying sensitive\ndata (https://docs.aws.amazon.com/batch/latest/userguide/specifying-sensitive-data.html)\nin the Batch User Guide.",
+                            "items": {
+                              "description": "Secret defines the secret to expose to your container. Secrets can\nbe exposed to a container in the following ways:\n\n\n  - To inject sensitive data into your containers as environment variables,\n    use the secrets container definition parameter.\n\n\n  - To reference sensitive information in the log configuration of a container,\n    use the secretOptions container definition parameter.\n\n\nFor more information, see Specifying sensitive data (https://docs.aws.amazon.com/batch/latest/userguide/specifying-sensitive-data.html)\nin the Batch User Guide.",
+                              "properties": {
+                                "name": {
+                                  "description": "The name of the secret.\n\n\nName is a required field",
+                                  "type": "string"
+                                },
+                                "valueFrom": {
+                                  "description": "The secret to expose to the container. The supported values are either the\nfull ARN of the Secrets Manager secret or the full ARN of the parameter in\nthe Amazon Web Services Systems Manager Parameter Store.\n\n\nIf the Amazon Web Services Systems Manager Parameter Store parameter exists\nin the same Region as the job you're launching, then you can use either the\nfull ARN or name of the parameter. If the parameter exists in a different\nRegion, then the full ARN must be specified.\n\n\nValueFrom is a required field",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "valueFrom"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "ulimits": {
+                            "description": "A list of ulimits to set in the container. This parameter maps to Ulimits\nin the Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --ulimit option to docker run (https://docs.docker.com/engine/reference/run/).\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                            "items": {
+                              "description": "Ulimit defines the ulimit settings to pass to the container.\n\n\nThis object isn't applicable to jobs that are running on Fargate resources.",
+                              "properties": {
+                                "hardLimit": {
+                                  "description": "The hard limit for the ulimit type.\n\n\nHardLimit is a required field",
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "name": {
+                                  "description": "The type of the ulimit.\n\n\nName is a required field",
+                                  "type": "string"
+                                },
+                                "softLimit": {
+                                  "description": "The soft limit for the ulimit type.\n\n\nSoftLimit is a required field",
+                                  "format": "int64",
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "hardLimit",
+                                "name",
+                                "softLimit"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "user": {
+                            "description": "The user name to use inside the container. This parameter maps to User in\nthe Create a container (https://docs.docker.com/engine/api/v1.23/#create-a-container)\nsection of the Docker Remote API (https://docs.docker.com/engine/api/v1.23/)\nand the --user option to docker run (https://docs.docker.com/engine/reference/run/).",
+                            "type": "string"
+                          },
+                          "volumes": {
+                            "description": "A list of data volumes used in a job.",
+                            "items": {
+                              "description": "Volume defines a data volume used in a job's container properties.",
+                              "properties": {
+                                "efsVolumeConfiguration": {
+                                  "description": "This parameter is specified when you are using an Amazon Elastic File System\nfile system for job storage. Jobs that are running on Fargate resources must\nspecify a platformVersion of at least 1.4.0.",
+                                  "properties": {
+                                    "authorizationConfig": {
+                                      "description": "The authorization configuration details for the Amazon EFS file system.",
+                                      "properties": {
+                                        "accessPointId": {
+                                          "description": "The Amazon EFS access point ID to use. If an access point is specified, the\nroot directory value specified in the EFSVolumeConfiguration must either\nbe omitted or set to / which will enforce the path set on the EFS access\npoint. If an access point is used, transit encryption must be enabled in\nthe EFSVolumeConfiguration. For more information, see Working with Amazon\nEFS Access Points (https://docs.aws.amazon.com/efs/latest/ug/efs-access-points.html)\nin the Amazon Elastic File System User Guide.",
+                                          "type": "string"
+                                        },
+                                        "accessPointIdRef": {
+                                          "description": "AccessPointIDRef are references to AccessPoint used to set\nthe AccessPointID.",
+                                          "properties": {
+                                            "name": {
+                                              "description": "Name of the referenced object.",
+                                              "type": "string"
+                                            },
+                                            "policy": {
+                                              "description": "Policies for referencing.",
+                                              "properties": {
+                                                "resolution": {
+                                                  "default": "Required",
+                                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                                  "enum": [
+                                                    "Required",
+                                                    "Optional"
+                                                  ],
+                                                  "type": "string"
+                                                },
+                                                "resolve": {
+                                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                                  "enum": [
+                                                    "Always",
+                                                    "IfNotPresent"
+                                                  ],
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "type": "object"
+                                            }
+                                          },
+                                          "required": [
+                                            "name"
+                                          ],
+                                          "type": "object"
+                                        },
+                                        "accessPointIdSelector": {
+                                          "description": "AccessPointIDSelector selects references to AccessPoint used\nto set the AccessPointID.",
+                                          "properties": {
+                                            "matchControllerRef": {
+                                              "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                              "type": "boolean"
+                                            },
+                                            "matchLabels": {
+                                              "additionalProperties": {
+                                                "type": "string"
+                                              },
+                                              "description": "MatchLabels ensures an object with matching labels is selected.",
+                                              "type": "object"
+                                            },
+                                            "policy": {
+                                              "description": "Policies for selection.",
+                                              "properties": {
+                                                "resolution": {
+                                                  "default": "Required",
+                                                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                                  "enum": [
+                                                    "Required",
+                                                    "Optional"
+                                                  ],
+                                                  "type": "string"
+                                                },
+                                                "resolve": {
+                                                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                                  "enum": [
+                                                    "Always",
+                                                    "IfNotPresent"
+                                                  ],
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "type": "object"
+                                            }
+                                          },
+                                          "type": "object"
+                                        },
+                                        "iam": {
+                                          "description": "Whether or not to use the Batch job IAM role defined in a job definition\nwhen mounting the Amazon EFS file system. If enabled, transit encryption\nmust be enabled in the EFSVolumeConfiguration. If this parameter is omitted,\nthe default value of DISABLED is used. For more information, see Using Amazon\nEFS Access Points (https://docs.aws.amazon.com/batch/latest/userguide/efs-volumes.html#efs-volume-accesspoints)\nin the Batch User Guide. EFS IAM authorization requires that TransitEncryption\nbe ENABLED and that a JobRoleArn is specified.",
+                                          "enum": [
+                                            "ENABLED",
+                                            "DISABLED"
+                                          ],
+                                          "type": "string"
+                                        }
+                                      },
+                                      "type": "object"
+                                    },
+                                    "fileSystemId": {
+                                      "description": "The Amazon EFS file system ID to use.\n\n\nFileSystemID is a required field",
+                                      "type": "string"
+                                    },
+                                    "fileSystemIdRef": {
+                                      "description": "FileSystemIDRef are references to Filesystem used to set\nthe FileSystemID.",
+                                      "properties": {
+                                        "name": {
+                                          "description": "Name of the referenced object.",
+                                          "type": "string"
+                                        },
+                                        "policy": {
+                                          "description": "Policies for referencing.",
+                                          "properties": {
+                                            "resolution": {
+                                              "default": "Required",
+                                              "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                              "enum": [
+                                                "Required",
+                                                "Optional"
+                                              ],
+                                              "type": "string"
+                                            },
+                                            "resolve": {
+                                              "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                              "enum": [
+                                                "Always",
+                                                "IfNotPresent"
+                                              ],
+                                              "type": "string"
+                                            }
+                                          },
+                                          "type": "object"
+                                        }
+                                      },
+                                      "required": [
+                                        "name"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    "fileSystemIdSelector": {
+                                      "description": "FileSystemIDSelector selects references to Filesystem used\nto set the FileSystemID.",
+                                      "properties": {
+                                        "matchControllerRef": {
+                                          "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                                          "type": "boolean"
+                                        },
+                                        "matchLabels": {
+                                          "additionalProperties": {
+                                            "type": "string"
+                                          },
+                                          "description": "MatchLabels ensures an object with matching labels is selected.",
+                                          "type": "object"
+                                        },
+                                        "policy": {
+                                          "description": "Policies for selection.",
+                                          "properties": {
+                                            "resolution": {
+                                              "default": "Required",
+                                              "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                                              "enum": [
+                                                "Required",
+                                                "Optional"
+                                              ],
+                                              "type": "string"
+                                            },
+                                            "resolve": {
+                                              "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                                              "enum": [
+                                                "Always",
+                                                "IfNotPresent"
+                                              ],
+                                              "type": "string"
+                                            }
+                                          },
+                                          "type": "object"
+                                        }
+                                      },
+                                      "type": "object"
+                                    },
+                                    "rootDirectory": {
+                                      "description": "The directory within the Amazon EFS file system to mount as the root directory\ninside the host. If this parameter is omitted, the root of the Amazon EFS\nvolume is used instead. Specifying / has the same effect as omitting this\nparameter. The maximum length is 4,096 characters.\n\n\nIf an EFS access point is specified in the authorizationConfig, the root\ndirectory parameter must either be omitted or set to /, which enforces the\npath set on the Amazon EFS access point.",
+                                      "type": "string"
+                                    },
+                                    "transitEncryption": {
+                                      "description": "Determines whether to enable encryption for Amazon EFS data in transit between\nthe Amazon ECS host and the Amazon EFS server. Transit encryption must be\nenabled if Amazon EFS IAM authorization is used. If this parameter is omitted,\nthe default value of DISABLED is used. For more information, see Encrypting\ndata in transit (https://docs.aws.amazon.com/efs/latest/ug/encryption-in-transit.html)\nin the Amazon Elastic File System User Guide.",
+                                      "enum": [
+                                        "ENABLED",
+                                        "DISABLED"
+                                      ],
+                                      "type": "string"
+                                    },
+                                    "transitEncryptionPort": {
+                                      "description": "The port to use when sending encrypted data between the Amazon ECS host and\nthe Amazon EFS server. If you don't specify a transit encryption port, it\nuses the port selection strategy that the Amazon EFS mount helper uses. The\nvalue must be between 0 and 65,535. For more information, see EFS Mount Helper\n(https://docs.aws.amazon.com/efs/latest/ug/efs-mount-helper.html) in the\nAmazon Elastic File System User Guide.",
+                                      "format": "int64",
+                                      "type": "integer"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "host": {
+                                  "description": "The contents of the host parameter determine whether your data volume persists\non the host container instance and where it is stored. If the host parameter\nis empty, then the Docker daemon assigns a host path for your data volume.\nHowever, the data isn't guaranteed to persist after the containers associated\nwith it stop running.\n\n\nThis parameter isn't applicable to jobs that are running on Fargate resources\nand shouldn't be provided.",
+                                  "properties": {
+                                    "sourcePath": {
+                                      "description": "The path on the host container instance that's presented to the container.\nIf this parameter is empty, then the Docker daemon has assigned a host path\nfor you. If this parameter contains a file location, then the data volume\npersists at the specified location on the host container instance until you\ndelete it manually. If the source path location doesn't exist on the host\ncontainer instance, the Docker daemon creates it. If the location does exist,\nthe contents of the source path folder are exported.\n\n\nThis parameter isn't applicable to jobs that run on Fargate resources and\nshouldn't be provided.",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "name": {
+                                  "description": "The name of the volume. Up to 255 letters (uppercase and lowercase), numbers,\nhyphens, and underscores are allowed. This name is referenced in the sourceVolume\nparameter of container definition mountPoints.",
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "targetNodes": {
+                        "description": "The range of nodes, using node index values. A range of 0:3 indicates nodes\nwith index values of 0 through 3. If the starting range value is omitted\n(:n), then 0 is used to start the range. If the ending range value is omitted\n(n:), then the highest possible node index is used to end the range. Your\naccumulative node ranges must account for all nodes (0:n). You can nest node\nranges, for example 0:10 and 4:5, in which case the 4:5 range properties\noverride the 0:10 properties.\n\n\nTargetNodes is a required field",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "targetNodes"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "numNodes": {
+                  "description": "The number of nodes associated with a multi-node parallel job.\n\n\nNumNodes is a required field",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "mainNode",
+                "nodeRangeProperties",
+                "numNodes"
+              ],
+              "type": "object"
+            },
+            "parameters": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Default parameter substitution placeholders to set in the job definition.\nParameters are specified as a key-value pair mapping. Parameters in a SubmitJob\nrequest override any corresponding parameter defaults from the job definition.",
+              "type": "object"
+            },
+            "platformCapabilities": {
+              "description": "The platform capabilities required by the job definition. If no value is\nspecified, it defaults to EC2. To run the job on Fargate resources, specify\nFARGATE.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "propagateTags": {
+              "description": "Specifies whether to propagate the tags from the job or job definition to\nthe corresponding Amazon ECS task. If no value is specified, the tags are\nnot propagated. Tags can only be propagated to the tasks during task creation.\nFor tags with the same name, job tags are given priority over job definitions\ntags. If the total number of combined tags from the job and job definition\nis over 50, the job is moved to the FAILED state.",
+              "type": "boolean"
+            },
+            "region": {
+              "description": "Region is which region the Function will be created.",
+              "type": "string"
+            },
+            "retryStrategy": {
+              "description": "The retry strategy to use for failed jobs that are submitted with this job\ndefinition. Any retry strategy that's specified during a SubmitJob operation\noverrides the retry strategy defined here. If a job is terminated due to\na timeout, it isn't retried.",
+              "properties": {
+                "attempts": {
+                  "description": "The number of times to move a job to the RUNNABLE status. You can specify\nbetween 1 and 10 attempts. If the value of attempts is greater than one,\nthe job is retried on failure the same number of attempts as the value.",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "evaluateOnExit": {
+                  "description": "Array of up to 5 objects that specify conditions under which the job should\nbe retried or failed. If this parameter is specified, then the attempts parameter\nmust also be specified.",
+                  "items": {
+                    "description": "EvaluateOnExit specifies a set of conditions to be met, and an action to take (RETRY or\nEXIT) if all conditions are met.",
+                    "properties": {
+                      "action": {
+                        "description": "Specifies the action to take if all of the specified conditions (onStatusReason,\nonReason, and onExitCode) are met. The values aren't case sensitive.\n(AWS gives lowercase back!)\nAction is a required field",
+                        "enum": [
+                          "retry",
+                          "exit"
+                        ],
+                        "type": "string"
+                      },
+                      "onExitCode": {
+                        "description": "Contains a glob pattern to match against the decimal representation of the\nExitCode returned for a job. The pattern can be up to 512 characters in length.\nIt can contain only numbers, and can optionally end with an asterisk (*)\nso that only the start of the string needs to be an exact match.",
+                        "type": "string"
+                      },
+                      "onReason": {
+                        "description": "Contains a glob pattern to match against the Reason returned for a job. The\npattern can be up to 512 characters in length. It can contain letters, numbers,\nperiods (.), colons (:), and white space (including spaces and tabs). It\ncan optionally end with an asterisk (*) so that only the start of the string\nneeds to be an exact match.",
+                        "type": "string"
+                      },
+                      "onStatusReason": {
+                        "description": "Contains a glob pattern to match against the StatusReason returned for a\njob. The pattern can be up to 512 characters in length. It can contain letters,\nnumbers, periods (.), colons (:), and white space (including spaces or tabs).\nIt can optionally end with an asterisk (*) so that only the start of the\nstring needs to be an exact match.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "action"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The tags that you apply to the job definition to help you categorize and\norganize your resources. Each tag consists of a key and an optional value.\nFor more information, see Tagging Amazon Web Services Resources (https://docs.aws.amazon.com/batch/latest/userguide/using-tags.html)\nin Batch User Guide.",
+              "type": "object"
+            },
+            "timeout": {
+              "description": "The timeout configuration for jobs that are submitted with this job definition,\nafter which Batch terminates your jobs if they have not finished. If a job\nis terminated due to a timeout, it isn't retried. The minimum value for the\ntimeout is 60 seconds. Any timeout configuration that's specified during\na SubmitJob operation overrides the timeout configuration defined here. For\nmore information, see Job Timeouts (https://docs.aws.amazon.com/batch/latest/userguide/job_timeouts.html)\nin the Batch User Guide.",
+              "properties": {
+                "attemptDurationSeconds": {
+                  "description": "The time duration in seconds (measured from the job attempt's startedAt timestamp)\nafter which Batch terminates your jobs if they have not finished. The minimum\nvalue for the timeout is 60 seconds.",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "jobDefinitionType",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "A JobDefinitionStatus represents the observed state of a JobDefinition.",
+      "properties": {
+        "atProvider": {
+          "description": "JobDefinitionObservation keeps the state for the external resource",
+          "properties": {
+            "jobDefinitionArn": {
+              "description": "The Amazon Resource Name (ARN) for the job definition.",
+              "type": "string"
+            },
+            "revision": {
+              "description": "The revision of the job definition.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "status": {
+              "description": "The status of the job definition.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

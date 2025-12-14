@@ -1,0 +1,779 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/eks.aws.crossplane.io/v1beta1/cluster.json",
+  "title": "Cluster",
+  "description": "Cluster is the Schema for the clusters API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.418201+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "A ClusterSpec defines the desired state of an EKS Cluster.",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "ClusterParameters define the desired state of an AWS Elastic Kubernetes\nService cluster.",
+          "properties": {
+            "accessConfig": {
+              "description": "The access configuration for the cluster.",
+              "properties": {
+                "authenticationMode": {
+                  "description": "The desired authentication mode for the cluster.",
+                  "enum": [
+                    "API",
+                    "API_AND_CONFIG_MAP",
+                    "CONFIG_MAP"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "encryptionConfig": {
+              "description": "The encryption configuration for the cluster.",
+              "items": {
+                "description": "EncryptionConfig is the encryption configuration for a cluster.",
+                "properties": {
+                  "provider": {
+                    "description": "AWS Key Management Service (AWS KMS) customer master key (CMK). Either the\nARN or the alias can be used.",
+                    "properties": {
+                      "keyArn": {
+                        "description": "Amazon Resource Name (ARN) or alias of the customer master key (CMK). The\nCMK must be symmetric, created in the same region as the cluster, and if\nthe CMK was created in a different account, the user must have access to\nthe CMK. For more information, see Allowing Users in Other Accounts to Use\na CMK (https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html)\nin the AWS Key Management Service Developer Guide.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "keyArn"
+                    ],
+                    "type": "object"
+                  },
+                  "resources": {
+                    "description": "Specifies the resources to be encrypted. The only supported value is \"secrets\".",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "provider",
+                  "resources"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "kubernetesNetworkConfig": {
+              "description": "The Kubernetes network configuration for the cluster.",
+              "properties": {
+                "ipFamily": {
+                  "description": "Specify which IP family is used to assign Kubernetes pod and service IP\naddresses. If you don't specify a value, ipv4 is used by default. You can only\nspecify an IP family when you create a cluster and can't change this value once\nthe cluster is created. If you specify ipv6, the VPC and subnets that you\nspecify for cluster creation must have both IPv4 and IPv6 CIDR blocks assigned\nto them. You can't specify ipv6 for clusters in China Regions. You can only\nspecify ipv6 for 1.21 and later clusters that use version 1.10.1 or later of the\nAmazon VPC CNI add-on. If you specify ipv6, then ensure that your VPC meets the\nrequirements listed in the considerations listed in Assigning IPv6 addresses to\npods and services\n(https://docs.aws.amazon.com/eks/latest/userguide/cni-ipv6.html) in the Amazon\nEKS User Guide. Kubernetes assigns services IPv6 addresses from the unique local\naddress range (fc00::/7). You can't specify a custom IPv6 CIDR block. Pod\naddresses are assigned from the subnet's IPv6 CIDR.",
+                  "type": "string"
+                },
+                "serviceIpv4Cidr": {
+                  "description": "Don't specify a value if you select ipv6 for ipFamily. The CIDR block to assign\nKubernetes service IP addresses from. If you don't specify a block, Kubernetes\nassigns addresses from either the 10.100.0.0/16 or 172.20.0.0/16 CIDR blocks. We\nrecommend that you specify a block that does not overlap with resources in other\nnetworks that are peered or connected to your VPC. The block must meet the\nfollowing requirements:\n\n\n* Within one of the following private IP address\nblocks: 10.0.0.0/8, 172.16.0.0/12, or 192.168.0.0/16.\n\n\n* Doesn't overlap with\nany CIDR block assigned to the VPC that you selected for VPC.\n\n\n* Between /24 and\n/12.\n\n\nYou can only specify a custom CIDR block when you create a cluster and\ncan't change this value once the cluster is created.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ipFamily"
+              ],
+              "type": "object"
+            },
+            "logging": {
+              "description": "Enable or disable exporting the Kubernetes control plane logs for your cluster\nto CloudWatch Logs. By default, cluster control plane logs aren't exported\nto CloudWatch Logs. For more information, see Amazon EKS Cluster Control\nPlane Logs (https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html)\nin the Amazon EKS User Guide .\n\n\nCloudWatch Logs ingestion, archive storage, and data scanning rates apply\nto exported control plane logs. For more information, see Amazon CloudWatch\nPricing (http://aws.amazon.com/cloudwatch/pricing/).",
+              "properties": {
+                "clusterLogging": {
+                  "description": "The cluster control plane logging configuration for your cluster.",
+                  "items": {
+                    "description": "LogSetup specifies the logging types that are enabled.",
+                    "properties": {
+                      "enabled": {
+                        "description": "If a log type is enabled, that log type exports its control plane logs to\nCloudWatch Logs. If a log type isn't enabled, that log type doesn't export\nits control plane logs. Each individual log type can be enabled or disabled\nindependently.",
+                        "type": "boolean"
+                      },
+                      "types": {
+                        "description": "The available cluster control plane log types.",
+                        "items": {
+                          "description": "LogType is a type of logging.",
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "clusterLogging"
+              ],
+              "type": "object"
+            },
+            "outpostConfig": {
+              "description": "An object representing the configuration of your local Amazon EKS cluster on an\nAmazon Web Services Outpost. Before creating a local cluster on an Outpost,\nreview Creating an Amazon EKS cluster on an Amazon Web Services Outpost\n(https://docs.aws.amazon.com/eks/latest/userguide/create-cluster-outpost.html)\nin the Amazon EKS User Guide. This object isn't available for creating Amazon\nEKS clusters on the Amazon Web Services cloud.",
+              "properties": {
+                "controlPlaneInstanceType": {
+                  "description": "The Amazon EC2 instance type that you want to use for your local Amazon EKS\ncluster on Outposts. The instance type that you specify is used for all\nKubernetes control plane instances. The instance type can't be changed after\ncluster creation. Choose an instance type based on the number of nodes that your\ncluster will have. If your cluster will have:\n\n\n* 1\u201320 nodes, then we recommend\nspecifying a large instance type.\n\n\n* 21\u2013100 nodes, then we recommend specifying\nan xlarge instance type.\n\n\n* 101\u2013250 nodes, then we recommend specifying a\n2xlarge instance type.\n\n\nFor a list of the available Amazon EC2 instance types,\nsee Compute and storage in Outposts rack features\n(http://aws.amazon.com/outposts/rack/features/). The control plane is not\nautomatically scaled by Amazon EKS.\n\n\nThis member is required.",
+                  "type": "string"
+                },
+                "outpostArns": {
+                  "description": "The ARN of the Outpost that you want to use for your local Amazon EKS cluster on\nOutposts. Only a single Outpost ARN is supported.\n\n\nThis member is required.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "controlPlaneInstanceType",
+                "outpostArns"
+              ],
+              "type": "object"
+            },
+            "region": {
+              "description": "Region is the region you'd like your Cluster to be created in.",
+              "type": "string"
+            },
+            "resourcesVpcConfig": {
+              "description": "The VPC configuration used by the cluster control plane. Amazon EKS VPC resources\nhave specific requirements to work properly with Kubernetes. For more information,\nsee Cluster VPC Considerations (https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html)\nand Cluster Security Group Considerations (https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html)\nin the Amazon EKS User Guide. You must specify at least two subnets. You\ncan specify up to five security groups, but we recommend that you use a dedicated\nsecurity group for your cluster control plane.\n\n\nResourcesVpcConfig is a required field",
+              "properties": {
+                "endpointPrivateAccess": {
+                  "description": "Set this value to true to enable private access for your cluster's Kubernetes\nAPI server endpoint. If you enable private access, Kubernetes API requests\nfrom within your cluster's VPC use the private VPC endpoint. The default\nvalue for this parameter is false, which disables private access for your\nKubernetes API server. For more information, see Amazon EKS Cluster Endpoint\nAccess Control (https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html)\nin the Amazon EKS User Guide.",
+                  "type": "boolean"
+                },
+                "endpointPublicAccess": {
+                  "description": "Set this value to false to disable public access for your cluster's Kubernetes\nAPI server endpoint. If you disable public access, your cluster's Kubernetes\nAPI server can receive only requests from within the cluster VPC. The default\nvalue for this parameter is true, which enables public access for your Kubernetes\nAPI server. For more information, see Amazon EKS Cluster Endpoint Access\nControl (https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html)\nin the Amazon EKS User Guide.",
+                  "type": "boolean"
+                },
+                "publicAccessCidrs": {
+                  "description": "The CIDR blocks that are allowed access to your cluster's public Kubernetes\nAPI server endpoint. Communication to the endpoint from addresses outside\nof the CIDR blocks that you specify is denied. The default value is 0.0.0.0/0.\nIf you've disabled private endpoint access and you have worker nodes or AWS\nFargate pods in the cluster, then ensure that you specify the necessary CIDR\nblocks. For more information, see Amazon EKS Cluster Endpoint Access Control\n(https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html)\nin the Amazon EKS User Guide.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "securityGroupIdRefs": {
+                  "description": "SecurityGroupIDRefs are references to SecurityGroups used to set\nthe SecurityGroupIDs.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "securityGroupIdSelector": {
+                  "description": "SecurityGroupIDSelector selects references to SecurityGroups used\nto set the SecurityGroupIDs.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "securityGroupIds": {
+                  "description": "Specify one or more security groups for the cross-account elastic network\ninterfaces that Amazon EKS creates to use to allow communication between\nyour worker nodes and the Kubernetes control plane. If you don't specify\na security group, the default security group for your VPC is used.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "subnetIdRefs": {
+                  "description": "SubnetIDRefs are references to Subnets used to set\nthe SubnetIDs.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "subnetIdSelector": {
+                  "description": "SubnetIDSelector selects references to Subnets used\nto set the SubnetIDs.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "subnetIds": {
+                  "description": "Specify subnets for your Amazon EKS worker nodes. Amazon EKS creates cross-account\nelastic network interfaces in these subnets to allow communication between\nyour worker nodes and the Kubernetes control plane.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "roleArn": {
+              "description": "The Amazon Resource Name (ARN) of the IAM role that provides permissions\nfor Amazon EKS to make calls to other AWS API operations on your behalf.\nFor more information, see Amazon EKS Service IAM Role (https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html)\nin the Amazon EKS User Guide .\n\n\nRoleArn is a required field",
+              "type": "string"
+            },
+            "roleArnRef": {
+              "description": "RoleArnRef is a reference to an IAMRole used to set\nthe RoleArn.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "roleArnSelector": {
+              "description": "RoleArnSelector selects references to IAMRole used\nto set the RoleArn.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The metadata to apply to the cluster to assist with categorization and organization.\nEach tag consists of a key and an optional value, both of which you define.",
+              "type": "object"
+            },
+            "version": {
+              "description": "The desired Kubernetes version for your cluster. If you don't specify a value\nhere, the latest version available in Amazon EKS is used.\nExample: 1.15",
+              "type": "string"
+            }
+          },
+          "required": [
+            "resourcesVpcConfig"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "A ClusterStatus represents the observed state of an EKS Cluster.",
+      "properties": {
+        "atProvider": {
+          "description": "ClusterObservation is the observed state of a cluster.",
+          "properties": {
+            "accessConfig": {
+              "description": "The access configuration for the cluster.",
+              "properties": {
+                "authenticationMode": {
+                  "description": "The authentication mode used for the cluster.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "arn": {
+              "description": "The Amazon Resource Name (ARN) of the cluster.",
+              "type": "string"
+            },
+            "certificateAuthorityData": {
+              "description": "The Base64-encoded certificate data required to communicate with your cluster.",
+              "type": "string"
+            },
+            "createdAt": {
+              "description": "The Unix epoch timestamp in seconds for when the cluster was created.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "endpoint": {
+              "description": "The endpoint for your Kubernetes API server.",
+              "type": "string"
+            },
+            "identity": {
+              "description": "The identity provider information for the cluster.",
+              "properties": {
+                "oidc": {
+                  "description": "The OpenID Connect (https://openid.net/connect/) identity provider information\nfor the cluster.",
+                  "properties": {
+                    "issuer": {
+                      "description": "The issuer URL for the OpenID Connect identity provider.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "kubernetesNetworkConfig": {
+              "description": "The Kubernetes network configuration for the cluster.",
+              "properties": {
+                "ipFamily": {
+                  "description": "The IP family used to assign Kubernetes pod and service IP addresses. The IP\nfamily is always ipv4, unless you have a 1.21 or later cluster running version\n1.10.1 or later of the Amazon VPC CNI add-on and specified ipv6 when you created\nthe cluster.",
+                  "type": "string"
+                },
+                "serviceIpv4Cidr": {
+                  "description": "The CIDR block that Kubernetes pod and service IP addresses are assigned from.\nKubernetes assigns addresses from an IPv4 CIDR block assigned to a subnet that\nthe node is in. If you didn't specify a CIDR block when you created the cluster,\nthen Kubernetes assigns addresses from either the 10.100.0.0/16 or 172.20.0.0/16\nCIDR blocks. If this was specified, then it was specified when the cluster was\ncreated and it can't be changed.",
+                  "type": "string"
+                },
+                "serviceIpv6Cidr": {
+                  "description": "The CIDR block that Kubernetes pod and service IP addresses are assigned from if\nyou created a 1.21 or later cluster with version 1.10.1 or later of the Amazon\nVPC CNI add-on and specified ipv6 for ipFamily when you created the cluster.\nKubernetes assigns service addresses from the unique local address range\n(fc00::/7) because you can't specify a custom IPv6 CIDR block when you create\nthe cluster.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "outpostConfig": {
+              "description": "An object representing the configuration of your local Amazon EKS cluster on an\nAmazon Web Services Outpost. This object isn't available for clusters on the\nAmazon Web Services cloud.",
+              "properties": {
+                "controlPlaneInstanceType": {
+                  "description": "The Amazon EC2 instance type used for the control plane. The instance type is\nthe same for all control plane instances.\n\n\nThis member is required.",
+                  "type": "string"
+                },
+                "outpostArns": {
+                  "description": "The ARN of the Outpost that you specified for use with your local Amazon EKS\ncluster on Outposts.\n\n\nThis member is required.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "platformVersion": {
+              "description": "The platform version of your Amazon EKS cluster. For more information, see\nPlatform Versions (https://docs.aws.amazon.com/eks/latest/userguide/platform-versions.html)\nin the Amazon EKS User Guide .",
+              "type": "string"
+            },
+            "resourcesVpcConfig": {
+              "description": "The VPC configuration used by the cluster control plane. Amazon EKS VPC resources\nhave specific requirements to work properly with Kubernetes. For more information,\nsee Cluster VPC Considerations (https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html)\nand Cluster Security Group Considerations (https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html)\nin the Amazon EKS User Guide.",
+              "properties": {
+                "clusterSecurityGroupId": {
+                  "description": "The cluster security group that was created by Amazon EKS for the cluster.\nManaged node groups use this security group for control-plane-to-data-plane\ncommunication.",
+                  "type": "string"
+                },
+                "vpcId": {
+                  "description": "The VPC associated with your cluster.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "status": {
+              "description": "The current status of the cluster.",
+              "type": "string"
+            },
+            "version": {
+              "description": "The kubernetes version of your Amazon EKS cluster. For more information, see\nKubernetes Versions (https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html)\nin the Amazon EKS User Guide .",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

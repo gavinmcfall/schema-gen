@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/acid.zalan.do/v1/postgresteam.json",
+  "title": "PostgresTeam",
+  "description": "PostgresTeam is the Schema for the postgresteams API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "postgres-operator",
+    "sourceVersion": "1.13.0",
+    "extractedAt": "2025-12-14T02:20:19.974825+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "enum": [
+        "acid.zalan.do/v1"
+      ],
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "PostgresTeam"
+      ],
+      "type": "string"
+    },
+    "spec": {
+      "properties": {
+        "additionalMembers": {
+          "additionalProperties": {
+            "description": "List of users who will also be added to the Postgres cluster",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "description": "Map for teamId and associated additional users",
+          "type": "object"
+        },
+        "additionalSuperuserTeams": {
+          "additionalProperties": {
+            "description": "List of teams to become Postgres superusers",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "description": "Map for teamId and associated additional superuser teams",
+          "type": "object"
+        },
+        "additionalTeams": {
+          "additionalProperties": {
+            "description": "List of teams whose members will also be added to the Postgres cluster",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "description": "Map for teamId and associated additional teams",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "kind",
+    "apiVersion",
+    "spec"
+  ]
+}

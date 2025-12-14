@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/stackgres.io/v1/sgpoolingconfig.json",
+  "title": "SGPoolingConfig",
+  "description": "SGPoolingConfig is the Schema for the sgpoolingconfigs API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "stackgres",
+    "sourceVersion": "1.18.2",
+    "extractedAt": "2025-12-14T02:28:30.447396+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "metadata": {
+      "properties": {
+        "name": {
+          "description": "Name of the Connection Pooling Configuration. The configuration may be referenced by zero or more SGClusters, and if so it would be referenced by its name. Following [Kubernetes naming conventions](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/identifiers.md), it must be an rfc1035/rfc1123 subdomain, that is, up to 253 characters consisting of one or more lowercase labels separated by `.`. Where each label is an alphanumeric (a-z, and 0-9) string, with the `-` character allowed anywhere except the first or last character.\n\nThe name must be unique across all Connection Pooling configurations in the same namespace.\n",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "pgBouncer": {
+          "description": "Connection pooling configuration based on PgBouncer.\n",
+          "properties": {
+            "pgbouncer.ini": {
+              "description": "The `pgbouncer.ini` parameters the configuration contains, represented as an object where the keys are valid names for the `pgbouncer.ini` configuration file parameters.\n\nCheck [pgbouncer configuration](https://www.pgbouncer.org/config.html#generic-settings) for more information about supported parameters.\n",
+              "properties": {
+                "databases": {
+                  "additionalProperties": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "description": "The `pgbouncer.ini` (Section [databases]) parameters the configuration contains, represented as an object where the keys are valid names for the `pgbouncer.ini` configuration file parameters.\n\nCheck [pgbouncer configuration](https://www.pgbouncer.org/config.html#section-databases) for more information about supported parameters.\n",
+                  "type": "object"
+                },
+                "pgbouncer": {
+                  "additionalProperties": true,
+                  "description": "The `pgbouncer.ini` (Section [pgbouncer]) parameters the configuration contains, represented as an object where the keys are valid names for the `pgbouncer.ini` configuration file parameters.\n\nCheck [pgbouncer configuration](https://www.pgbouncer.org/config.html#generic-settings) for more information about supported parameters\n",
+                  "type": "object"
+                },
+                "users": {
+                  "additionalProperties": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "description": "The `pgbouncer.ini` (Section [users]) parameters the configuration contains, represented as an object where the keys are valid names for the `pgbouncer.ini` configuration file parameters.\n\nCheck [pgbouncer configuration](https://www.pgbouncer.org/config.html#section-users) for more information about supported parameters.\n",
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "pgBouncer": {
+          "description": "Connection pooling configuration status based on PgBouncer.\n",
+          "properties": {
+            "defaultParameters": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The `pgbouncer.ini` default parameters parameters which are used if not set.\n",
+              "type": "object"
+            }
+          },
+          "required": [
+            "defaultParameters"
+          ],
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "stackgres.io/v1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "SGPoolingConfig"
+      ]
+    }
+  },
+  "required": [
+    "metadata",
+    "spec"
+  ]
+}

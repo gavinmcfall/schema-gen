@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/stackgres.io/v1/sgshardedbackup.json",
+  "title": "SGShardedBackup",
+  "description": "SGShardedBackup is the Schema for the sgshardedbackups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "stackgres",
+    "sourceVersion": "1.18.2",
+    "extractedAt": "2025-12-14T02:28:30.447983+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "metadata": {
+      "properties": {
+        "name": {
+          "description": "Name of the sharded backup. Following [Kubernetes naming conventions](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/identifiers.md), it must be an rfc1035/rfc1123 subdomain, that is, up to 253 characters consisting of one or more lowercase labels separated by `.`. Where each label is an alphanumeric (a-z, and 0-9) string, with the `-` character allowed anywhere except the first or last character.\n\nThe name must be unique across all StackGres sharded backups in the same namespace.\"\n",
+          "maxLength": 56,
+          "pattern": "^[a-z]([-a-z0-9]*[a-z0-9])?$",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "managedLifecycle": {
+          "description": "Indicate if this sharded backup is permanent and should not be removed by the automated\n retention policy. Default is `false`.\n",
+          "type": "boolean"
+        },
+        "maxRetries": {
+          "description": "The maximum number of retries the backup operation is allowed to do after a failure.\n\nA value of `0` (zero) means no retries are made. Defaults to: `3`.\n",
+          "type": "integer"
+        },
+        "reconciliationTimeout": {
+          "default": 300,
+          "description": "Allow to set a timeout for the reconciliation process that take place after the backup.\n\nIf not set defaults to 300 (5 minutes). If set to 0 it will disable timeout.\n\nFailure of reconciliation will not make the backup fail and will be re-tried the next time a SGBackup\n or shecduled backup Job take place.\n",
+          "type": "integer"
+        },
+        "sgShardedCluster": {
+          "description": "The name of the `SGShardedCluster` from which this sharded backup is/will be taken.\n\nIf this is a copy of an existing completed sharded backup in a different namespace\n the value must be prefixed with the namespace of the source backup and a\n dot `.` (e.g. `<sharded cluster namespace>.<sharded cluster name>`) or have the same value\n if the source sharded backup is also a copy.\n",
+          "type": "string"
+        },
+        "timeout": {
+          "description": "Allow to set a timeout for the backup creation.\n\nIf not set it will be disabled and the backup operation will continue until the backup completes or fail. If set to 0 is the same as not being set.\n\nMake sure to set a reasonable high value in order to allow for any unexpected delays during backup creation (network low bandwidth, disk low throughput and so forth).\n",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "backupInformation": {
+          "properties": {
+            "postgresVersion": {
+              "description": "Postgres version of the server where the sharded backup is taken from.\n",
+              "type": "string"
+            },
+            "size": {
+              "properties": {
+                "compressed": {
+                  "description": "Size (in bytes) of the compressed sharded backup.\n",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "uncompressed": {
+                  "description": "Size (in bytes) of the uncompressed sharded backup.\n",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "process": {
+          "properties": {
+            "failure": {
+              "description": "If the status is `failed` this field will contain a message indicating the failure reason.\n",
+              "type": "string"
+            },
+            "jobPod": {
+              "description": "Name of the pod assigned to the sharded backup. StackGres utilizes internally a locking mechanism based on the pod name of the job that creates the sharded backup.\n",
+              "type": "string"
+            },
+            "status": {
+              "description": "Status of the sharded backup.\n",
+              "type": "string"
+            },
+            "timing": {
+              "properties": {
+                "end": {
+                  "description": "End time of sharded backup.\n",
+                  "type": "string"
+                },
+                "start": {
+                  "description": "Start time of sharded backup.\n",
+                  "type": "string"
+                },
+                "stored": {
+                  "description": "Time at which the sharded backup is safely stored in the object storage.\n",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "sgBackups": {
+          "description": "The list of SGBackups that compose the SGShardedBackup used to restore the sharded cluster.\n",
+          "items": {
+            "description": "One of the SGBackups that compose the SGShardedBackup used to restore the sharded cluster.\n",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "stackgres.io/v1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "SGShardedBackup"
+      ]
+    }
+  },
+  "required": [
+    "metadata",
+    "spec"
+  ]
+}

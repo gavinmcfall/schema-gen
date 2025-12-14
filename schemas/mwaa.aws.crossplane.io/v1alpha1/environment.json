@@ -1,0 +1,864 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/mwaa.aws.crossplane.io/v1alpha1/environment.json",
+  "title": "Environment",
+  "description": "Environment is the Schema for the environments API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.460770+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "EnvironmentSpec defines the desired state of Environment",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "EnvironmentParameters defines the desired state of Environment",
+          "properties": {
+            "airflowConfigurationOptions": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "A list of key-value pairs containing the Apache Airflow configuration options\nyou want to attach to your environment. For more information, see Apache\nAirflow configuration options (https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-env-variables.html).",
+              "type": "object"
+            },
+            "airflowVersion": {
+              "description": "The Apache Airflow version for your environment. If no value is specified,\nit defaults to the latest version. Valid values: 1.10.12, 2.0.2, 2.2.2, 2.4.3,\nand 2.5.1. For more information, see Apache Airflow versions on Amazon Managed\nWorkflows for Apache Airflow (MWAA) (https://docs.aws.amazon.com/mwaa/latest/userguide/airflow-versions.html).",
+              "type": "string"
+            },
+            "dagS3Path": {
+              "description": "The relative path to the DAGs folder on your Amazon S3 bucket. For example,\ndags. For more information, see Adding or updating DAGs (https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-dag-folder.html).",
+              "type": "string"
+            },
+            "environmentClass": {
+              "description": "The environment class type. Valid values: mw1.small, mw1.medium, mw1.large.\nFor more information, see Amazon MWAA environment class (https://docs.aws.amazon.com/mwaa/latest/userguide/environment-class.html).",
+              "type": "string"
+            },
+            "executionRoleARN": {
+              "description": "The Amazon Resource Name (ARN) of the execution role for your environment.\nAn execution role is an AWS Identity and Access Management (IAM) role that\ngrants MWAA permission to access AWS services and resources used by your\nenvironment. For example, arn:aws:iam::123456789:role/my-execution-role.\nTo learn more, see Amazon MWAA Execution role (https://docs.aws.amazon.com/mwaa/latest/userguide/mwaa-create-role.html).\n\n\nThis field or SourceBucketARNRef or SourceBucketARNSelector is required.",
+              "type": "string"
+            },
+            "executionRoleARNRef": {
+              "description": "ExecutionRoleARNRef is a reference to the ExecutionRoleARN used to set.\nthe SubnetIDs.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "executionRoleARNSelector": {
+              "description": "ExecutionRoleARNSelector selects the reference to the ExecutionRoleARN.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "kmsKey": {
+              "description": "The AWS Key Management Service (KMS) key to encrypt the data in your environment.\nYou can use an AWS owned CMK, or a Customer managed CMK (advanced). To learn\nmore, see Get started with Amazon Managed Workflows for Apache Airflow (https://docs.aws.amazon.com/mwaa/latest/userguide/get-started.html).\n\n\nThis field or KMSKeyRef or KMSKeySelector is required.",
+              "type": "string"
+            },
+            "kmsKeyRef": {
+              "description": "KMSKeyRef is a reference to the KMSKey used to set.\nthe SubnetIDs.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "kmsKeySelector": {
+              "description": "KMSKeySelector selects the reference to the KMSKey.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "loggingConfiguration": {
+              "description": "Defines the Apache Airflow logs to send to CloudWatch Logs.",
+              "properties": {
+                "dagProcessingLogs": {
+                  "description": "Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines\nthe log level to send to CloudWatch Logs (e.g. INFO).",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "logLevel": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "schedulerLogs": {
+                  "description": "Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines\nthe log level to send to CloudWatch Logs (e.g. INFO).",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "logLevel": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "taskLogs": {
+                  "description": "Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines\nthe log level to send to CloudWatch Logs (e.g. INFO).",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "logLevel": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "webserverLogs": {
+                  "description": "Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines\nthe log level to send to CloudWatch Logs (e.g. INFO).",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "logLevel": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "workerLogs": {
+                  "description": "Enables the Apache Airflow log type (e.g. DagProcessingLogs) and defines\nthe log level to send to CloudWatch Logs (e.g. INFO).",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "logLevel": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "maxWorkers": {
+              "description": "The maximum number of workers that you want to run in your environment. MWAA\nscales the number of Apache Airflow workers up to the number you specify\nin the MaxWorkers field. For example, 20. When there are no more tasks running,\nand no more in the queue, MWAA disposes of the extra workers leaving the\none worker that is included with your environment, or the number you specify\nin MinWorkers.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "minWorkers": {
+              "description": "The minimum number of workers that you want to run in your environment. MWAA\nscales the number of Apache Airflow workers up to the number you specify\nin the MaxWorkers field. When there are no more tasks running, and no more\nin the queue, MWAA disposes of the extra workers leaving the worker count\nyou specify in the MinWorkers field. For example, 2.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "networkConfiguration": {
+              "description": "The VPC networking components used to secure and enable network traffic between\nthe AWS resources for your environment. To learn more, see About networking\non Amazon MWAA (https://docs.aws.amazon.com/mwaa/latest/userguide/networking-about.html).",
+              "properties": {
+                "securityGroupIdRefs": {
+                  "description": "SecurityGroupIDRefs is a list of references to SecurityGroups used to set\nthe SecurityGroupIDs.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "securityGroupIdSelector": {
+                  "description": "SecurityGroupIDsSelector selects references to SecurityGroupID used\nto set the SecurityGroupIDs.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "securityGroupIds": {
+                  "description": "SecurityGroupIDs is the list of IDs for the SecurityGroups.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "subnetIdRefs": {
+                  "description": "SubnetIDRefs is a list of references to Subnets used to set\nthe SubnetIDs.",
+                  "items": {
+                    "description": "A Reference to a named object.",
+                    "properties": {
+                      "name": {
+                        "description": "Name of the referenced object.",
+                        "type": "string"
+                      },
+                      "policy": {
+                        "description": "Policies for referencing.",
+                        "properties": {
+                          "resolution": {
+                            "default": "Required",
+                            "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                            "enum": [
+                              "Required",
+                              "Optional"
+                            ],
+                            "type": "string"
+                          },
+                          "resolve": {
+                            "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                            "enum": [
+                              "Always",
+                              "IfNotPresent"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "subnetIdSelector": {
+                  "description": "SubnetIDsSelector selects references to Subnets used\nto set the SubnetIDs.",
+                  "properties": {
+                    "matchControllerRef": {
+                      "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                      "type": "boolean"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "MatchLabels ensures an object with matching labels is selected.",
+                      "type": "object"
+                    },
+                    "policy": {
+                      "description": "Policies for selection.",
+                      "properties": {
+                        "resolution": {
+                          "default": "Required",
+                          "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                          "enum": [
+                            "Required",
+                            "Optional"
+                          ],
+                          "type": "string"
+                        },
+                        "resolve": {
+                          "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                          "enum": [
+                            "Always",
+                            "IfNotPresent"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "subnetIds": {
+                  "description": "SecurityGroupIDs is the list of IDs for the SecurityGroups.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "pluginsS3ObjectVersion": {
+              "description": "The version of the plugins.zip file on your Amazon S3 bucket. You must specify\na version each time a plugins.zip file is updated. For more information,\nsee How S3 Versioning works (https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html).",
+              "type": "string"
+            },
+            "pluginsS3Path": {
+              "description": "The relative path to the plugins.zip file on your Amazon S3 bucket. For example,\nplugins.zip. If specified, then the plugins.zip version is required. For\nmore information, see Installing custom plugins (https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-dag-import-plugins.html).",
+              "type": "string"
+            },
+            "region": {
+              "description": "Region is which region the Environment will be created.",
+              "type": "string"
+            },
+            "requirementsS3ObjectVersion": {
+              "description": "The version of the requirements.txt file on your Amazon S3 bucket. You must\nspecify a version each time a requirements.txt file is updated. For more\ninformation, see How S3 Versioning works (https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html).",
+              "type": "string"
+            },
+            "requirementsS3Path": {
+              "description": "The relative path to the requirements.txt file on your Amazon S3 bucket.\nFor example, requirements.txt. If specified, then a version is required.\nFor more information, see Installing Python dependencies (https://docs.aws.amazon.com/mwaa/latest/userguide/working-dags-dependencies.html).",
+              "type": "string"
+            },
+            "schedulers": {
+              "description": "The number of Apache Airflow schedulers to run in your environment. Valid\nvalues:\n\n\n   * v2 - Accepts between 2 to 5. Defaults to 2.\n\n\n   * v1 - Accepts 1.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "sourceBucketARN": {
+              "description": "The Amazon Resource Name (ARN) of the Amazon S3 bucket where your DAG code\nand supporting files are stored. For example, arn:aws:s3:::my-airflow-bucket-unique-name.\nTo learn more, see Create an Amazon S3 bucket for Amazon MWAA (https://docs.aws.amazon.com/mwaa/latest/userguide/mwaa-s3-bucket.html).\n\n\nThis field or SourceBucketARNRef or SourceBucketARNSelector is required.",
+              "type": "string"
+            },
+            "sourceBucketARNRef": {
+              "description": "SourceBucketARNRef is a reference to the SourceBucketARN used to set.\nthe SubnetIDs.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "sourceBucketARNSelector": {
+              "description": "SourceBucketARNSelector selects the reference to the SourceBucketARN.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "startupScriptS3ObjectVersion": {
+              "description": "The version of the startup shell script in your Amazon S3 bucket. You must\nspecify the version ID (https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html)\nthat Amazon S3 assigns to the file every time you update the script.\n\n\nVersion IDs are Unicode, UTF-8 encoded, URL-ready, opaque strings that are\nno more than 1,024 bytes long. The following is an example:\n\n\n3sL4kqtJlcpXroDTDmJ+rmSpXd3dIbrHY+MTRCxf3vjVBH40Nr8X8gdRQBpUMLUo\n\n\nFor more information, see Using a startup script (https://docs.aws.amazon.com/mwaa/latest/userguide/using-startup-script.html).",
+              "type": "string"
+            },
+            "startupScriptS3Path": {
+              "description": "The relative path to the startup shell script in your Amazon S3 bucket. For\nexample, s3://mwaa-environment/startup.sh.\n\n\nAmazon MWAA runs the script as your environment starts, and before running\nthe Apache Airflow process. You can use this script to install dependencies,\nmodify Apache Airflow configuration options, and set environment variables.\nFor more information, see Using a startup script (https://docs.aws.amazon.com/mwaa/latest/userguide/using-startup-script.html).",
+              "type": "string"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The key-value tag pairs you want to associate to your environment. For example,\n\"Environment\": \"Staging\". For more information, see Tagging Amazon Web Services\nresources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).",
+              "type": "object"
+            },
+            "webserverAccessMode": {
+              "description": "The Apache Airflow Web server access mode. For more information, see Apache\nAirflow access modes (https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-networking.html).",
+              "type": "string"
+            },
+            "weeklyMaintenanceWindowStart": {
+              "description": "The day and time of the week in Coordinated Universal Time (UTC) 24-hour\nstandard time to start weekly maintenance updates of your environment in\nthe following format: DAY:HH:MM. For example: TUE:03:30. You can specify\na start time in 30 minute increments only.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "dagS3Path",
+            "networkConfiguration",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "EnvironmentStatus defines the observed state of Environment.",
+      "properties": {
+        "atProvider": {
+          "description": "EnvironmentObservation defines the observed state of Environment",
+          "properties": {
+            "arn": {
+              "description": "The Amazon Resource Name (ARN) returned in the response for the environment.",
+              "type": "string"
+            },
+            "lastUpdate": {
+              "description": "The status of the last update on the environment.",
+              "properties": {
+                "error": {
+                  "description": "Describes the error(s) encountered with the last update of the environment.",
+                  "properties": {
+                    "errorCode": {
+                      "type": "string"
+                    },
+                    "errorMessage": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "status": {
+              "description": "The status of the Amazon MWAA environment. Valid values:\n\n\n   * CREATING - Indicates the request to create the environment is in progress.\n\n\n   * CREATING_SNAPSHOT - Indicates the request to update environment details,\n   or upgrade the environment version, is in progress and Amazon MWAA is\n   creating a storage volume snapshot of the Amazon RDS database cluster\n   associated with the environment. A database snapshot is a backup created\n   at a specific point in time. Amazon MWAA uses snapshots to recover environment\n   metadata if the process to update or upgrade an environment fails.\n\n\n   * CREATE_FAILED - Indicates the request to create the environment failed,\n   and the environment could not be created.\n\n\n   * AVAILABLE - Indicates the request was successful and the environment\n   is ready to use.\n\n\n   * UPDATING - Indicates the request to update the environment is in progress.\n\n\n   * ROLLING_BACK - Indicates the request to update environment details,\n   or upgrade the environment version, failed and Amazon MWAA is restoring\n   the environment using the latest storage volume snapshot.\n\n\n   * DELETING - Indicates the request to delete the environment is in progress.\n\n\n   * DELETED - Indicates the request to delete the environment is complete,\n   and the environment has been deleted.\n\n\n   * UNAVAILABLE - Indicates the request failed, but the environment was\n   unable to rollback and is not in a stable state.\n\n\n   * UPDATE_FAILED - Indicates the request to update the environment failed,\n   and the environment has rolled back successfully and is ready to use.\n\n\nWe recommend reviewing our troubleshooting guide for a list of common errors\nand their solutions. For more information, see Amazon MWAA troubleshooting\n(https://docs.aws.amazon.com/mwaa/latest/userguide/troubleshooting.html).",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

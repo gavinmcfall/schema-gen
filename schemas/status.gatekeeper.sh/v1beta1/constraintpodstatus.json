@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/status.gatekeeper.sh/v1beta1/constraintpodstatus.json",
+  "title": "ConstraintPodStatus",
+  "description": "ConstraintPodStatus is the Schema for the constraintpodstatuss API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "gatekeeper",
+    "sourceVersion": "3.18.2",
+    "extractedAt": "2025-12-14T02:22:54.307699+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "status": {
+      "description": "ConstraintPodStatusStatus defines the observed state of ConstraintPodStatus.",
+      "properties": {
+        "constraintUID": {
+          "description": "Storing the constraint UID allows us to detect drift, such as\nwhen a constraint has been recreated after its CRD was deleted\nout from under it, interrupting the watch",
+          "type": "string"
+        },
+        "enforced": {
+          "type": "boolean"
+        },
+        "enforcementPointsStatus": {
+          "items": {
+            "description": "EnforcementPointStatus represents the status of a single enforcement point.",
+            "properties": {
+              "enforcementPoint": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "observedGeneration": {
+                "format": "int64",
+                "type": "integer"
+              },
+              "state": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "enforcementPoint",
+              "state"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "errors": {
+          "items": {
+            "description": "Error represents a single error caught while adding a constraint to engine.",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "observedGeneration": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "operations": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

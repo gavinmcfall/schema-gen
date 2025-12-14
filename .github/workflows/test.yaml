@@ -1,0 +1,121 @@
+---
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "requirements*.txt"
+      - ".github/workflows/test.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "scripts/**"
+      - "tests/**"
+      - "sources.yaml"
+      - "schemas/sources.schema.json"
+      - "pyproject.toml"
+      - "requirements*.txt"
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: |
+          pytest --cov=scripts --cov-report=xml --cov-report=term-missing -m "not integration"
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: github.event_name == 'push'
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Run ruff check
+        run: ruff check scripts/ tests/
+
+      - name: Run ruff format check
+        run: ruff format --check scripts/ tests/
+
+  validate-sources:
+    name: Validate sources.yaml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: pip install pyyaml jsonschema
+
+      - name: Validate sources.yaml against schema
+        run: |
+          python -c "
+          import json
+          import yaml
+          import jsonschema
+          import sys
+
+          # Load schema
+          with open('schemas/sources.schema.json') as f:
+              schema = json.load(f)
+
+          # Load sources
+          with open('sources.yaml') as f:
+              sources = yaml.safe_load(f)
+
+          # Validate
+          validator = jsonschema.Draft202012Validator(schema)
+          errors = list(validator.iter_errors(sources))
+
+          if errors:
+              print(f'Found {len(errors)} validation errors:')
+              for error in errors:
+                  print(f'  - {error.message}')
+                  print(f'    Path: {list(error.absolute_path)}')
+              sys.exit(1)
+          else:
+              print(f'sources.yaml is valid ({len(sources[\"sources\"])} sources)')
+          "

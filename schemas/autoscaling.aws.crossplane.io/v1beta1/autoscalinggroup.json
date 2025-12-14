@@ -1,0 +1,1279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/autoscaling.aws.crossplane.io/v1beta1/autoscalinggroup.json",
+  "title": "AutoScalingGroup",
+  "description": "AutoScalingGroup is the Schema for the autoscalinggroups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.359794+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "AutoScalingGroupSpec defines the desired state of AutoScalingGroup",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "AutoScalingGroupParameters defines the desired state of AutoScalingGroup",
+          "properties": {
+            "availabilityZones": {
+              "description": "A list of Availability Zones where instances in the Auto Scaling group can\nbe created. Used for launching into the default VPC subnet in each Availability\nZone when not using the VPCZoneIdentifier property, or for attaching a network\ninterface when an existing network interface ID is specified in a launch\ntemplate.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "capacityRebalance": {
+              "description": "Indicates whether Capacity Rebalancing is enabled. Otherwise, Capacity Rebalancing\nis disabled. When you turn on Capacity Rebalancing, Amazon EC2 Auto Scaling\nattempts to launch a Spot Instance whenever Amazon EC2 notifies that a Spot\nInstance is at an elevated risk of interruption. After launching a new instance,\nit then terminates an old instance. For more information, see Use Capacity\nRebalancing to handle Amazon EC2 Spot Interruptions (https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-capacity-rebalancing.html)\nin the in the Amazon EC2 Auto Scaling User Guide.",
+              "type": "boolean"
+            },
+            "context": {
+              "description": "Reserved.",
+              "type": "string"
+            },
+            "defaultCooldown": {
+              "description": "Only needed if you use simple scaling policies.\n\n\nThe amount of time, in seconds, between one scaling activity ending and another\none starting due to simple scaling policies. For more information, see Scaling\ncooldowns for Amazon EC2 Auto Scaling (https://docs.aws.amazon.com/autoscaling/ec2/userguide/Cooldown.html)\nin the Amazon EC2 Auto Scaling User Guide.\n\n\nDefault: 300 seconds",
+              "format": "int64",
+              "type": "integer"
+            },
+            "defaultInstanceWarmup": {
+              "description": "The amount of time, in seconds, until a new instance is considered to have\nfinished initializing and resource consumption to become stable after it\nenters the InService state.\n\n\nDuring an instance refresh, Amazon EC2 Auto Scaling waits for the warm-up\nperiod after it replaces an instance before it moves on to replacing the\nnext instance. Amazon EC2 Auto Scaling also waits for the warm-up period\nbefore aggregating the metrics for new instances with existing instances\nin the Amazon CloudWatch metrics that are used for scaling, resulting in\nmore reliable usage data. For more information, see Set the default instance\nwarmup for an Auto Scaling group (https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-default-instance-warmup.html)\nin the Amazon EC2 Auto Scaling User Guide.\n\n\nTo manage various warm-up settings at the group level, we recommend that\nyou set the default instance warmup, even if it is set to 0 seconds. To remove\na value that you previously set, include the property but specify -1 for\nthe value. However, we strongly recommend keeping the default instance warmup\nenabled by specifying a value of 0 or other nominal value.\n\n\nDefault: None",
+              "format": "int64",
+              "type": "integer"
+            },
+            "desiredCapacity": {
+              "description": "The desired capacity is the initial capacity of the Auto Scaling group at\nthe time of its creation and the capacity it attempts to maintain. It can\nscale beyond this capacity if you configure auto scaling. This number must\nbe greater than or equal to the minimum size of the group and less than or\nequal to the maximum size of the group. If you do not specify a desired capacity,\nthe default is the minimum size of the group.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "desiredCapacityType": {
+              "description": "The unit of measurement for the value specified for desired capacity. Amazon\nEC2 Auto Scaling supports DesiredCapacityType for attribute-based instance\ntype selection only. For more information, see Creating an Auto Scaling group\nusing attribute-based instance type selection (https://docs.aws.amazon.com/autoscaling/ec2/userguide/create-asg-instance-type-requirements.html)\nin the Amazon EC2 Auto Scaling User Guide.\n\n\nBy default, Amazon EC2 Auto Scaling specifies units, which translates into\nnumber of instances.\n\n\nValid values: units | vcpu | memory-mib",
+              "type": "string"
+            },
+            "healthCheckGracePeriod": {
+              "description": "The amount of time, in seconds, that Amazon EC2 Auto Scaling waits before\nchecking the health status of an EC2 instance that has come into service\nand marking it unhealthy due to a failed health check. This is useful if\nyour instances do not immediately pass their health checks after they enter\nthe InService state. For more information, see Set the health check grace\nperiod for an Auto Scaling group (https://docs.aws.amazon.com/autoscaling/ec2/userguide/health-check-grace-period.html)\nin the Amazon EC2 Auto Scaling User Guide.\n\n\nDefault: 0 seconds",
+              "format": "int64",
+              "type": "integer"
+            },
+            "healthCheckType": {
+              "description": "A comma-separated value string of one or more health check types.\n\n\nThe valid values are EC2, ELB, and VPC_LATTICE. EC2 is the default health\ncheck and cannot be disabled. For more information, see Health checks for\nAuto Scaling instances (https://docs.aws.amazon.com/autoscaling/ec2/userguide/healthcheck.html)\nin the Amazon EC2 Auto Scaling User Guide.\n\n\nOnly specify EC2 if you must clear a value that was previously set.",
+              "type": "string"
+            },
+            "instanceID": {
+              "description": "The ID of the instance used to base the launch configuration on. If specified,\nAmazon EC2 Auto Scaling uses the configuration values from the specified\ninstance to create a new launch configuration. To get the instance ID, use\nthe Amazon EC2 DescribeInstances (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstances.html)\nAPI operation. For more information, see Creating an Auto Scaling group using\nan EC2 instance (https://docs.aws.amazon.com/autoscaling/ec2/userguide/create-asg-from-instance.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+              "type": "string"
+            },
+            "launchConfigurationName": {
+              "description": "The name of the launch configuration to use to launch instances.\n\n\nConditional: You must specify either a launch template (LaunchTemplate or\nMixedInstancesPolicy) or a launch configuration (LaunchConfigurationName\nor InstanceId).",
+              "type": "string"
+            },
+            "launchTemplate": {
+              "description": "Information used to specify the launch template and version to use to launch\ninstances.\n\n\nConditional: You must specify either a launch template (LaunchTemplate or\nMixedInstancesPolicy) or a launch configuration (LaunchConfigurationName\nor InstanceId).\n\n\nThe launch template that is specified must be configured for use with an\nAuto Scaling group. For more information, see Creating a launch template\nfor an Auto Scaling group (https://docs.aws.amazon.com/autoscaling/ec2/userguide/create-launch-template.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+              "properties": {
+                "launchTemplateID": {
+                  "type": "string"
+                },
+                "launchTemplateName": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "lifecycleHookSpecificationList": {
+              "description": "One or more lifecycle hooks to add to the Auto Scaling group before instances\nare launched.",
+              "items": {
+                "properties": {
+                  "defaultResult": {
+                    "type": "string"
+                  },
+                  "heartbeatTimeout": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "lifecycleHookName": {
+                    "type": "string"
+                  },
+                  "lifecycleTransition": {
+                    "type": "string"
+                  },
+                  "notificationMetadata": {
+                    "type": "string"
+                  },
+                  "notificationTargetARN": {
+                    "type": "string"
+                  },
+                  "roleARN": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "loadBalancerNames": {
+              "description": "A list of Classic Load Balancers associated with this Auto Scaling group.\nFor Application Load Balancers, Network Load Balancers, and Gateway Load\nBalancers, specify the TargetGroupARNs property instead.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "maxInstanceLifetime": {
+              "description": "The maximum amount of time, in seconds, that an instance can be in service.\nThe default is null. If specified, the value must be either 0 or a number\nequal to or greater than 86,400 seconds (1 day). For more information, see\nReplacing Auto Scaling instances based on maximum instance lifetime (https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-max-instance-lifetime.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "maxSize": {
+              "description": "The maximum size of the group.\n\n\nWith a mixed instances policy that uses instance weighting, Amazon EC2 Auto\nScaling may need to go above MaxSize to meet your capacity requirements.\nIn this event, Amazon EC2 Auto Scaling will never go above MaxSize by more\nthan your largest instance weight (weights that define how many units each\ninstance contributes to the desired capacity of the group).",
+              "format": "int64",
+              "type": "integer"
+            },
+            "minSize": {
+              "description": "The minimum size of the group.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "mixedInstancesPolicy": {
+              "description": "The mixed instances policy. For more information, see Auto Scaling groups\nwith multiple instance types and purchase options (https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-mixed-instances-groups.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+              "properties": {
+                "instancesDistribution": {
+                  "description": "Use this structure to specify the distribution of On-Demand Instances and\nSpot Instances and the allocation strategies used to fulfill On-Demand and\nSpot capacities for a mixed instances policy.",
+                  "properties": {
+                    "onDemandAllocationStrategy": {
+                      "type": "string"
+                    },
+                    "onDemandBaseCapacity": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "onDemandPercentageAboveBaseCapacity": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "spotAllocationStrategy": {
+                      "type": "string"
+                    },
+                    "spotInstancePools": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "spotMaxPrice": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "launchTemplate": {
+                  "description": "Use this structure to specify the launch templates and instance types (overrides)\nfor a mixed instances policy.",
+                  "properties": {
+                    "launchTemplateSpecification": {
+                      "description": "Describes the launch template and the version of the launch template that\nAmazon EC2 Auto Scaling uses to launch Amazon EC2 instances. For more information\nabout launch templates, see Launch templates (https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchTemplates.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+                      "properties": {
+                        "launchTemplateID": {
+                          "type": "string"
+                        },
+                        "launchTemplateName": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "overrides": {
+                      "items": {
+                        "properties": {
+                          "instanceRequirements": {
+                            "description": "The attributes for the instance types for a mixed instances policy. Amazon\nEC2 Auto Scaling uses your specified requirements to identify instance types.\nThen, it uses your On-Demand and Spot allocation strategies to launch instances\nfrom these instance types.\n\n\nWhen you specify multiple attributes, you get instance types that satisfy\nall of the specified attributes. If you specify multiple values for an attribute,\nyou get instance types that satisfy any of the specified values.\n\n\nTo limit the list of instance types from which Amazon EC2 Auto Scaling can\nidentify matching instance types, you can use one of the following parameters,\nbut not both in the same request:\n\n\n   * AllowedInstanceTypes - The instance types to include in the list. All\n   other instance types are ignored, even if they match your specified attributes.\n\n\n   * ExcludedInstanceTypes - The instance types to exclude from the list,\n   even if they match your specified attributes.\n\n\nYou must specify VCpuCount and MemoryMiB. All other attributes are optional.\nAny unspecified optional attribute is set to its default.\n\n\nFor more information, see Creating an Auto Scaling group using attribute-based\ninstance type selection (https://docs.aws.amazon.com/autoscaling/ec2/userguide/create-asg-instance-type-requirements.html)\nin the Amazon EC2 Auto Scaling User Guide. For help determining which instance\ntypes match your attributes before you apply them to your Auto Scaling group,\nsee Preview instance types with specified attributes (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-fleet-attribute-based-instance-type-selection.html#ec2fleet-get-instance-types-from-instance-requirements)\nin the Amazon EC2 User Guide for Linux Instances.",
+                            "properties": {
+                              "acceleratorCount": {
+                                "description": "Specifies the minimum and maximum for the AcceleratorCount object when you\nspecify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "acceleratorManufacturers": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "acceleratorNames": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "acceleratorTotalMemoryMiB": {
+                                "description": "Specifies the minimum and maximum for the AcceleratorTotalMemoryMiB object\nwhen you specify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "acceleratorTypes": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "allowedInstanceTypes": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "bareMetal": {
+                                "type": "string"
+                              },
+                              "baselineEBSBandwidthMbps": {
+                                "description": "Specifies the minimum and maximum for the BaselineEbsBandwidthMbps object\nwhen you specify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "burstablePerformance": {
+                                "type": "string"
+                              },
+                              "cpuManufacturers": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "excludedInstanceTypes": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "instanceGenerations": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "localStorage": {
+                                "type": "string"
+                              },
+                              "localStorageTypes": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "memoryGiBPerVCPU": {
+                                "description": "Specifies the minimum and maximum for the MemoryGiBPerVCpu object when you\nspecify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "type": "number"
+                                  },
+                                  "min": {
+                                    "type": "number"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "memoryMiB": {
+                                "description": "Specifies the minimum and maximum for the MemoryMiB object when you specify\nInstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "networkBandwidthGbps": {
+                                "description": "Specifies the minimum and maximum for the NetworkBandwidthGbps object when\nyou specify InstanceRequirements for an Auto Scaling group.\n\n\nSetting the minimum bandwidth does not guarantee that your instance will\nachieve the minimum bandwidth. Amazon EC2 will identify instance types that\nsupport the specified minimum bandwidth, but the actual bandwidth of your\ninstance might go below the specified minimum at times. For more information,\nsee Available instance bandwidth (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html#available-instance-bandwidth)\nin the Amazon EC2 User Guide for Linux Instances.",
+                                "properties": {
+                                  "max": {
+                                    "type": "number"
+                                  },
+                                  "min": {
+                                    "type": "number"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "networkInterfaceCount": {
+                                "description": "Specifies the minimum and maximum for the NetworkInterfaceCount object when\nyou specify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "onDemandMaxPricePercentageOverLowestPrice": {
+                                "format": "int64",
+                                "type": "integer"
+                              },
+                              "requireHibernateSupport": {
+                                "type": "boolean"
+                              },
+                              "spotMaxPricePercentageOverLowestPrice": {
+                                "format": "int64",
+                                "type": "integer"
+                              },
+                              "totalLocalStorageGB": {
+                                "description": "Specifies the minimum and maximum for the TotalLocalStorageGB object when\nyou specify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "type": "number"
+                                  },
+                                  "min": {
+                                    "type": "number"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "vCPUCount": {
+                                "description": "Specifies the minimum and maximum for the VCpuCount object when you specify\nInstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "instanceType": {
+                            "type": "string"
+                          },
+                          "launchTemplateSpecification": {
+                            "description": "Describes the launch template and the version of the launch template that\nAmazon EC2 Auto Scaling uses to launch Amazon EC2 instances. For more information\nabout launch templates, see Launch templates (https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchTemplates.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+                            "properties": {
+                              "launchTemplateID": {
+                                "type": "string"
+                              },
+                              "launchTemplateName": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "weightedCapacity": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "newInstancesProtectedFromScaleIn": {
+              "description": "Indicates whether newly launched instances are protected from termination\nby Amazon EC2 Auto Scaling when scaling in. For more information about preventing\ninstances from terminating on scale in, see Using instance scale-in protection\n(https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-instance-protection.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+              "type": "boolean"
+            },
+            "placementGroup": {
+              "description": "The name of the placement group into which to launch your instances. For\nmore information, see Placement groups (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html)\nin the Amazon EC2 User Guide for Linux Instances.\n\n\nA cluster placement group is a logical grouping of instances within a single\nAvailability Zone. You cannot specify multiple Availability Zones and a cluster\nplacement group.",
+              "type": "string"
+            },
+            "region": {
+              "description": "Region is which region the AutoScalingGroup will be created.",
+              "type": "string"
+            },
+            "serviceLinkedRoleARN": {
+              "description": "The Amazon Resource Name (ARN) of the service-linked role that the Auto Scaling\ngroup uses to call other Amazon Web Services service on your behalf. By default,\nAmazon EC2 Auto Scaling uses a service-linked role named AWSServiceRoleForAutoScaling,\nwhich it creates if it does not exist. For more information, see Service-linked\nroles (https://docs.aws.amazon.com/autoscaling/ec2/userguide/autoscaling-service-linked-role.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+              "type": "string"
+            },
+            "tags": {
+              "description": "One or more tags. You can tag your Auto Scaling group and propagate the tags\nto the Amazon EC2 instances it launches. Tags are not propagated to Amazon\nEBS volumes. To add tags to Amazon EBS volumes, specify the tags in a launch\ntemplate but use caution. If the launch template specifies an instance tag\nwith a key that is also specified for the Auto Scaling group, Amazon EC2\nAuto Scaling overrides the value of that instance tag with the value specified\nby the Auto Scaling group. For more information, see Tag Auto Scaling groups\nand instances (https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-tagging.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "propagateAtLaunch": {
+                    "type": "boolean"
+                  },
+                  "resourceID": {
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "targetGroupARNs": {
+              "description": "The Amazon Resource Names (ARN) of the Elastic Load Balancing target groups\nto associate with the Auto Scaling group. Instances are registered as targets\nwith the target groups. The target groups receive incoming traffic and route\nrequests to one or more registered targets. For more information, see Use\nElastic Load Balancing to distribute traffic across the instances in your\nAuto Scaling group (https://docs.aws.amazon.com/autoscaling/ec2/userguide/autoscaling-load-balancer.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "terminationPolicies": {
+              "description": "A policy or a list of policies that are used to select the instance to terminate.\nThese policies are executed in the order that you list them. For more information,\nsee Work with Amazon EC2 Auto Scaling termination policies (https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-termination-policies.html)\nin the Amazon EC2 Auto Scaling User Guide.\n\n\nValid values: Default | AllocationStrategy | ClosestToNextInstanceHour |\nNewestInstance | OldestInstance | OldestLaunchConfiguration | OldestLaunchTemplate\n| arn:aws:lambda:region:account-id:function:my-function:my-alias",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "vpcZoneIdentifier": {
+              "description": "A comma-separated list of subnet IDs for a virtual private cloud (VPC) where\ninstances in the Auto Scaling group can be created. If you specify VPCZoneIdentifier\nwith AvailabilityZones, the subnets that you specify must reside in those\nAvailability Zones.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "maxSize",
+            "minSize",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "AutoScalingGroupStatus defines the observed state of AutoScalingGroup.",
+      "properties": {
+        "atProvider": {
+          "description": "AutoScalingGroupObservation defines the observed state of AutoScalingGroup",
+          "properties": {
+            "autoScalingGroupARN": {
+              "description": "The Amazon Resource Name (ARN) of the Auto Scaling group.",
+              "type": "string"
+            },
+            "autoScalingGroupName": {
+              "description": "The name of the Auto Scaling group.",
+              "type": "string"
+            },
+            "availabilityZones": {
+              "description": "One or more Availability Zones for the group.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "capacityRebalance": {
+              "description": "Indicates whether Capacity Rebalancing is enabled.",
+              "type": "boolean"
+            },
+            "defaultCooldown": {
+              "description": "The duration of the default cooldown period, in seconds.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "defaultInstanceWarmup": {
+              "description": "The duration of the default instance warmup, in seconds.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "desiredCapacity": {
+              "description": "The desired size of the group.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "desiredCapacityType": {
+              "description": "The date and time the group was created.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "enabledMetrics": {
+              "description": "The metrics enabled for the group.",
+              "items": {
+                "properties": {
+                  "granularity": {
+                    "type": "string"
+                  },
+                  "metric": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "healthCheckGracePeriod": {
+              "description": "The duration of the health check grace period, in seconds.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "healthCheckType": {
+              "description": "A comma-separated value string of one or more health check types.",
+              "type": "string"
+            },
+            "instances": {
+              "description": "The EC2 instances associated with the group.",
+              "items": {
+                "properties": {
+                  "availabilityZone": {
+                    "type": "string"
+                  },
+                  "healthStatus": {
+                    "type": "string"
+                  },
+                  "instanceID": {
+                    "type": "string"
+                  },
+                  "instanceType": {
+                    "type": "string"
+                  },
+                  "launchConfigurationName": {
+                    "type": "string"
+                  },
+                  "launchTemplate": {
+                    "description": "Describes the launch template and the version of the launch template that\nAmazon EC2 Auto Scaling uses to launch Amazon EC2 instances. For more information\nabout launch templates, see Launch templates (https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchTemplates.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+                    "properties": {
+                      "launchTemplateID": {
+                        "type": "string"
+                      },
+                      "launchTemplateName": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "lifecycleState": {
+                    "type": "string"
+                  },
+                  "protectedFromScaleIn": {
+                    "type": "boolean"
+                  },
+                  "weightedCapacity": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "launchConfigurationName": {
+              "description": "The name of the associated launch configuration.",
+              "type": "string"
+            },
+            "launchTemplate": {
+              "description": "The launch template for the group.",
+              "properties": {
+                "launchTemplateID": {
+                  "type": "string"
+                },
+                "launchTemplateName": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "loadBalancerNames": {
+              "description": "One or more load balancers associated with the group.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "maxInstanceLifetime": {
+              "description": "The maximum amount of time, in seconds, that an instance can be in service.\n\n\nValid Range: Minimum value of 0.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "maxSize": {
+              "description": "The maximum size of the group.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "minSize": {
+              "description": "The minimum size of the group.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "mixedInstancesPolicy": {
+              "description": "The mixed instances policy for the group.",
+              "properties": {
+                "instancesDistribution": {
+                  "description": "Use this structure to specify the distribution of On-Demand Instances and\nSpot Instances and the allocation strategies used to fulfill On-Demand and\nSpot capacities for a mixed instances policy.",
+                  "properties": {
+                    "onDemandAllocationStrategy": {
+                      "type": "string"
+                    },
+                    "onDemandBaseCapacity": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "onDemandPercentageAboveBaseCapacity": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "spotAllocationStrategy": {
+                      "type": "string"
+                    },
+                    "spotInstancePools": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "spotMaxPrice": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "launchTemplate": {
+                  "description": "Use this structure to specify the launch templates and instance types (overrides)\nfor a mixed instances policy.",
+                  "properties": {
+                    "launchTemplateSpecification": {
+                      "description": "Describes the launch template and the version of the launch template that\nAmazon EC2 Auto Scaling uses to launch Amazon EC2 instances. For more information\nabout launch templates, see Launch templates (https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchTemplates.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+                      "properties": {
+                        "launchTemplateID": {
+                          "type": "string"
+                        },
+                        "launchTemplateName": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "overrides": {
+                      "items": {
+                        "properties": {
+                          "instanceRequirements": {
+                            "description": "The attributes for the instance types for a mixed instances policy. Amazon\nEC2 Auto Scaling uses your specified requirements to identify instance types.\nThen, it uses your On-Demand and Spot allocation strategies to launch instances\nfrom these instance types.\n\n\nWhen you specify multiple attributes, you get instance types that satisfy\nall of the specified attributes. If you specify multiple values for an attribute,\nyou get instance types that satisfy any of the specified values.\n\n\nTo limit the list of instance types from which Amazon EC2 Auto Scaling can\nidentify matching instance types, you can use one of the following parameters,\nbut not both in the same request:\n\n\n   * AllowedInstanceTypes - The instance types to include in the list. All\n   other instance types are ignored, even if they match your specified attributes.\n\n\n   * ExcludedInstanceTypes - The instance types to exclude from the list,\n   even if they match your specified attributes.\n\n\nYou must specify VCpuCount and MemoryMiB. All other attributes are optional.\nAny unspecified optional attribute is set to its default.\n\n\nFor more information, see Creating an Auto Scaling group using attribute-based\ninstance type selection (https://docs.aws.amazon.com/autoscaling/ec2/userguide/create-asg-instance-type-requirements.html)\nin the Amazon EC2 Auto Scaling User Guide. For help determining which instance\ntypes match your attributes before you apply them to your Auto Scaling group,\nsee Preview instance types with specified attributes (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-fleet-attribute-based-instance-type-selection.html#ec2fleet-get-instance-types-from-instance-requirements)\nin the Amazon EC2 User Guide for Linux Instances.",
+                            "properties": {
+                              "acceleratorCount": {
+                                "description": "Specifies the minimum and maximum for the AcceleratorCount object when you\nspecify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "acceleratorManufacturers": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "acceleratorNames": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "acceleratorTotalMemoryMiB": {
+                                "description": "Specifies the minimum and maximum for the AcceleratorTotalMemoryMiB object\nwhen you specify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "acceleratorTypes": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "allowedInstanceTypes": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "bareMetal": {
+                                "type": "string"
+                              },
+                              "baselineEBSBandwidthMbps": {
+                                "description": "Specifies the minimum and maximum for the BaselineEbsBandwidthMbps object\nwhen you specify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "burstablePerformance": {
+                                "type": "string"
+                              },
+                              "cpuManufacturers": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "excludedInstanceTypes": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "instanceGenerations": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "localStorage": {
+                                "type": "string"
+                              },
+                              "localStorageTypes": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "memoryGiBPerVCPU": {
+                                "description": "Specifies the minimum and maximum for the MemoryGiBPerVCpu object when you\nspecify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "type": "number"
+                                  },
+                                  "min": {
+                                    "type": "number"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "memoryMiB": {
+                                "description": "Specifies the minimum and maximum for the MemoryMiB object when you specify\nInstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "networkBandwidthGbps": {
+                                "description": "Specifies the minimum and maximum for the NetworkBandwidthGbps object when\nyou specify InstanceRequirements for an Auto Scaling group.\n\n\nSetting the minimum bandwidth does not guarantee that your instance will\nachieve the minimum bandwidth. Amazon EC2 will identify instance types that\nsupport the specified minimum bandwidth, but the actual bandwidth of your\ninstance might go below the specified minimum at times. For more information,\nsee Available instance bandwidth (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html#available-instance-bandwidth)\nin the Amazon EC2 User Guide for Linux Instances.",
+                                "properties": {
+                                  "max": {
+                                    "type": "number"
+                                  },
+                                  "min": {
+                                    "type": "number"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "networkInterfaceCount": {
+                                "description": "Specifies the minimum and maximum for the NetworkInterfaceCount object when\nyou specify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "onDemandMaxPricePercentageOverLowestPrice": {
+                                "format": "int64",
+                                "type": "integer"
+                              },
+                              "requireHibernateSupport": {
+                                "type": "boolean"
+                              },
+                              "spotMaxPricePercentageOverLowestPrice": {
+                                "format": "int64",
+                                "type": "integer"
+                              },
+                              "totalLocalStorageGB": {
+                                "description": "Specifies the minimum and maximum for the TotalLocalStorageGB object when\nyou specify InstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "type": "number"
+                                  },
+                                  "min": {
+                                    "type": "number"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "vCPUCount": {
+                                "description": "Specifies the minimum and maximum for the VCpuCount object when you specify\nInstanceRequirements for an Auto Scaling group.",
+                                "properties": {
+                                  "max": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  },
+                                  "min": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "instanceType": {
+                            "type": "string"
+                          },
+                          "launchTemplateSpecification": {
+                            "description": "Describes the launch template and the version of the launch template that\nAmazon EC2 Auto Scaling uses to launch Amazon EC2 instances. For more information\nabout launch templates, see Launch templates (https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchTemplates.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+                            "properties": {
+                              "launchTemplateID": {
+                                "type": "string"
+                              },
+                              "launchTemplateName": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "weightedCapacity": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "newInstancesProtectedFromScaleIn": {
+              "description": "Indicates whether newly launched instances are protected from termination\nby Amazon EC2 Auto Scaling when scaling in.",
+              "type": "boolean"
+            },
+            "placementGroup": {
+              "description": "The name of the placement group into which to launch your instances, if any.",
+              "type": "string"
+            },
+            "predictedCapacity": {
+              "description": "The predicted capacity of the group when it has a predictive scaling policy.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "serviceLinkedRoleARN": {
+              "description": "The Amazon Resource Name (ARN) of the service-linked role that the Auto Scaling\ngroup uses to call other Amazon Web Services on your behalf.",
+              "type": "string"
+            },
+            "status": {
+              "description": "The current state of the group when the DeleteAutoScalingGroup operation\nis in progress.",
+              "type": "string"
+            },
+            "suspendedProcesses": {
+              "description": "The suspended processes associated with the group.",
+              "items": {
+                "properties": {
+                  "processName": {
+                    "type": "string"
+                  },
+                  "suspensionReason": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "tags": {
+              "description": "The tags for the group.",
+              "items": {
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "propagateAtLaunch": {
+                    "type": "boolean"
+                  },
+                  "resourceID": {
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "targetGroupARNs": {
+              "description": "The Amazon Resource Names (ARN) of the target groups for your load balancer.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "terminationPolicies": {
+              "description": "The termination policies for the group.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "trafficSources": {
+              "description": "The traffic sources associated with this Auto Scaling group.",
+              "items": {
+                "properties": {
+                  "identifier": {
+                    "type": "string"
+                  },
+                  "type_": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "vpcZoneIdentifier": {
+              "description": "One or more subnet IDs, if applicable, separated by commas.",
+              "type": "string"
+            },
+            "warmPoolConfiguration": {
+              "description": "The warm pool for the group.",
+              "properties": {
+                "instanceReusePolicy": {
+                  "description": "Describes an instance reuse policy for a warm pool.\n\n\nFor more information, see Warm pools for Amazon EC2 Auto Scaling (https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-warm-pools.html)\nin the Amazon EC2 Auto Scaling User Guide.",
+                  "properties": {
+                    "reuseOnScaleIn": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "maxGroupPreparedCapacity": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "minSize": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "poolState": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "warmPoolSize": {
+              "description": "The current size of the warm pool.",
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

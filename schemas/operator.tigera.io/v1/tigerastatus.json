@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/operator.tigera.io/v1/tigerastatus.json",
+  "title": "TigeraStatus",
+  "description": "TigeraStatus is the Schema for the tigerastatuss API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "calico",
+    "sourceVersion": "3.29.1",
+    "extractedAt": "2025-12-14T02:18:36.680274+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "TigeraStatusSpec defines the desired state of TigeraStatus",
+      "type": "object"
+    },
+    "status": {
+      "description": "TigeraStatusStatus defines the observed state of TigeraStatus",
+      "properties": {
+        "conditions": {
+          "description": "Conditions represents the latest observed set of conditions for this component. A component may be one or more of\nAvailable, Progressing, or Degraded.",
+          "items": {
+            "description": "TigeraStatusCondition represents a condition attached to a particular component.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "The timestamp representing the start time for the current status.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "Optionally, a detailed message providing additional context.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "observedGeneration represents the generation that the condition was set based upon.\nFor instance, if generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A brief reason explaining the condition.",
+                "type": "string"
+              },
+              "status": {
+                "description": "The status of the condition. May be True, False, or Unknown.",
+                "type": "string"
+              },
+              "type": {
+                "description": "The type of condition. May be Available, Progressing, or Degraded.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "conditions"
+      ],
+      "type": "object"
+    }
+  }
+}

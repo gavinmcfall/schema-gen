@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/solr.apache.org/v1beta1/solrbackup.json",
+  "title": "SolrBackup",
+  "description": "SolrBackup is the Schema for the solrbackups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "solr-operator",
+    "sourceVersion": "0.9.0",
+    "extractedAt": "2025-12-14T02:22:24.018106+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "SolrBackupSpec defines the desired state of SolrBackup",
+      "properties": {
+        "collections": {
+          "description": "The list of collections to backup.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "location": {
+          "description": "The location to store the backup in the specified backup repository.",
+          "type": "string"
+        },
+        "recurrence": {
+          "description": "Set this backup to be taken recurrently, with options for scheduling and storage.\n\nNOTE: This is only supported for Solr Clouds version 8.9+, as it uses the incremental backup API.",
+          "properties": {
+            "disabled": {
+              "default": false,
+              "description": "Disable the recurring backups. Note this will not affect any currently-running backup.",
+              "type": "boolean"
+            },
+            "maxSaved": {
+              "default": 5,
+              "description": "Define the number of backup points to save for this backup at any given time.\nThe oldest backups will be deleted if too many exist when a backup is taken.\nIf not provided, this defaults to 5.",
+              "minimum": 1,
+              "type": "integer"
+            },
+            "schedule": {
+              "description": "Perform a backup on the given schedule, in CRON format.\n\nMultiple CRON syntaxes are supported\n  - Standard CRON (e.g. \"CRON_TZ=Asia/Seoul 0 6 * * ?\")\n  - Predefined Schedules (e.g. \"@yearly\", \"@weekly\", \"@daily\", etc.)\n  - Intervals (e.g. \"@every 10h30m\")\n\nFor more information please check this reference:\nhttps://pkg.go.dev/github.com/robfig/cron/v3?utm_source=godoc#hdr-CRON_Expression_Format",
+              "type": "string"
+            }
+          },
+          "required": [
+            "schedule"
+          ],
+          "type": "object"
+        },
+        "repositoryName": {
+          "description": "The name of the repository to use for the backup.  Defaults to \"legacy_local_repository\" if not specified (the\nauto-configured repository for legacy singleton volumes).",
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "[a-zA-Z0-9]([-_a-zA-Z0-9]*[a-zA-Z0-9])?",
+          "type": "string"
+        },
+        "solrCloud": {
+          "description": "A reference to the SolrCloud to create a backup for",
+          "maxLength": 63,
+          "minLength": 1,
+          "pattern": "[a-z0-9]([-a-z0-9]*[a-z0-9])?",
+          "type": "string"
+        }
+      },
+      "required": [
+        "solrCloud"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "SolrBackupStatus defines the observed state of SolrBackup",
+      "properties": {
+        "collectionBackupStatuses": {
+          "description": "The status of each collection's backup progress",
+          "items": {
+            "description": "CollectionBackupStatus defines the progress of a Solr Collection's backup",
+            "properties": {
+              "asyncBackupStatus": {
+                "description": "The status of the asynchronous backup call to solr",
+                "type": "string"
+              },
+              "backupName": {
+                "description": "BackupName of this collection's backup in Solr",
+                "type": "string"
+              },
+              "collection": {
+                "description": "Solr Collection name",
+                "type": "string"
+              },
+              "finishTimestamp": {
+                "description": "Time that the collection backup finished at",
+                "format": "date-time",
+                "type": "string"
+              },
+              "finished": {
+                "description": "Whether the backup has finished",
+                "type": "boolean"
+              },
+              "inProgress": {
+                "description": "Whether the collection is being backed up",
+                "type": "boolean"
+              },
+              "startTimestamp": {
+                "description": "Time that the collection backup started at",
+                "format": "date-time",
+                "type": "string"
+              },
+              "successful": {
+                "description": "Whether the backup was successful",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "collection"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "finishTimestamp": {
+          "description": "The time that this backup was finished",
+          "format": "date-time",
+          "type": "string"
+        },
+        "finished": {
+          "description": "Whether the backup has finished",
+          "type": "boolean"
+        },
+        "history": {
+          "description": "The status history of recurring backups",
+          "items": {
+            "description": "IndividualSolrBackupStatus defines the observed state of a single issued SolrBackup",
+            "properties": {
+              "collectionBackupStatuses": {
+                "description": "The status of each collection's backup progress",
+                "items": {
+                  "description": "CollectionBackupStatus defines the progress of a Solr Collection's backup",
+                  "properties": {
+                    "asyncBackupStatus": {
+                      "description": "The status of the asynchronous backup call to solr",
+                      "type": "string"
+                    },
+                    "backupName": {
+                      "description": "BackupName of this collection's backup in Solr",
+                      "type": "string"
+                    },
+                    "collection": {
+                      "description": "Solr Collection name",
+                      "type": "string"
+                    },
+                    "finishTimestamp": {
+                      "description": "Time that the collection backup finished at",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "finished": {
+                      "description": "Whether the backup has finished",
+                      "type": "boolean"
+                    },
+                    "inProgress": {
+                      "description": "Whether the collection is being backed up",
+                      "type": "boolean"
+                    },
+                    "startTimestamp": {
+                      "description": "Time that the collection backup started at",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "successful": {
+                      "description": "Whether the backup was successful",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "collection"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "finishTimestamp": {
+                "description": "The time that this backup was finished",
+                "format": "date-time",
+                "type": "string"
+              },
+              "finished": {
+                "description": "Whether the backup has finished",
+                "type": "boolean"
+              },
+              "solrVersion": {
+                "description": "Version of the Solr being backed up",
+                "type": "string"
+              },
+              "startTimestamp": {
+                "description": "The time that this backup was initiated",
+                "format": "date-time",
+                "type": "string"
+              },
+              "successful": {
+                "description": "Whether the backup was successful",
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "nextScheduledTime": {
+          "description": "The scheduled time for the next backup to occur",
+          "format": "date-time",
+          "type": "string"
+        },
+        "solrVersion": {
+          "description": "Version of the Solr being backed up",
+          "type": "string"
+        },
+        "startTimestamp": {
+          "description": "The time that this backup was initiated",
+          "format": "date-time",
+          "type": "string"
+        },
+        "successful": {
+          "description": "Whether the backup was successful",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,393 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/neuvector.com/v1/nvsecurityrule.json",
+  "title": "NvSecurityRule",
+  "description": "NvSecurityRule is the Schema for the nvsecurityrules API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "neuvector",
+    "sourceVersion": "2.8.3",
+    "extractedAt": "2025-12-14T02:23:03.468440+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "properties": {
+        "dlp": {
+          "properties": {
+            "settings": {
+              "items": {
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "allow",
+                      "deny"
+                    ],
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "action"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "status": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "egress": {
+          "items": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "allow",
+                  "deny"
+                ],
+                "type": "string"
+              },
+              "applications": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "name": {
+                "type": "string"
+              },
+              "ports": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "integer"
+              },
+              "selector": {
+                "properties": {
+                  "comment": {
+                    "type": "string"
+                  },
+                  "criteria": {
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "op": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "op",
+                        "value"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "original_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "action",
+              "name",
+              "selector"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "file": {
+          "items": {
+            "properties": {
+              "app": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "behavior": {
+                "enum": [
+                  "monitor_change",
+                  "block_access"
+                ],
+                "type": "string"
+              },
+              "filter": {
+                "type": "string"
+              },
+              "recursive": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "behavior",
+              "filter"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "ingress": {
+          "items": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "allow",
+                  "deny"
+                ],
+                "type": "string"
+              },
+              "applications": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "name": {
+                "type": "string"
+              },
+              "ports": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "integer"
+              },
+              "selector": {
+                "properties": {
+                  "comment": {
+                    "type": "string"
+                  },
+                  "criteria": {
+                    "items": {
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "op": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "op",
+                        "value"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "original_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "action",
+              "name",
+              "selector"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "process": {
+          "items": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "allow",
+                  "deny"
+                ],
+                "type": "string"
+              },
+              "allow_update": {
+                "type": "boolean"
+              },
+              "name": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "process_profile": {
+          "properties": {
+            "baseline": {
+              "enum": [
+                "default",
+                "shield",
+                "basic",
+                "zero-drift"
+              ],
+              "type": "string"
+            },
+            "mode": {
+              "enum": [
+                "Discover",
+                "Monitor",
+                "Protect"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "target": {
+          "properties": {
+            "policymode": {
+              "enum": [
+                "Discover",
+                "Monitor",
+                "Protect",
+                "N/A"
+              ],
+              "type": "string"
+            },
+            "selector": {
+              "properties": {
+                "comment": {
+                  "type": "string"
+                },
+                "criteria": {
+                  "items": {
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "op": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "op",
+                      "value"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "grp_band_width": {
+                  "type": "integer"
+                },
+                "grp_sess_cur": {
+                  "type": "integer"
+                },
+                "grp_sess_rate": {
+                  "type": "integer"
+                },
+                "mon_metric": {
+                  "type": "boolean"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "original_name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "selector"
+          ],
+          "type": "object"
+        },
+        "waf": {
+          "properties": {
+            "settings": {
+              "items": {
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "allow",
+                      "deny"
+                    ],
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "action"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "status": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "neuvector.com/v1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "NvSecurityRule"
+      ]
+    }
+  }
+}

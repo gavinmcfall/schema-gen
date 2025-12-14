@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/local.openebs.io/v1alpha1/lvmsnapshot.json",
+  "title": "LVMSnapshot",
+  "description": "LVMSnapshot is the Schema for the lvmsnapshots API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "openebs",
+    "sourceVersion": "4.2.0",
+    "extractedAt": "2025-12-14T02:18:48.976977+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "LVMSnapshotSpec defines LVMSnapshot spec",
+      "properties": {
+        "ownerNodeID": {
+          "description": "OwnerNodeID is the Node ID where the volume group is present which is where the snapshot has been provisioned. OwnerNodeID can not be edited after the snapshot has been provisioned.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "snapSize": {
+          "description": "SnapSize specifies the space reserved for the snapshot",
+          "type": "string"
+        },
+        "volGroup": {
+          "description": "VolGroup specifies the name of the volume group where the snapshot has been created.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ownerNodeID",
+        "volGroup"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "SnapStatus string that reflects if the snapshot was created successfully",
+      "properties": {
+        "state": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec",
+    "status"
+  ]
+}

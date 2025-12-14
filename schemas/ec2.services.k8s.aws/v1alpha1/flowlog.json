@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/ec2.services.k8s.aws/v1alpha1/flowlog.json",
+  "title": "FlowLog",
+  "description": "FlowLog is the Schema for the flowlogs API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "ack-ec2-controller",
+    "sourceVersion": "1.2.23",
+    "extractedAt": "2025-12-14T02:27:09.393019+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "FlowLogSpec defines the desired state of FlowLog.\n\n\nDescribes a flow log.",
+      "properties": {
+        "deliverLogsPermissionARN": {
+          "description": "The ARN for the IAM role that permits Amazon EC2 to publish flow logs to\na CloudWatch Logs log group in your account.\n\n\nIf you specify LogDestinationType as s3, do not specify DeliverLogsPermissionArn\nor LogGroupName.",
+          "type": "string"
+        },
+        "destinationOptions": {
+          "description": "The destination options.",
+          "properties": {
+            "fileFormat": {
+              "type": "string"
+            },
+            "hiveCompatiblePartitions": {
+              "type": "boolean"
+            },
+            "perHourPartition": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "logDestination": {
+          "description": "The destination to which the flow log data is to be published. Flow log data\ncan be published to a CloudWatch Logs log group or an Amazon S3 bucket. The\nvalue specified for this parameter depends on the value specified for LogDestinationType.\n\n\nIf LogDestinationType is not specified or cloud-watch-logs, specify the Amazon\nResource Name (ARN) of the CloudWatch Logs log group. For example, to publish\nto a log group called my-logs, specify arn:aws:logs:us-east-1:123456789012:log-group:my-logs.\nAlternatively, use LogGroupName instead.\n\n\nIf LogDestinationType is s3, specify the ARN of the Amazon S3 bucket. You\ncan also specify a subfolder in the bucket. To specify a subfolder in the\nbucket, use the following ARN format: bucket_ARN/subfolder_name/. For example,\nto specify a subfolder named my-logs in a bucket named my-bucket, use the\nfollowing ARN: arn:aws:s3:::my-bucket/my-logs/. You cannot use AWSLogs as\na subfolder name. This is a reserved term.",
+          "type": "string"
+        },
+        "logDestinationType": {
+          "description": "The type of destination to which the flow log data is to be published. Flow\nlog data can be published to CloudWatch Logs or Amazon S3. To publish flow\nlog data to CloudWatch Logs, specify cloud-watch-logs. To publish flow log\ndata to Amazon S3, specify s3.\n\n\nIf you specify LogDestinationType as s3, do not specify DeliverLogsPermissionArn\nor LogGroupName.\n\n\nDefault: cloud-watch-logs",
+          "type": "string"
+        },
+        "logFormat": {
+          "description": "The fields to include in the flow log record, in the order in which they\nshould appear. For a list of available fields, see Flow log records (https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html#flow-log-records).\nIf you omit this parameter, the flow log is created using the default format.\nIf you specify this parameter, you must specify at least one field.\n\n\nSpecify the fields using the ${field-id} format, separated by spaces. For\nthe CLI, surround this parameter value with single quotes on Linux or double\nquotes on Windows.",
+          "type": "string"
+        },
+        "logGroupName": {
+          "description": "The name of a new or existing CloudWatch Logs log group where Amazon EC2\npublishes your flow logs.\n\n\nIf you specify LogDestinationType as s3, do not specify DeliverLogsPermissionArn\nor LogGroupName.",
+          "type": "string"
+        },
+        "maxAggregationInterval": {
+          "description": "The maximum interval of time during which a flow of packets is captured and\naggregated into a flow log record. You can specify 60 seconds (1 minute)\nor 600 seconds (10 minutes).\n\n\nWhen a network interface is attached to a Nitro-based instance (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html#ec2-nitro-instances),\nthe aggregation interval is always 60 seconds or less, regardless of the\nvalue that you specify.\n\n\nDefault: 600",
+          "format": "int64",
+          "type": "integer"
+        },
+        "resourceID": {
+          "type": "string"
+        },
+        "resourceType": {
+          "description": "The type of resource for which to create the flow log. For example, if you\nspecified a VPC ID for the ResourceId property, specify VPC for this property.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "The tags. The value parameter is required, but if you don't want the tag\nto have a value, specify the parameter with no value, and we set the value\nto an empty string.",
+          "items": {
+            "description": "Describes a tag.",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "trafficType": {
+          "description": "The type of traffic to log. You can log traffic that the resource accepts\nor rejects, or all traffic.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "resourceID",
+        "resourceType"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "FlowLogStatus defines the observed state of FlowLog",
+      "properties": {
+        "ackResourceMetadata": {
+          "description": "All CRs managed by ACK have a common `Status.ACKResourceMetadata` member\nthat is used to contain resource sync state, account ownership,\nconstructed ARN for the resource",
+          "properties": {
+            "arn": {
+              "description": "ARN is the Amazon Resource Name for the resource. This is a\nglobally-unique identifier and is set only by the ACK service controller\nonce the controller has orchestrated the creation of the resource OR\nwhen it has verified that an \"adopted\" resource (a resource where the\nARN annotation was set by the Kubernetes user on the CR) exists and\nmatches the supplied CR's Spec field values.\nTODO(vijat@): Find a better strategy for resources that do not have ARN in CreateOutputResponse\nhttps://github.com/aws/aws-controllers-k8s/issues/270",
+              "type": "string"
+            },
+            "ownerAccountID": {
+              "description": "OwnerAccountID is the AWS Account ID of the account that owns the\nbackend AWS service API resource.",
+              "type": "string"
+            },
+            "region": {
+              "description": "Region is the AWS region in which the resource exists or will exist.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "ownerAccountID",
+            "region"
+          ],
+          "type": "object"
+        },
+        "clientToken": {
+          "description": "Unique, case-sensitive identifier that you provide to ensure the idempotency\nof the request.",
+          "type": "string"
+        },
+        "conditions": {
+          "description": "All CRS managed by ACK have a common `Status.Conditions` member that\ncontains a collection of `ackv1alpha1.Condition` objects that describe\nthe various terminal states of the CR and its backend AWS service API\nresource",
+          "items": {
+            "description": "Condition is the common struct used by all CRDs managed by ACK service\ncontrollers to indicate terminal states  of the CR and its backend AWS\nservice API resource",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "Last time the condition transitioned from one status to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A human readable message indicating details about the transition.",
+                "type": "string"
+              },
+              "reason": {
+                "description": "The reason for the condition's last transition.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of the condition, one of True, False, Unknown.",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type is the type of the Condition",
+                "type": "string"
+              }
+            },
+            "required": [
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "flowLogID": {
+          "type": "string"
+        },
+        "unsuccessful": {
+          "description": "Information about the flow logs that could not be created successfully.",
+          "items": {
+            "description": "Information about items that were not successfully processed in a batch call.",
+            "properties": {
+              "error": {
+                "description": "Information about the error that occurred. For more information about errors,\nsee Error codes (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/errors-overview.html).",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "resourceID": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

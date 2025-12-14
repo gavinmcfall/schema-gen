@@ -1,0 +1,69 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":automergePatch"
+  ],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dashboard - CRD Sources",
+  "suppressNotifications": ["prEditedNotification"],
+  "rebaseWhen": "conflicted",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^sources\\.yaml$"],
+      "matchStrings": [
+        "# (?<depType>helm)\\n\\s+- name: (?<depName>\\S+)\\n\\s+type: helm\\n\\s+registry: (?<registryUrl>[^\\n]+)\\n\\s+chart: (?<packageName>[^\\n]+)\\n\\s+version: (?<currentValue>[^\\n]+)"
+      ],
+      "datasourceTemplate": "helm",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^sources\\.yaml$"],
+      "matchStrings": [
+        "- name: (?<depName>\\S+)\\n\\s+type: helm\\n\\s+registry: oci://(?<registryUrl>[^/]+)/(?<packageName>[^\\n]+)\\n\\s+chart: [^\\n]+\\n\\s+version: (?<currentValue>[^\\n]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^sources\\.yaml$"],
+      "matchStrings": [
+        "- name: (?<depName>\\S+)\\n\\s+type: github\\n\\s+repo: (?<packageName>[^\\n]+)\\n\\s+version: (?<currentValue>[^\\n]+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "CRD source updates",
+      "matchFileNames": ["sources.yaml"],
+      "labels": ["schema-update", "dependencies"],
+      "automerge": false,
+      "commitMessagePrefix": "chore(sources):",
+      "commitMessageTopic": "{{depName}}",
+      "prBodyNotes": [
+        "This PR updates a CRD source. After merge, the extraction workflow will regenerate schemas."
+      ]
+    },
+    {
+      "description": "Group Flux updates",
+      "matchPackagePatterns": ["^flux"],
+      "groupName": "flux"
+    },
+    {
+      "description": "Group cert-manager updates",
+      "matchPackagePatterns": ["cert-manager", "trust-manager"],
+      "groupName": "cert-manager"
+    },
+    {
+      "description": "Group monitoring updates",
+      "matchPackagePatterns": ["prometheus", "grafana"],
+      "groupName": "monitoring"
+    }
+  ]
+}

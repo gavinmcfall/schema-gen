@@ -1,0 +1,161 @@
+---
+name: Extract CRD Schemas
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - sources.yaml
+      - scripts/**
+      - .github/workflows/extract.yaml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - sources.yaml
+  workflow_dispatch:
+    inputs:
+      source:
+        description: "Specific source to extract (leave empty for all changed)"
+        required: false
+        type: string
+      full_rebuild:
+        description: "Rebuild all schemas from scratch"
+        required: false
+        type: boolean
+        default: false
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  detect-changes:
+    name: Detect Changed Sources
+    runs-on: ubuntu-latest
+    outputs:
+      sources: ${{ steps.changes.outputs.sources }}
+      matrix: ${{ steps.changes.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Detect changed sources
+        id: changes
+        run: |
+          if [[ "${{ github.event.inputs.full_rebuild }}" == "true" ]]; then
+            echo "Full rebuild requested"
+            SOURCES=$(python -c "
+          import yaml
+          with open('sources.yaml') as f:
+              data = yaml.safe_load(f)
+          sources = [s['name'] for s in data['sources']]
+          print(','.join(sources))
+          ")
+          elif [[ -n "${{ github.event.inputs.source }}" ]]; then
+            SOURCES="${{ github.event.inputs.source }}"
+          else
+            # Detect which sources changed in sources.yaml
+            if git diff --name-only ${{ github.event.before || 'HEAD~1' }} HEAD | grep -q "sources.yaml"; then
+              SOURCES=$(python scripts/detect_changes.py ${{ github.event.before || 'HEAD~1' }} HEAD)
+            else
+              SOURCES=""
+            fi
+          fi
+
+          echo "sources=$SOURCES" >> $GITHUB_OUTPUT
+
+          # Build matrix JSON
+          if [[ -n "$SOURCES" ]]; then
+            MATRIX=$(echo "$SOURCES" | tr ',' '\n' | jq -R -s -c 'split("\n") | map(select(length > 0))')
+            echo "matrix={\"source\":$MATRIX}" >> $GITHUB_OUTPUT
+          else
+            echo "matrix={\"source\":[]}" >> $GITHUB_OUTPUT
+          fi
+
+  extract:
+    name: Extract ${{ matrix.source }}
+    needs: detect-changes
+    if: needs.detect-changes.outputs.sources != ''
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python dependencies
+        run: pip install pyyaml requests
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Extract CRDs for ${{ matrix.source }}
+        run: |
+          python scripts/extract.py \
+            --source "${{ matrix.source }}" \
+            --output schemas/
+
+      - name: Upload schemas artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: schemas-${{ matrix.source }}
+          path: schemas/
+          retention-days: 1
+
+  commit:
+    name: Commit Schema Updates
+    needs: [detect-changes, extract]
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all schema artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          pattern: schemas-*
+
+      - name: Merge schemas
+        run: |
+          # Merge all downloaded schemas into schemas/
+          for dir in artifacts/schemas-*/; do
+            cp -r "$dir"* schemas/ 2>/dev/null || true
+          done
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add schemas/
+
+          if git diff --staged --quiet; then
+            echo "No schema changes to commit"
+            exit 0
+          fi
+
+          SOURCES="${{ needs.detect-changes.outputs.sources }}"
+          git commit -m "chore(schemas): update schemas for ${SOURCES}"
+          git push

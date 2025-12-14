@@ -1,0 +1,514 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/cognitoidentityprovider.aws.crossplane.io/v1alpha1/userpoolclient.json",
+  "title": "UserPoolClient",
+  "description": "UserPoolClient is the Schema for the userpoolclients API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.379358+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "UserPoolClientSpec defines the desired state of UserPoolClient",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "UserPoolClientParameters defines the desired state of UserPoolClient",
+          "properties": {
+            "accessTokenValidity": {
+              "description": "The access token time limit. After this limit expires, your user can't use\ntheir access token. To specify the time unit for AccessTokenValidity as seconds,\nminutes, hours, or days, set a TokenValidityUnits value in your API request.\n\n\nFor example, when you set AccessTokenValidity to 10 and TokenValidityUnits\nto hours, your user can authorize access with their access token for 10 hours.\n\n\nThe default time unit for AccessTokenValidity in an API request is hours.\nValid range is displayed below in seconds.\n\n\nIf you don't specify otherwise in the configuration of your app client, your\naccess tokens are valid for one hour.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "allowedOAuthFlows": {
+              "description": "The allowed OAuth flows.\n\n\ncode\n\n\nUse a code grant flow, which provides an authorization code as the response.\nThis code can be exchanged for access tokens with the /oauth2/token endpoint.\n\n\nimplicit\n\n\nIssue the access token (and, optionally, ID token, based on scopes) directly\nto your user.\n\n\nclient_credentials\n\n\nIssue the access token from the /oauth2/token endpoint directly to a non-person\nuser using a combination of the client ID and client secret.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "allowedOAuthFlowsUserPoolClient": {
+              "description": "Set to true to use OAuth 2.0 features in your user pool app client.\n\n\nAllowedOAuthFlowsUserPoolClient must be true before you can configure the\nfollowing features in your app client.\n\n\n   * CallBackURLs: Callback URLs.\n\n\n   * LogoutURLs: Sign-out redirect URLs.\n\n\n   * AllowedOAuthScopes: OAuth 2.0 scopes.\n\n\n   * AllowedOAuthFlows: Support for authorization code, implicit, and client\n   credentials OAuth 2.0 grants.\n\n\nTo use OAuth 2.0 features, configure one of these features in the Amazon\nCognito console or set AllowedOAuthFlowsUserPoolClient to true in a CreateUserPoolClient\nor UpdateUserPoolClient API request. If you don't set a value for AllowedOAuthFlowsUserPoolClient\nin a request with the CLI or SDKs, it defaults to false.",
+              "type": "boolean"
+            },
+            "allowedOAuthScopes": {
+              "description": "The allowed OAuth scopes. Possible values provided by OAuth are phone, email,\nopenid, and profile. Possible values provided by Amazon Web Services are\naws.cognito.signin.user.admin. Custom scopes created in Resource Servers\nare also supported.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "analyticsConfiguration": {
+              "description": "The user pool analytics configuration for collecting metrics and sending\nthem to your Amazon Pinpoint campaign.\n\n\nIn Amazon Web Services Regions where Amazon Pinpoint isn't available, user\npools only support sending events to Amazon Pinpoint projects in Amazon Web\nServices Region us-east-1. In Regions where Amazon Pinpoint is available,\nuser pools support sending events to Amazon Pinpoint projects within that\nsame Region.",
+              "properties": {
+                "applicationARN": {
+                  "type": "string"
+                },
+                "applicationID": {
+                  "type": "string"
+                },
+                "externalID": {
+                  "type": "string"
+                },
+                "roleARN": {
+                  "type": "string"
+                },
+                "userDataShared": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "authSessionValidity": {
+              "description": "Amazon Cognito creates a session token for each API request in an authentication\nflow. AuthSessionValidity is the duration, in minutes, of that session token.\nYour user pool native user must respond to each authentication challenge\nbefore the session expires.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "callbackURLs": {
+              "description": "A list of allowed redirect (callback) URLs for the IdPs.\n\n\nA redirect URI must:\n\n\n   * Be an absolute URI.\n\n\n   * Be registered with the authorization server.\n\n\n   * Not include a fragment component.\n\n\nSee OAuth 2.0 - Redirection Endpoint (https://tools.ietf.org/html/rfc6749#section-3.1.2).\n\n\nAmazon Cognito requires HTTPS over HTTP except for http://localhost for testing\npurposes only.\n\n\nApp callback URLs such as myapp://example are also supported.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "clientName": {
+              "description": "The client name for the user pool client you would like to create.",
+              "type": "string"
+            },
+            "defaultRedirectURI": {
+              "description": "The default redirect URI. Must be in the CallbackURLs list.\n\n\nA redirect URI must:\n\n\n   * Be an absolute URI.\n\n\n   * Be registered with the authorization server.\n\n\n   * Not include a fragment component.\n\n\nSee OAuth 2.0 - Redirection Endpoint (https://tools.ietf.org/html/rfc6749#section-3.1.2).\n\n\nAmazon Cognito requires HTTPS over HTTP except for http://localhost for testing\npurposes only.\n\n\nApp callback URLs such as myapp://example are also supported.",
+              "type": "string"
+            },
+            "enablePropagateAdditionalUserContextData": {
+              "description": "Activates the propagation of additional user context data. For more information\nabout propagation of user context data, see Adding advanced security to a\nuser pool (https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-advanced-security.html).\nIf you don\u2019t include this parameter, you can't send device fingerprint\ninformation, including source IP address, to Amazon Cognito advanced security.\nYou can only activate EnablePropagateAdditionalUserContextData in an app\nclient that has a client secret.",
+              "type": "boolean"
+            },
+            "enableTokenRevocation": {
+              "description": "Activates or deactivates token revocation. For more information about revoking\ntokens, see RevokeToken (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_RevokeToken.html).\n\n\nIf you don't include this parameter, token revocation is automatically activated\nfor the new user pool client.",
+              "type": "boolean"
+            },
+            "explicitAuthFlows": {
+              "description": "The authentication flows that you want your user pool client to support.\nFor each app client in your user pool, you can sign in your users with any\ncombination of one or more flows, including with a user name and Secure Remote\nPassword (SRP), a user name and password, or a custom authentication process\nthat you define with Lambda functions.\n\n\nIf you don't specify a value for ExplicitAuthFlows, your user client supports\nALLOW_REFRESH_TOKEN_AUTH, ALLOW_USER_SRP_AUTH, and ALLOW_CUSTOM_AUTH.\n\n\nValid values include:\n\n\n   * ALLOW_ADMIN_USER_PASSWORD_AUTH: Enable admin based user password authentication\n   flow ADMIN_USER_PASSWORD_AUTH. This setting replaces the ADMIN_NO_SRP_AUTH\n   setting. With this authentication flow, your app passes a user name and\n   password to Amazon Cognito in the request, instead of using the Secure\n   Remote Password (SRP) protocol to securely transmit the password.\n\n\n   * ALLOW_CUSTOM_AUTH: Enable Lambda trigger based authentication.\n\n\n   * ALLOW_USER_PASSWORD_AUTH: Enable user password-based authentication.\n   In this flow, Amazon Cognito receives the password in the request instead\n   of using the SRP protocol to verify passwords.\n\n\n   * ALLOW_USER_SRP_AUTH: Enable SRP-based authentication.\n\n\n   * ALLOW_REFRESH_TOKEN_AUTH: Enable authflow to refresh tokens.\n\n\nIn some environments, you will see the values ADMIN_NO_SRP_AUTH, CUSTOM_AUTH_FLOW_ONLY,\nor USER_PASSWORD_AUTH. You can't assign these legacy ExplicitAuthFlows values\nto user pool clients at the same time as values that begin with ALLOW_, like\nALLOW_USER_SRP_AUTH.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "generateSecret": {
+              "description": "Boolean to specify whether you want to generate a secret for the user pool\nclient being created.",
+              "type": "boolean"
+            },
+            "idTokenValidity": {
+              "description": "The ID token time limit. After this limit expires, your user can't use their\nID token. To specify the time unit for IdTokenValidity as seconds, minutes,\nhours, or days, set a TokenValidityUnits value in your API request.\n\n\nFor example, when you set IdTokenValidity as 10 and TokenValidityUnits as\nhours, your user can authenticate their session with their ID token for 10\nhours.\n\n\nThe default time unit for IdTokenValidity in an API request is hours. Valid\nrange is displayed below in seconds.\n\n\nIf you don't specify otherwise in the configuration of your app client, your\nID tokens are valid for one hour.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "logoutURLs": {
+              "description": "A list of allowed logout URLs for the IdPs.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "preventUserExistenceErrors": {
+              "description": "Errors and responses that you want Amazon Cognito APIs to return during authentication,\naccount confirmation, and password recovery when the user doesn't exist in\nthe user pool. When set to ENABLED and the user doesn't exist, authentication\nreturns an error indicating either the username or password was incorrect.\nAccount confirmation and password recovery return a response indicating a\ncode was sent to a simulated destination. When set to LEGACY, those APIs\nreturn a UserNotFoundException exception if the user doesn't exist in the\nuser pool.\n\n\nValid values include:\n\n\n   * ENABLED - This prevents user existence-related errors.\n\n\n   * LEGACY - This represents the early behavior of Amazon Cognito where\n   user existence related errors aren't prevented.",
+              "type": "string"
+            },
+            "readAttributes": {
+              "description": "The read attributes.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "refreshTokenValidity": {
+              "description": "The refresh token time limit. After this limit expires, your user can't use\ntheir refresh token. To specify the time unit for RefreshTokenValidity as\nseconds, minutes, hours, or days, set a TokenValidityUnits value in your\nAPI request.\n\n\nFor example, when you set RefreshTokenValidity as 10 and TokenValidityUnits\nas days, your user can refresh their session and retrieve new access and\nID tokens for 10 days.\n\n\nThe default time unit for RefreshTokenValidity in an API request is days.\nYou can't set RefreshTokenValidity to 0. If you do, Amazon Cognito overrides\nthe value with the default value of 30 days. Valid range is displayed below\nin seconds.\n\n\nIf you don't specify otherwise in the configuration of your app client, your\nrefresh tokens are valid for 30 days.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "region": {
+              "description": "Region is which region the UserPoolClient will be created.",
+              "type": "string"
+            },
+            "supportedIdentityProviders": {
+              "description": "A list of provider names for the identity providers (IdPs) that are supported\non this client. The following are supported: COGNITO, Facebook, Google, SignInWithApple,\nand LoginWithAmazon. You can also specify the names that you configured for\nthe SAML and OIDC IdPs in your user pool, for example MySAMLIdP or MyOIDCIdP.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "tokenValidityUnits": {
+              "description": "The units in which the validity times are represented. The default unit for\nRefreshToken is days, and default for ID and access tokens are hours.",
+              "properties": {
+                "accessToken": {
+                  "type": "string"
+                },
+                "idToken": {
+                  "type": "string"
+                },
+                "refreshToken": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "userPoolId": {
+              "description": "The user pool ID.",
+              "type": "string"
+            },
+            "userPoolIdRef": {
+              "description": "UserPoolIDRef is a reference to an server instance.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "userPoolIdSelector": {
+              "description": "UserPoolIDSelector selects references to an server instance.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "writeAttributes": {
+              "description": "The user pool attributes that the app client can write to.\n\n\nIf your app client allows users to sign in through an IdP, this array must\ninclude all attributes that you have mapped to IdP attributes. Amazon Cognito\nupdates mapped attributes when users sign in to your application through\nan IdP. If your app client does not have write access to a mapped attribute,\nAmazon Cognito throws an error when it tries to update the attribute. For\nmore information, see Specifying IdP Attribute Mappings for Your user pool\n(https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-specifying-attribute-mapping.html).",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "clientName",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "UserPoolClientStatus defines the observed state of UserPoolClient.",
+      "properties": {
+        "atProvider": {
+          "description": "UserPoolClientObservation defines the observed state of UserPoolClient",
+          "properties": {
+            "clientID": {
+              "description": "The ID of the client associated with the user pool.",
+              "type": "string"
+            },
+            "clientSecret": {
+              "description": "The client secret from the user pool request of the client type.",
+              "type": "string"
+            },
+            "creationDate": {
+              "description": "The date and time, in ISO 8601 (https://www.iso.org/iso-8601-date-and-time-format.html)\nformat, when the item was created.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedDate": {
+              "description": "The date and time, in ISO 8601 (https://www.iso.org/iso-8601-date-and-time-format.html)\nformat, when the item was modified.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "userPoolID": {
+              "description": "The user pool ID for the user pool client.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

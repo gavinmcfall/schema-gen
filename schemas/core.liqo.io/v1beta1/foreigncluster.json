@@ -1,0 +1,360 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/core.liqo.io/v1beta1/foreigncluster.json",
+  "title": "ForeignCluster",
+  "description": "ForeignCluster is the Schema for the foreignclusters API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.900774+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ForeignClusterSpec defines the desired state of ForeignCluster.",
+      "properties": {
+        "clusterID": {
+          "description": "Foreign Cluster ID.",
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clusterID"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "ForeignClusterStatus defines the observed state of ForeignCluster.",
+      "properties": {
+        "apiServerUrl": {
+          "description": "URL of the forign cluster's API server.",
+          "type": "string"
+        },
+        "conditions": {
+          "description": "Generic conditions related to the foreign cluster.",
+          "items": {
+            "description": "Condition contains details about state of a.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime -> timestamp for when the condition last transitioned from one status to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "Message -> Human-readable message indicating details about the last status transition.",
+                "type": "string"
+              },
+              "reason": {
+                "description": "Reason -> Machine-readable, UpperCamelCase text indicating the reason for the condition's last transition.",
+                "type": "string"
+              },
+              "status": {
+                "default": "None",
+                "description": "Status of the condition.",
+                "enum": [
+                  "None",
+                  "Pending",
+                  "Established",
+                  "Error",
+                  "Ready",
+                  "NotReady",
+                  "SomeNotReady"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of the condition.",
+                "enum": [
+                  "APIServerStatus",
+                  "NetworkConnectionStatus",
+                  "NetworkGatewayServerStatus",
+                  "NetworkGatewayClientStatus",
+                  "NetworkGatewayPresence",
+                  "NetworkConfigurationStatus",
+                  "AuthIdentityControlPlaneStatus",
+                  "AuthTenantStatus",
+                  "OffloadingVirtualNodeStatus",
+                  "OffloadingNodeStatus"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "foreignProxyUrl": {
+          "description": "URL where to contact foreign proxy for the api server.\nThis URL is used when creating the k8s clients toward the remote cluster.",
+          "type": "string"
+        },
+        "modules": {
+          "description": "Modules contains the configuration of the modules for this foreign cluster.",
+          "properties": {
+            "authentication": {
+              "description": "Module contains the configuration and conditions of a module for a foreign cluster.",
+              "properties": {
+                "conditions": {
+                  "description": "Conditions contains the status conditions related to the module.",
+                  "items": {
+                    "description": "Condition contains details about state of a.",
+                    "properties": {
+                      "lastTransitionTime": {
+                        "description": "LastTransitionTime -> timestamp for when the condition last transitioned from one status to another.",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "message": {
+                        "description": "Message -> Human-readable message indicating details about the last status transition.",
+                        "type": "string"
+                      },
+                      "reason": {
+                        "description": "Reason -> Machine-readable, UpperCamelCase text indicating the reason for the condition's last transition.",
+                        "type": "string"
+                      },
+                      "status": {
+                        "default": "None",
+                        "description": "Status of the condition.",
+                        "enum": [
+                          "None",
+                          "Pending",
+                          "Established",
+                          "Error",
+                          "Ready",
+                          "NotReady",
+                          "SomeNotReady"
+                        ],
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of the condition.",
+                        "enum": [
+                          "APIServerStatus",
+                          "NetworkConnectionStatus",
+                          "NetworkGatewayServerStatus",
+                          "NetworkGatewayClientStatus",
+                          "NetworkGatewayPresence",
+                          "NetworkConfigurationStatus",
+                          "AuthIdentityControlPlaneStatus",
+                          "AuthTenantStatus",
+                          "OffloadingVirtualNodeStatus",
+                          "OffloadingNodeStatus"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "status",
+                      "type"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "enabled": {
+                  "description": "Enabled indicates if the module is enabled or not.",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "enabled"
+              ],
+              "type": "object"
+            },
+            "networking": {
+              "description": "Module contains the configuration and conditions of a module for a foreign cluster.",
+              "properties": {
+                "conditions": {
+                  "description": "Conditions contains the status conditions related to the module.",
+                  "items": {
+                    "description": "Condition contains details about state of a.",
+                    "properties": {
+                      "lastTransitionTime": {
+                        "description": "LastTransitionTime -> timestamp for when the condition last transitioned from one status to another.",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "message": {
+                        "description": "Message -> Human-readable message indicating details about the last status transition.",
+                        "type": "string"
+                      },
+                      "reason": {
+                        "description": "Reason -> Machine-readable, UpperCamelCase text indicating the reason for the condition's last transition.",
+                        "type": "string"
+                      },
+                      "status": {
+                        "default": "None",
+                        "description": "Status of the condition.",
+                        "enum": [
+                          "None",
+                          "Pending",
+                          "Established",
+                          "Error",
+                          "Ready",
+                          "NotReady",
+                          "SomeNotReady"
+                        ],
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of the condition.",
+                        "enum": [
+                          "APIServerStatus",
+                          "NetworkConnectionStatus",
+                          "NetworkGatewayServerStatus",
+                          "NetworkGatewayClientStatus",
+                          "NetworkGatewayPresence",
+                          "NetworkConfigurationStatus",
+                          "AuthIdentityControlPlaneStatus",
+                          "AuthTenantStatus",
+                          "OffloadingVirtualNodeStatus",
+                          "OffloadingNodeStatus"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "status",
+                      "type"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "enabled": {
+                  "description": "Enabled indicates if the module is enabled or not.",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "enabled"
+              ],
+              "type": "object"
+            },
+            "offloading": {
+              "description": "Module contains the configuration and conditions of a module for a foreign cluster.",
+              "properties": {
+                "conditions": {
+                  "description": "Conditions contains the status conditions related to the module.",
+                  "items": {
+                    "description": "Condition contains details about state of a.",
+                    "properties": {
+                      "lastTransitionTime": {
+                        "description": "LastTransitionTime -> timestamp for when the condition last transitioned from one status to another.",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "message": {
+                        "description": "Message -> Human-readable message indicating details about the last status transition.",
+                        "type": "string"
+                      },
+                      "reason": {
+                        "description": "Reason -> Machine-readable, UpperCamelCase text indicating the reason for the condition's last transition.",
+                        "type": "string"
+                      },
+                      "status": {
+                        "default": "None",
+                        "description": "Status of the condition.",
+                        "enum": [
+                          "None",
+                          "Pending",
+                          "Established",
+                          "Error",
+                          "Ready",
+                          "NotReady",
+                          "SomeNotReady"
+                        ],
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of the condition.",
+                        "enum": [
+                          "APIServerStatus",
+                          "NetworkConnectionStatus",
+                          "NetworkGatewayServerStatus",
+                          "NetworkGatewayClientStatus",
+                          "NetworkGatewayPresence",
+                          "NetworkConfigurationStatus",
+                          "AuthIdentityControlPlaneStatus",
+                          "AuthTenantStatus",
+                          "OffloadingVirtualNodeStatus",
+                          "OffloadingNodeStatus"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "status",
+                      "type"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "enabled": {
+                  "description": "Enabled indicates if the module is enabled or not.",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "enabled"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "authentication",
+            "networking",
+            "offloading"
+          ],
+          "type": "object"
+        },
+        "role": {
+          "default": "Unknown",
+          "description": "Role of the ForeignCluster.",
+          "enum": [
+            "Consumer",
+            "Provider",
+            "ConsumerAndProvider",
+            "Unknown"
+          ],
+          "type": "string"
+        },
+        "tenantNamespace": {
+          "description": "TenantNamespace names in the peered clusters",
+          "properties": {
+            "local": {
+              "description": "local TenantNamespace name",
+              "type": "string"
+            },
+            "remote": {
+              "description": "remote TenantNamespace name",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "role"
+      ],
+      "type": "object"
+    }
+  }
+}

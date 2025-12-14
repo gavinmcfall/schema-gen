@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/iam.openfaas.com/v1/policy.json",
+  "title": "Policy",
+  "description": "Policy is the Schema for the policys API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "openfaas",
+    "sourceVersion": "14.2.77",
+    "extractedAt": "2025-12-14T02:25:00.511385+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "statement": {
+          "items": {
+            "properties": {
+              "action": {
+                "description": "Action is a set of actions that the policy applies to i.e. Function:Read",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "condition": {
+                "additionalProperties": {
+                  "additionalProperties": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "type": "object"
+                },
+                "description": "Condition is a set of conditions that the policy applies to\n{\n\t\"StringLike\": {\n\t\t\"jwt:https://my-identity-provider.com#sub-id\": [\n\t\t\t\"1234567890\",\n\t\t\t\"0987654321\"\n\t\t],\n\t}\n}",
+                "type": "object"
+              },
+              "effect": {
+                "description": "Effect is the effect of the policy - only Allow is supported",
+                "type": "string"
+              },
+              "resource": {
+                "description": "Resource is a set of resources that the policy applies to - only namespaces are supported at\npresent",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "sid": {
+                "description": "SID is the unique identifier for the policy",
+                "type": "string"
+              }
+            },
+            "required": [
+              "action",
+              "effect",
+              "resource",
+              "sid"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "statement"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

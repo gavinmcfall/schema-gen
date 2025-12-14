@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/ceph.rook.io/v1/cephobjectrealm.json",
+  "title": "CephObjectRealm",
+  "description": "CephObjectRealm is the Schema for the cephobjectrealms API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "rook-ceph",
+    "sourceVersion": "1.16.2",
+    "extractedAt": "2025-12-14T02:18:40.657861+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ObjectRealmSpec represent the spec of an ObjectRealm",
+      "properties": {
+        "pull": {
+          "description": "PullSpec represents the pulling specification of a Ceph Object Storage Gateway Realm",
+          "properties": {
+            "endpoint": {
+              "pattern": "^https*://",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "Status represents the status of an object",
+      "properties": {
+        "conditions": {
+          "items": {
+            "description": "Condition represents a status condition on any Rook-Ceph Custom Resource.",
+            "properties": {
+              "lastHeartbeatTime": {
+                "format": "date-time",
+                "type": "string"
+              },
+              "lastTransitionTime": {
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "reason": {
+                "description": "ConditionReason is a reason for a condition",
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "type": {
+                "description": "ConditionType represent a resource's status",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest generation observed by the controller.",
+          "format": "int64",
+          "type": "integer"
+        },
+        "phase": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "metadata"
+  ]
+}

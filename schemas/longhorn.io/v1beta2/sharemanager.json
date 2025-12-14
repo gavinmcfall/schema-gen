@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/longhorn.io/v1beta2/sharemanager.json",
+  "title": "ShareManager",
+  "description": "ShareManager is the Schema for the sharemanagers API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "longhorn",
+    "sourceVersion": "1.7.2",
+    "extractedAt": "2025-12-14T02:18:42.961719+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ShareManagerSpec defines the desired state of the Longhorn share manager",
+      "properties": {
+        "image": {
+          "description": "Share manager image used for creating a share manager pod",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "ShareManagerStatus defines the observed state of the Longhorn share manager",
+      "properties": {
+        "endpoint": {
+          "description": "NFS endpoint that can access the mounted filesystem of the volume",
+          "type": "string"
+        },
+        "ownerID": {
+          "description": "The node ID on which the controller is responsible to reconcile this share manager resource",
+          "type": "string"
+        },
+        "state": {
+          "description": "The state of the share manager resource",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

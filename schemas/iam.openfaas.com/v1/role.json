@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/iam.openfaas.com/v1/role.json",
+  "title": "Role",
+  "description": "Role is the Schema for the roles API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "openfaas",
+    "sourceVersion": "14.2.77",
+    "extractedAt": "2025-12-14T02:25:00.511538+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "RoleSpec maps a number of principals or attributes within a JWT to\na set of policies.",
+      "properties": {
+        "condition": {
+          "additionalProperties": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "object"
+          },
+          "description": "Condition is a set of conditions that can be used instead of a principal\nto match against claims within a JWT\n{\n\t\"StringLike\": {\n\t\t\"jwt:https://my-identity-provider.com#sub-id\": [\n\t\t\t\"1234567890\",\n\t\t\t\"0987654321\"\n\t\t],\n\t}\n}",
+          "type": "object"
+        },
+        "policy": {
+          "description": "Policy is a list of named policies which apply to this role",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "principal": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "description": "Principal is the principal that the role applies to i.e.\n{\n\t\t\"jwt:sub\":[\"repo:alexellis/minty:ref:refs/heads/master\"]\n}",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

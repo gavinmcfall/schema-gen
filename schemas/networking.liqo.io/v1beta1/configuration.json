@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/networking.liqo.io/v1beta1/configuration.json",
+  "title": "Configuration",
+  "description": "Configuration is the Schema for the configurations API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.902138+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ConfigurationSpec defines the desired state of Configuration.",
+      "properties": {
+        "local": {
+          "description": "Local network configuration (the cluster where the resource is created).",
+          "properties": {
+            "cidr": {
+              "description": "CIDR of the cluster.",
+              "properties": {
+                "external": {
+                  "description": "External CIDR of the cluster.",
+                  "items": {
+                    "description": "CIDR defines a syntax validated CIDR.",
+                    "format": "cidr",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "pod": {
+                  "description": "Pod CIDR of the cluster.",
+                  "items": {
+                    "description": "CIDR defines a syntax validated CIDR.",
+                    "format": "cidr",
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "remote": {
+          "description": "Remote network configuration (the other cluster).",
+          "properties": {
+            "cidr": {
+              "description": "CIDR of the cluster.",
+              "properties": {
+                "external": {
+                  "description": "External CIDR of the cluster.",
+                  "items": {
+                    "description": "CIDR defines a syntax validated CIDR.",
+                    "format": "cidr",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "pod": {
+                  "description": "Pod CIDR of the cluster.",
+                  "items": {
+                    "description": "CIDR defines a syntax validated CIDR.",
+                    "format": "cidr",
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "ConfigurationStatus defines the observed state of Configuration.",
+      "properties": {
+        "remote": {
+          "description": "Remote remapped configuration, it defines how the local cluster sees the remote cluster.",
+          "properties": {
+            "cidr": {
+              "description": "CIDR of the cluster.",
+              "properties": {
+                "external": {
+                  "description": "External CIDR of the cluster.",
+                  "items": {
+                    "description": "CIDR defines a syntax validated CIDR.",
+                    "format": "cidr",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "pod": {
+                  "description": "Pod CIDR of the cluster.",
+                  "items": {
+                    "description": "CIDR defines a syntax validated CIDR.",
+                    "format": "cidr",
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/longhorn.io/v1beta2/backuptarget.json",
+  "title": "BackupTarget",
+  "description": "BackupTarget is the Schema for the backuptargets API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "longhorn",
+    "sourceVersion": "1.7.2",
+    "extractedAt": "2025-12-14T02:18:42.957983+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "BackupTargetSpec defines the desired state of the Longhorn backup target",
+      "properties": {
+        "backupTargetURL": {
+          "description": "The backup target URL.",
+          "type": "string"
+        },
+        "credentialSecret": {
+          "description": "The backup target credential secret.",
+          "type": "string"
+        },
+        "pollInterval": {
+          "description": "The interval that the cluster needs to run sync with the backup target.",
+          "type": "string"
+        },
+        "syncRequestedAt": {
+          "description": "The time to request run sync the remote backup target.",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "BackupTargetStatus defines the observed state of the Longhorn backup target",
+      "properties": {
+        "available": {
+          "description": "Available indicates if the remote backup target is available or not.",
+          "type": "boolean"
+        },
+        "conditions": {
+          "description": "Records the reason on why the backup target is unavailable.",
+          "items": {
+            "properties": {
+              "lastProbeTime": {
+                "description": "Last time we probed the condition.",
+                "type": "string"
+              },
+              "lastTransitionTime": {
+                "description": "Last time the condition transitioned from one status to another.",
+                "type": "string"
+              },
+              "message": {
+                "description": "Human-readable message indicating details about last transition.",
+                "type": "string"
+              },
+              "reason": {
+                "description": "Unique, one-word, CamelCase reason for the condition's last transition.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status is the status of the condition.\nCan be True, False, Unknown.",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type is the type of the condition.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "lastSyncedAt": {
+          "description": "The last time that the controller synced with the remote backup target.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "ownerID": {
+          "description": "The node ID on which the controller is responsible to reconcile this backup target CR.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

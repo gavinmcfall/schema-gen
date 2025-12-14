@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/serving.kserve.io/v1alpha1/localmodelnode.json",
+  "title": "LocalModelNode",
+  "description": "LocalModelNode is the Schema for the localmodelnodes API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "kserve",
+    "sourceVersion": "v0.14.1",
+    "extractedAt": "2025-12-14T02:25:52.682122+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "localModels": {
+          "items": {
+            "properties": {
+              "modelName": {
+                "type": "string"
+              },
+              "sourceModelUri": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "modelName",
+              "sourceModelUri"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "localModels"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "modelStatus": {
+          "additionalProperties": {
+            "enum": [
+              "",
+              "ModelDownloadPending",
+              "ModelDownloading",
+              "ModelDownloaded",
+              "ModelDownloadError"
+            ],
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

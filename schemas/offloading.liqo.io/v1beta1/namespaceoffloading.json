@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/offloading.liqo.io/v1beta1/namespaceoffloading.json",
+  "title": "NamespaceOffloading",
+  "description": "NamespaceOffloading is the Schema for the namespaceoffloadings API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.929755+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "NamespaceOffloadingSpec defines the desired state of NamespaceOffloading.",
+      "properties": {
+        "clusterSelector": {
+          "description": "ClusterSelector allows users to select a specific subset of remote clusters to perform\npod offloading by means of the standard Kubernetes NodeSelector approach\n(https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity).\nA cluster selector with no NodeSelectorTerms matches all clusters.",
+          "properties": {
+            "nodeSelectorTerms": {
+              "description": "Required. A list of node selector terms. The terms are ORed.",
+              "items": {
+                "description": "A null or empty node selector term matches no objects. The requirements of\nthem are ANDed.\nThe TopologySelectorTerm type implements a subset of the NodeSelectorTerm.",
+                "properties": {
+                  "matchExpressions": {
+                    "description": "A list of node selector requirements by node's labels.",
+                    "items": {
+                      "description": "A node selector requirement is a selector that contains values, a key, and an operator\nthat relates the key and values.",
+                      "properties": {
+                        "key": {
+                          "description": "The label key that the selector applies to.",
+                          "type": "string"
+                        },
+                        "operator": {
+                          "description": "Represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.",
+                          "type": "string"
+                        },
+                        "values": {
+                          "description": "An array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. If the operator is Gt or Lt, the values\narray must have a single element, which will be interpreted as an integer.\nThis array is replaced during a strategic merge patch.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "operator"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "matchFields": {
+                    "description": "A list of node selector requirements by node's fields.",
+                    "items": {
+                      "description": "A node selector requirement is a selector that contains values, a key, and an operator\nthat relates the key and values.",
+                      "properties": {
+                        "key": {
+                          "description": "The label key that the selector applies to.",
+                          "type": "string"
+                        },
+                        "operator": {
+                          "description": "Represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.",
+                          "type": "string"
+                        },
+                        "values": {
+                          "description": "An array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. If the operator is Gt or Lt, the values\narray must have a single element, which will be interpreted as an integer.\nThis array is replaced during a strategic merge patch.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "operator"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "nodeSelectorTerms"
+          ],
+          "type": "object"
+        },
+        "namespaceMappingStrategy": {
+          "default": "DefaultName",
+          "description": " NamespaceMappingStrategy allows users to map local and remote namespace names according to two\n different strategies: \"DefaultName\", which ensures uniqueness and prevents conflicts, and \"EnforceSameName\",\n which enforces the same name at the cost of possible conflicts.",
+          "enum": [
+            "EnforceSameName",
+            "DefaultName",
+            "SelectedName"
+          ],
+          "type": "string"
+        },
+        "podOffloadingStrategy": {
+          "default": "LocalAndRemote",
+          "description": "PodOffloadingStrategy allows users to configure how pods in this namespace are offloaded, according to three\ndifferent strategies: \"Local\" (i.e. no pod offloading is performed), \"Remote\" (i.e. all pods are offloaded\nin remote clusters), \"LocalAndRemote\" (i.e. no constraints are enforced besides the ones\nspecified by the ClusterSelector).",
+          "enum": [
+            "Local",
+            "Remote",
+            "LocalAndRemote"
+          ],
+          "type": "string"
+        },
+        "remoteNamespaceName": {
+          "description": "RemoteNamespaceName allows users to choose a specific name for the remote namespace.\nThis field is required if NamespaceMappingStrategy is set to \"SelectedName\". It is ignored otherwise.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "NamespaceOffloadingStatus defines the observed state of NamespaceOffloading.",
+      "properties": {
+        "observedGeneration": {
+          "description": "The generation observed by the NamespaceOffloading controller.\nThis field allows external tools (e.g., liqoctl) to detect whether a spec modification has already been processed\nor not (i.e., whether the status should be expected to be up-to-date or not), and thus act accordingly.",
+          "format": "int64",
+          "type": "integer"
+        },
+        "offloadingPhase": {
+          "description": "OffloadingPhase -> informs users about namespaces offloading status:\n\"Ready\" (i.e. remote Namespaces have been correctly created on previously selected clusters.)\n\"NoClusterSelected\" (i.e. no cluster matches user constraints.)\n\"InProgress\" (i.e. remote Namespaces' creation is still ongoing.)\n\"SomeFailed\" (i.e. there was an error during creation of some remote Namespaces.)\n\"AllFailed\" (i.e. there was an error during creation of all remote Namespaces.)\n\"Terminating\" (i.e. remote namespaces are undergoing graceful termination.)",
+          "type": "string"
+        },
+        "remoteNamespaceName": {
+          "description": "RemoteNamespaceName is the remote namespace name chosen by means of the NamespaceMappingStrategy.",
+          "type": "string"
+        },
+        "remoteNamespacesConditions": {
+          "additionalProperties": {
+            "description": "RemoteNamespaceConditions list of RemoteNamespaceCondition.",
+            "items": {
+              "description": "RemoteNamespaceCondition contains details about state of remote namespace.",
+              "properties": {
+                "lastTransitionTime": {
+                  "description": "LastTransitionTime -> timestamp for when the Namespace last transitioned from one status to another.",
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Message -> Human-readable message indicating details about the last status transition.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Reason -> Machine-readable, UpperCamelCase text indicating the reason for the condition's last transition.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Status of the condition, one of True, False, Unknown.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of remote namespace controller condition.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "status",
+                "type"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "description": "RemoteNamespacesConditions -> allows user to verify remote Namespaces' presence and status on all remote\nclusters through RemoteNamespaceCondition.",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

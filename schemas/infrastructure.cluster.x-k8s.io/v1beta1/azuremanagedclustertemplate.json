@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/infrastructure.cluster.x-k8s.io/v1beta1/azuremanagedclustertemplate.json",
+  "title": "AzureManagedClusterTemplate",
+  "description": "AzureManagedClusterTemplate is the Schema for the azuremanagedclustertemplates API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "cluster-api-provider-azure",
+    "sourceVersion": "v1.19.1",
+    "extractedAt": "2025-12-14T02:28:02.144802+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "AzureManagedClusterTemplateSpec defines the desired state of AzureManagedClusterTemplate.",
+      "properties": {
+        "template": {
+          "description": "AzureManagedClusterTemplateResource describes the data needed to create an AzureManagedCluster from a template.",
+          "properties": {
+            "spec": {
+              "description": "AzureManagedClusterTemplateResourceSpec specifies an Azure managed cluster template resource.",
+              "type": "object"
+            }
+          },
+          "required": [
+            "spec"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "template"
+      ],
+      "type": "object"
+    }
+  }
+}

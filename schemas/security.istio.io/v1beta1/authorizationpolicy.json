@@ -1,0 +1,439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/security.istio.io/v1beta1/authorizationpolicy.json",
+  "title": "AuthorizationPolicy",
+  "description": "AuthorizationPolicy is the Schema for the authorizationpolicys API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "istio-base",
+    "sourceVersion": "1.24.2",
+    "extractedAt": "2025-12-14T02:18:07.465748+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "description": "Configuration for access control on workloads. See more details at: https://istio.io/docs/reference/config/security/authorization-policy.html",
+      "oneOf": [
+        {
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "provider"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "required": [
+            "provider"
+          ]
+        }
+      ],
+      "properties": {
+        "action": {
+          "description": "Optional.\n\nValid Options: ALLOW, DENY, AUDIT, CUSTOM",
+          "enum": [
+            "ALLOW",
+            "DENY",
+            "AUDIT",
+            "CUSTOM"
+          ],
+          "type": "string"
+        },
+        "provider": {
+          "description": "Specifies detailed configuration of the CUSTOM action.",
+          "properties": {
+            "name": {
+              "description": "Specifies the name of the extension provider.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "rules": {
+          "description": "Optional.",
+          "items": {
+            "properties": {
+              "from": {
+                "description": "Optional.",
+                "items": {
+                  "properties": {
+                    "source": {
+                      "description": "Source specifies the source of a request.",
+                      "properties": {
+                        "ipBlocks": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "namespaces": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "notIpBlocks": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "notNamespaces": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "notPrincipals": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "notRemoteIpBlocks": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "notRequestPrincipals": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "principals": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "remoteIpBlocks": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "requestPrincipals": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "to": {
+                "description": "Optional.",
+                "items": {
+                  "properties": {
+                    "operation": {
+                      "description": "Operation specifies the operation of a request.",
+                      "properties": {
+                        "hosts": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "methods": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "notHosts": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "notMethods": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "notPaths": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "notPorts": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "paths": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "ports": {
+                          "description": "Optional.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "when": {
+                "description": "Optional.",
+                "items": {
+                  "properties": {
+                    "key": {
+                      "description": "The name of an Istio attribute.",
+                      "type": "string"
+                    },
+                    "notValues": {
+                      "description": "Optional.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "values": {
+                      "description": "Optional.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "key"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "selector": {
+          "description": "Optional.",
+          "properties": {
+            "matchLabels": {
+              "additionalProperties": {
+                "maxLength": 63,
+                "type": "string"
+              },
+              "description": "One or more labels that indicate a specific set of pods/VMs on which a policy should be applied.",
+              "maxProperties": 4096,
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "targetRef": {
+          "properties": {
+            "group": {
+              "description": "group is the group of the target resource.",
+              "maxLength": 253,
+              "pattern": "^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$",
+              "type": "string"
+            },
+            "kind": {
+              "description": "kind is kind of the target resource.",
+              "maxLength": 63,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$",
+              "type": "string"
+            },
+            "name": {
+              "description": "name is the name of the target resource.",
+              "maxLength": 253,
+              "minLength": 1,
+              "type": "string"
+            },
+            "namespace": {
+              "description": "namespace is the namespace of the referent.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "name"
+          ],
+          "type": "object"
+        },
+        "targetRefs": {
+          "description": "Optional.",
+          "items": {
+            "properties": {
+              "group": {
+                "description": "group is the group of the target resource.",
+                "maxLength": 253,
+                "pattern": "^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$",
+                "type": "string"
+              },
+              "kind": {
+                "description": "kind is kind of the target resource.",
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$",
+                "type": "string"
+              },
+              "name": {
+                "description": "name is the name of the target resource.",
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              },
+              "namespace": {
+                "description": "namespace is the namespace of the referent.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "name"
+            ],
+            "type": "object"
+          },
+          "maxItems": 16,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "conditions": {
+          "description": "Current service state of the resource.",
+          "items": {
+            "properties": {
+              "lastProbeTime": {
+                "description": "Last time we probed the condition.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "lastTransitionTime": {
+                "description": "Last time the condition transitioned from one status to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "Human-readable message indicating details about last transition.",
+                "type": "string"
+              },
+              "reason": {
+                "description": "Unique, one-word, CamelCase reason for the condition's last transition.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status is the status of the condition.",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type is the type of the condition.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Resource Generation to which the Reconciled Condition refers."
+        },
+        "validationMessages": {
+          "description": "Includes any errors or warnings detected by Istio's analyzers.",
+          "items": {
+            "properties": {
+              "documentationUrl": {
+                "description": "A url pointing to the Istio documentation for this specific error type.",
+                "type": "string"
+              },
+              "level": {
+                "description": "Represents how severe a message is.\n\nValid Options: UNKNOWN, ERROR, WARNING, INFO",
+                "enum": [
+                  "UNKNOWN",
+                  "ERROR",
+                  "WARNING",
+                  "INFO"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "properties": {
+                  "code": {
+                    "description": "A 7 character code matching `^IST[0-9]{4}$` intended to uniquely identify the message type.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "A human-readable name for the message type.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "security.istio.io/v1beta1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "AuthorizationPolicy"
+      ]
+    }
+  }
+}

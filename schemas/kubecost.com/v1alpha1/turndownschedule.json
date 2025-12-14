@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/kubecost.com/v1alpha1/turndownschedule.json",
+  "title": "TurndownSchedule",
+  "description": "TurndownSchedule is the Schema for the turndownschedules API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "kubecost",
+    "sourceVersion": "2.5.2",
+    "extractedAt": "2025-12-14T02:26:06.468122+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "properties": {
+        "end": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "repeat": {
+          "enum": [
+            "none",
+            "daily",
+            "weekly"
+          ],
+          "type": "string"
+        },
+        "start": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "current": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "nextScaleDownTime": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "nextScaleUpTime": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "scaleDownId": {
+          "type": "string"
+        },
+        "scaleDownMetadata": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "scaleUpID": {
+          "type": "string"
+        },
+        "scaleUpMetadata": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "state": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "kubecost.com/v1alpha1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "TurndownSchedule"
+      ]
+    }
+  }
+}

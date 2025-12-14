@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/secrets.hashicorp.com/v1alpha1/vaultconnection.json",
+  "title": "VaultConnection",
+  "description": "VaultConnection is the Schema for the vaultconnections API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "vault-secrets-operator",
+    "sourceVersion": "0.1.0-beta",
+    "extractedAt": "2025-12-13T22:52:25.264629+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "VaultConnectionSpec defines the desired state of VaultConnection",
+      "properties": {
+        "address": {
+          "description": "Address of the Vault server",
+          "type": "string"
+        },
+        "caCertSecretRef": {
+          "description": "CACertSecretRef containing the trusted PEM encoded CA certificate chain.",
+          "type": "string"
+        },
+        "headers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Headers to be included in all Vault requests.",
+          "type": "object"
+        },
+        "skipTLSVerify": {
+          "description": "SkipTLSVerify for TLS connections.",
+          "type": "boolean"
+        },
+        "tlsServerName": {
+          "description": "TLSServerName to use as the SNI host for TLS connections.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "address"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "VaultConnectionStatus defines the observed state of VaultConnection",
+      "properties": {
+        "valid": {
+          "description": "Valid auth mechanism.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "valid"
+      ],
+      "type": "object"
+    }
+  }
+}

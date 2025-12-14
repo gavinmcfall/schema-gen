@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/velero.io/v1/downloadrequest.json",
+  "title": "DownloadRequest",
+  "description": "DownloadRequest is the Schema for the downloadrequests API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "velero",
+    "sourceVersion": "8.2.0",
+    "extractedAt": "2025-12-14T02:25:11.598475+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "DownloadRequestSpec is the specification for a download request.",
+      "properties": {
+        "target": {
+          "description": "Target is what to download (e.g. logs for a backup).",
+          "properties": {
+            "kind": {
+              "description": "Kind is the type of file to download.",
+              "enum": [
+                "BackupLog",
+                "BackupContents",
+                "BackupVolumeSnapshots",
+                "BackupItemOperations",
+                "BackupResourceList",
+                "BackupResults",
+                "RestoreLog",
+                "RestoreResults",
+                "RestoreResourceList",
+                "RestoreItemOperations",
+                "CSIBackupVolumeSnapshots",
+                "CSIBackupVolumeSnapshotContents",
+                "BackupVolumeInfos",
+                "RestoreVolumeInfo"
+              ],
+              "type": "string"
+            },
+            "name": {
+              "description": "Name is the name of the Kubernetes resource with which the file is associated.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "name"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "DownloadRequestStatus is the current status of a DownloadRequest.",
+      "properties": {
+        "downloadURL": {
+          "description": "DownloadURL contains the pre-signed URL for the target file.",
+          "type": "string"
+        },
+        "expiration": {
+          "description": "Expiration is when this DownloadRequest expires and can be deleted by the system.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "phase": {
+          "description": "Phase is the current state of the DownloadRequest.",
+          "enum": [
+            "New",
+            "Processed"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

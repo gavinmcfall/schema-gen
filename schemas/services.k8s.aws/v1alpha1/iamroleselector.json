@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/services.k8s.aws/v1alpha1/iamroleselector.json",
+  "title": "IAMRoleSelector",
+  "description": "IAMRoleSelector is the Schema for the iamroleselectors API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "ack-route53-controller",
+    "sourceVersion": "1.2.0",
+    "extractedAt": "2025-12-14T02:27:30.693750+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "arn": {
+          "type": "string"
+        },
+        "namespaceSelector": {
+          "description": "IAMRoleSelectorSpec defines the desired state of IAMRoleSelector",
+          "properties": {
+            "labelSelector": {
+              "description": "LabelSelector is a label query over a set of resources.",
+              "properties": {
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "matchLabels"
+              ],
+              "type": "object"
+            },
+            "names": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "names"
+          ],
+          "type": "object"
+        },
+        "resourceTypeSelector": {
+          "items": {
+            "properties": {
+              "group": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "group",
+              "kind",
+              "version"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "arn"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "type": "object"
+    }
+  }
+}

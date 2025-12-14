@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/flink.apache.org/v1beta1/flinkstatesnapshot.json",
+  "title": "FlinkStateSnapshot",
+  "description": "FlinkStateSnapshot is the Schema for the flinkstatesnapshots API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "flink-operator",
+    "sourceVersion": "1.10.0",
+    "extractedAt": "2025-12-14T02:25:42.810535+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "properties": {
+        "backoffLimit": {
+          "type": "integer"
+        },
+        "checkpoint": {
+          "type": "object"
+        },
+        "jobReference": {
+          "properties": {
+            "kind": {
+              "enum": [
+                "FlinkDeployment",
+                "FlinkSessionJob"
+              ],
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "savepoint": {
+          "properties": {
+            "alreadyExists": {
+              "type": "boolean"
+            },
+            "disposeOnDelete": {
+              "type": "boolean"
+            },
+            "formatType": {
+              "enum": [
+                "CANONICAL",
+                "NATIVE",
+                "UNKNOWN"
+              ],
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "failures": {
+          "type": "integer"
+        },
+        "path": {
+          "type": "string"
+        },
+        "resultTimestamp": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "ABANDONED",
+            "COMPLETED",
+            "FAILED",
+            "IN_PROGRESS",
+            "TRIGGER_PENDING"
+          ],
+          "type": "string"
+        },
+        "triggerId": {
+          "type": "string"
+        },
+        "triggerTimestamp": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "flink.apache.org/v1beta1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "FlinkStateSnapshot"
+      ]
+    }
+  }
+}

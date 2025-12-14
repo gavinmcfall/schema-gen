@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/apps.emqx.io/v1beta4/emqxplugin.json",
+  "title": "EmqxPlugin",
+  "description": "EmqxPlugin is the Schema for the emqxplugins API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "emqx-operator",
+    "sourceVersion": "2.2.28",
+    "extractedAt": "2025-12-14T02:28:39.166023+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "config": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "pluginName": {
+          "type": "string"
+        },
+        "selector": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "pluginName",
+        "selector"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,933 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/redshift.aws.crossplane.io/v1alpha1/cluster.json",
+  "title": "Cluster",
+  "description": "Cluster is the Schema for the clusters API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.472681+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ClusterSpec defines the desired state of an AWS Redshift Cluster.",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "ClusterParameters define the parameters available for an AWS Redshift cluster",
+          "properties": {
+            "allowVersionUpgrade": {
+              "description": "AllowVersionUpgrade indicates that major engine upgrades are applied automatically to the\ncluster during the maintenance window.\ndefault=true",
+              "type": "boolean"
+            },
+            "automatedSnapshotRetentionPeriod": {
+              "description": "AutomatedSnapshotRetentionPeriod is the number of days for which\nautomated backups are retained. Setting this parameter to a positive\nnumber enables backups. Setting this parameter to  0 disables automated backups.\ndefault=1",
+              "format": "int32",
+              "maximum": 35,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "availabilityZone": {
+              "description": "AvailabilityZone is the EC2 Availability Zone in which you want\nAmazon Redshift to provision the cluster.\nDefault: A random, system-chosen Availability Zone in the region that is\nspecified by the endpoint.\nExample: us-east-2d\nConstraint: The specified Availability Zone must be in the same region as\nthe current endpoint. The Availability Zone parameter can't be specified\nif the MultiAZ parameter is set to true.\nThe specified Availability Zone must be in the same AWS Region as the current endpoint.",
+              "type": "string"
+            },
+            "clusterParameterGroupName": {
+              "description": "ClusterParameterGroupName is the name of the cluster parameter group to use for the cluster.\nDefault: The default Amazon Redshift cluster parameter group. For information\nabout the default parameter group, go to Working with Amazon Redshift Parameter\nGroups (https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-parameter-groups.html)",
+              "type": "string"
+            },
+            "clusterSecurityGroupRefs": {
+              "description": "ClusterSecurityGroupRefs are references to ClusterSecurityGroups used to set\nthe ClusterSecurityGroups.",
+              "items": {
+                "description": "A Reference to a named object.",
+                "properties": {
+                  "name": {
+                    "description": "Name of the referenced object.",
+                    "type": "string"
+                  },
+                  "policy": {
+                    "description": "Policies for referencing.",
+                    "properties": {
+                      "resolution": {
+                        "default": "Required",
+                        "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                        "enum": [
+                          "Required",
+                          "Optional"
+                        ],
+                        "type": "string"
+                      },
+                      "resolve": {
+                        "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                        "enum": [
+                          "Always",
+                          "IfNotPresent"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "clusterSecurityGroupSelector": {
+              "description": "ClusterSecurityGroupSelector selects references to ClusterSecurityGroups used\nto set the ClusterSecurityGroups.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "clusterSecurityGroups": {
+              "description": "SecurityGroups is a list of security groups to associate with this cluster.\nDefault: The default cluster security group for Amazon Redshift.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "clusterSubnetGroupName": {
+              "description": "ClusterSubnetGroupName is the name of a cluster subnet group to be associated with this cluster.\nIf this parameter is not provided the resulting cluster will be deployed\noutside virtual private cloud (VPC).",
+              "type": "string"
+            },
+            "clusterType": {
+              "description": "ClusterType is the type of the cluster you want.\nWhen cluster type is specified as\n   * single-node, the NumberOfNodes parameter is not required.\n   * multi-node, the NumberOfNodes parameter is required.\ndefault=multi-node",
+              "enum": [
+                "multi-node",
+                "single-node"
+              ],
+              "type": "string"
+            },
+            "clusterVersion": {
+              "description": "ClusterVersion is the version of the Amazon Redshift engine software\nthat you want to deploy on the cluster. The version selected runs on all the nodes in the cluster.\nConstraints: Only version 1.0 is currently available.",
+              "type": "string"
+            },
+            "dbName": {
+              "description": "DBName is the name of the first database to be created when the cluster is created.\nTo create additional databases after the cluster is created, connect to the\ncluster with a SQL client and use SQL commands to create a database. For\nmore information, go to Create a Database (https://docs.aws.amazon.com/redshift/latest/dg/t_creating_database.html)\nin the Amazon Redshift Database Developer Guide.\nConstraints:\n   * Must contain 1 to 64 alphanumeric characters.\n   * Must contain only lowercase letters.\n   * Cannot be a word that is reserved by the service. A list of reserved\n   words can be found in Reserved Words (https://docs.aws.amazon.com/redshift/latest/dg/r_pg_keywords.html)\n   in the Amazon Redshift Database Developer Guide.\ndefault=dev",
+              "type": "string"
+            },
+            "elasticIP": {
+              "description": "The Elastic IP (EIP) address for the cluster.\nConstraints: The cluster must be provisioned in EC2-VPC and publicly-accessible\nthrough an Internet gateway. For more information about provisioning clusters\nin EC2-VPC, go to Supported Platforms to Launch Your Cluster (https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-clusters.html#cluster-platforms)\nin the Amazon Redshift Cluster Management Guide.",
+              "type": "string"
+            },
+            "encrypted": {
+              "description": "Encrypted defines whether your data in the cluster will be encrypted at rest or not.\ndefault=false",
+              "type": "boolean"
+            },
+            "enhancedVPCRouting": {
+              "description": "EnhancedVPCRouting specifies whether to create the cluster with enhanced VPC\nrouting enabled. To create a cluster that uses enhanced VPC routing, the\ncluster must be in a VPC. For more information, see Enhanced VPC Routing\n(https://docs.aws.amazon.com/redshift/latest/mgmt/enhanced-vpc-routing.html)\nin the Amazon Redshift Cluster Management Guide.\nIf this option is true, enhanced VPC routing is enabled.\ndefault=false",
+              "type": "boolean"
+            },
+            "finalClusterSnapshotIdentifier": {
+              "description": "FinalClusterSnapshotIdentifier is the identifier of the final snapshot\nthat is to be created immediately before deleting the cluster.\nIf this parameter is provided, SkipFinalClusterSnapshot must be false.\nConstraints:\n   * Must be 1 to 255 alphanumeric characters.\n   * First character must be a letter.\n   * Cannot end with a hyphen or contain two consecutive hyphens.",
+              "type": "string"
+            },
+            "finalClusterSnapshotRetentionPeriod": {
+              "description": "FinalClusterSnapshotRetentionPeriod is the number of days that\na manual snapshot is retained.\nIf the value is -1, the manual snapshot is retained indefinitely.\nThe value must be either -1 or an integer between 1 and 3,653.\ndefault -1",
+              "format": "int32",
+              "type": "integer"
+            },
+            "hsmClientCertificateIdentifier": {
+              "description": "HSMClientCertificateIdentifier specifies the name of the HSM client certificate\nthe Amazon Redshift cluster uses to retrieve the data encryption keys stored in an HSM.",
+              "type": "string"
+            },
+            "hsmConfigurationIdentifier": {
+              "description": "HSMConfigurationIdentifier specifies the name of the HSM configuration that\ncontains the information the Amazon Redshift cluster can use to retrieve\nand store keys in an HSM.",
+              "type": "string"
+            },
+            "iamRoleRefs": {
+              "description": "IAMRoleRefs are references to IAMRoles used to set\nthe IAMRoles.",
+              "items": {
+                "description": "A Reference to a named object.",
+                "properties": {
+                  "name": {
+                    "description": "Name of the referenced object.",
+                    "type": "string"
+                  },
+                  "policy": {
+                    "description": "Policies for referencing.",
+                    "properties": {
+                      "resolution": {
+                        "default": "Required",
+                        "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                        "enum": [
+                          "Required",
+                          "Optional"
+                        ],
+                        "type": "string"
+                      },
+                      "resolve": {
+                        "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                        "enum": [
+                          "Always",
+                          "IfNotPresent"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "iamRoleSelector": {
+              "description": "IAMRoleSelector selects references to IAMRoles used\nto set the IAMRoles.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "iamRoles": {
+              "description": "IAMRoles is a list of AWS Identity and Access Management (IAM) roles that can be used\nby the cluster to access other AWS services. You must supply the IAM roles\nin their Amazon Resource Name (ARN) format. You can supply up to 10 IAM roles\nin a single request.\nA cluster can have up to 10 IAM roles associated with it at any time.\nkubebuilder:validation:MaxItems=10",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "kmsKeyID": {
+              "description": "KMSKeyID is the Amazon Resource Name (ARN) for the KMS encryption\nkey. If you are creating a cluster with the same AWS account that owns\nthe KMS encryption key used to encrypt the new cluster, then you can\nuse the KMS key alias instead of the ARN for the KM encryption key.",
+              "type": "string"
+            },
+            "maintenanceTrackName": {
+              "description": "MaintenanceTrackName an optional parameter for the name of the maintenance track for the cluster.",
+              "type": "string"
+            },
+            "manualSnapshotRetentionPeriod": {
+              "description": "ManualSnapshotRetentionPeriod is the default number of days to retain a manual snapshot.\nIf the value is -1, the snapshot is retained indefinitely.\nThis setting doesn't change the retention period of existing snapshots.\ndefault=1",
+              "format": "int32",
+              "maximum": 3653,
+              "type": "integer"
+            },
+            "masterUsername": {
+              "description": "MasterUsername is the user name associated with the master user account for the cluster that\nis being created.\nConstraints:\n   * Must be 1 - 128 alphanumeric characters. The user name can't be PUBLIC.\n   * First character must be a letter.\n   * Cannot be a reserved word. A list of reserved words can be found in\n   Reserved Words (https://docs.aws.amazon.com/redshift/latest/dg/r_pg_keywords.html)\n   in the Amazon Redshift Database Developer Guide.",
+              "type": "string"
+            },
+            "newClusterIdentifier": {
+              "description": "NewClusterIdentifier is the new identifier you want to use for the cluster.",
+              "type": "string"
+            },
+            "newMasterUserPassword": {
+              "description": "NewMasterUserPassword is the new password to be associated with the master user account\nfor the cluster that has being created.\nSet this value if you want to change the existing password of the cluster.\nConstraints:\n   * Must be between 8 and 64 characters in length.\n   * Must contain at least one uppercase letter.\n   * Must contain at least one lowercase letter.\n   * Must contain one number.\n   * Can be any printable ASCII character (ASCII code 33 to 126) except '\n   (single quote), \" (double quote), \\, /, @, or space.",
+              "type": "string"
+            },
+            "nodeType": {
+              "description": "NodeType is the node type defining its size and compute capacity to be\nprovisioned for the cluster. For information about node types,\ngo to Working with Clusters (https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-clusters.html#how-many-nodes)\nin the Amazon Redshift Cluster Management Guide.",
+              "type": "string"
+            },
+            "numberOfNodes": {
+              "description": "NumberOfNodes defines the number of compute nodes in the cluster.\nThis parameter is required when the ClusterType parameter is specified as multi-node.\nFor information about determining how many nodes you need, go to Working\nwith Clusters (https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-clusters.html#how-many-nodes)\nin the Amazon Redshift Cluster Management Guide.\nIf you don't specify this parameter, you get a single-node cluster. When\nrequesting a multi-node cluster, you must specify the number of nodes that\nyou want in the cluster.\ndefault=1",
+              "format": "int32",
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "port": {
+              "description": "Port specifies the port number on which the cluster accepts incoming connections.\nThe cluster is accessible only via the JDBC and ODBC connection strings.\nPart of the connection string requires the port on which the cluster will\nlisten for incoming connections.\ndefault=5439",
+              "format": "int32",
+              "maximum": 65535,
+              "minimum": 1150,
+              "type": "integer"
+            },
+            "preferredMaintenanceWindow": {
+              "description": "PreferredMaintenanceWindow is the weekly time range (in UTC) during which\nautomated cluster maintenance can occur.\nDefault: A 30-minute window selected at random from an 8-hour block of time\nper region, occurring on a random day of the week. For more information about\nthe time blocks for each region, see Maintenance Windows (https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-clusters.html#rs-maintenance-windows)\nin Amazon Redshift Cluster Management Guide.\nConstraints: Minimum 30-minute window.",
+              "type": "string"
+            },
+            "publiclyAccessible": {
+              "description": "PubliclyAccessible is to specify if the cluster can be accessed from a public network.",
+              "type": "boolean"
+            },
+            "region": {
+              "description": "Region is the region you'd like the Cluster to be created in.",
+              "type": "string"
+            },
+            "skipFinalClusterSnapshot": {
+              "description": "SkipFinalClusterSnapshot determines whether a final snapshot of the cluster\nis created before Amazon Redshift deletes the cluster.\nIf true, a final cluster snapshot is not created.\nIf false, a final cluster snapshot is created before the cluster is deleted.\nThe FinalClusterSnapshotIdentifier parameter must be specified if SkipFinalClusterSnapshot\nis false.\nDefault: false",
+              "type": "boolean"
+            },
+            "snapshotScheduleIdentifier": {
+              "description": "SnapshotScheduleIdentifier is a unique identifier for the snapshot schedule.",
+              "type": "string"
+            },
+            "tags": {
+              "description": "Tags indicates a list of tags for the clusters.",
+              "items": {
+                "description": "Tag represetnt a key-pair metadata assigned to a Redshift Cluster",
+                "properties": {
+                  "tag": {
+                    "description": "The key of the tag.",
+                    "type": "string"
+                  },
+                  "value": {
+                    "description": "The value of the tag.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tag",
+                  "value"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "vpcSecurityGroupIDRefs": {
+              "description": "VPCSecurityGroupIDRefs are references to VPCSecurityGroups used to set\nthe VPCSecurityGroupIDs.",
+              "items": {
+                "description": "A Reference to a named object.",
+                "properties": {
+                  "name": {
+                    "description": "Name of the referenced object.",
+                    "type": "string"
+                  },
+                  "policy": {
+                    "description": "Policies for referencing.",
+                    "properties": {
+                      "resolution": {
+                        "default": "Required",
+                        "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                        "enum": [
+                          "Required",
+                          "Optional"
+                        ],
+                        "type": "string"
+                      },
+                      "resolve": {
+                        "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                        "enum": [
+                          "Always",
+                          "IfNotPresent"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "vpcSecurityGroupIDSelector": {
+              "description": "VPCSecurityGroupIDSelector selects references to VPCSecurityGroups used\nto set the VPCSecurityGroupIDs.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "vpcSecurityGroupIds": {
+              "description": "VPCSecurityGroupIDs a list of Virtual Private Cloud (VPC) security groups to be associated with\nthe cluster.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "masterUsername",
+            "nodeType",
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "ClusterStatus represents the observed state of an AWS Redshift Cluster.",
+      "properties": {
+        "atProvider": {
+          "description": "ClusterObservation is the representation of the current state that is observed.",
+          "properties": {
+            "clusterAvailabilityStatus": {
+              "description": "ClusterAvailabilityStatus is the availability status of the cluster.",
+              "type": "string"
+            },
+            "clusterCreateTime": {
+              "description": "ClusterCreateTime is the date and time that the cluster was created.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "clusterNodes": {
+              "description": "The nodes in the cluster.",
+              "items": {
+                "description": "ClusterNode is the identifier of a node in a cluster.",
+                "properties": {
+                  "nodeRole": {
+                    "description": "Whether the node is a leader node or a compute node.",
+                    "type": "string"
+                  },
+                  "privateIPAddress": {
+                    "description": "The private IP address of a node within a cluster.",
+                    "type": "string"
+                  },
+                  "publicIPAddress": {
+                    "description": "The public IP address of a node within a cluster.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "clusterParameterGroups": {
+              "description": "The list of cluster parameter groups that are associated with this cluster.\nEach parameter group in the list is returned with its status.",
+              "items": {
+                "description": "ClusterParameterGroupStatus is the status of the Cluster parameter group.",
+                "properties": {
+                  "clusterParameterStatusList": {
+                    "description": "The list of parameter statuses.\n\n\nFor more information about parameters and parameter groups, go to Amazon\nRedshift Parameter Groups (https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-parameter-groups.html)\nin the Amazon Redshift Cluster Management Guide.",
+                    "items": {
+                      "description": "ClusterParameterStatus describes the status of a Cluster parameter.",
+                      "properties": {
+                        "parameterApplyErrorDescription": {
+                          "description": "The error that prevented the parameter from being applied to the database.",
+                          "type": "string"
+                        },
+                        "parameterApplyStatus": {
+                          "description": "The status of the parameter that indicates whether the parameter is in sync\nwith the database, waiting for a cluster reboot, or encountered an error\nwhen being applied.\n\n\nThe following are possible statuses and descriptions.\n\n\n   * in-sync: The parameter value is in sync with the database.\n\n\n   * pending-reboot: The parameter value will be applied after the cluster\n   reboots.\n\n\n   * applying: The parameter value is being applied to the database.\n\n\n   * invalid-parameter: Cannot apply the parameter value because it has an\n   invalid value or syntax.\n\n\n   * apply-deferred: The parameter contains static property changes. The\n   changes are deferred until the cluster reboots.\n\n\n   * apply-error: Cannot connect to the cluster. The parameter change will\n   be applied after the cluster reboots.\n\n\n   * unknown-error: Cannot apply the parameter change right now. The change\n   will be applied after the cluster reboots.",
+                          "type": "string"
+                        },
+                        "parameterName": {
+                          "description": "The name of the parameter.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "parameterApplyStatus": {
+                    "description": "The status of parameter updates.",
+                    "type": "string"
+                  },
+                  "parameterGroupName": {
+                    "description": "The name of the cluster parameter group.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "clusterPublicKey": {
+              "description": "The public key for the cluster.",
+              "type": "string"
+            },
+            "clusterRevisionNumber": {
+              "description": "The specific revision number of the database in the cluster.",
+              "type": "string"
+            },
+            "clusterSnapshotCopyStatus": {
+              "description": "A value that returns the destination region and retention period that are\nconfigured for cross-region snapshot copy.",
+              "properties": {
+                "destinationRegion": {
+                  "description": "The destination region that snapshots are automatically copied to when cross-region\nsnapshot copy is enabled.",
+                  "type": "string"
+                },
+                "manualSnapshotRetentionPeriod": {
+                  "description": "The number of days that automated snapshots are retained in the destination\nregion after they are copied from a source region. If the value is -1, the\nmanual snapshot is retained indefinitely.\n\n\nThe value must be either -1 or an integer between 1 and 3,653.",
+                  "format": "int32",
+                  "type": "integer"
+                },
+                "retentionPeriod": {
+                  "description": "The number of days that automated snapshots are retained in the destination\nregion after they are copied from a source region.",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "snapshotCopyGrantName": {
+                  "description": "The name of the snapshot copy grant.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "clusterStatus": {
+              "description": "ClusterStatus is the current state of the cluster.",
+              "type": "string"
+            },
+            "dataTransferProgress": {
+              "description": "Describes the status of a cluster while it is in the process of resizing\nwith an incremental resize.",
+              "properties": {
+                "currentRateInMegaBytesPerSecond": {
+                  "description": "Describes the data transfer rate in MB's per second.",
+                  "type": "integer"
+                },
+                "dataTransferredInMegaBytes": {
+                  "description": "Describes the total amount of data that has been transferred in MB's.",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "elapsedTimeInSeconds": {
+                  "description": "Describes the number of seconds that have elapsed during the data transfer.",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "estimatedTimeToCompletionInSeconds": {
+                  "description": "Describes the estimated number of seconds remaining to complete the transfer.",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "status": {
+                  "description": "Describes the status of the cluster. While the transfer is in progress the\nstatus is transferringdata.",
+                  "type": "string"
+                },
+                "totalDataInMegaBytes": {
+                  "description": "Describes the total amount of data to be transferred in megabytes.",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "deferredMaintenanceWindows": {
+              "description": "Describes a group of DeferredMaintenanceWindow objects.",
+              "items": {
+                "description": "DeferredMaintenanceWindow describes a deferred maintenance window",
+                "properties": {
+                  "deferMaintenanceEndTime": {
+                    "description": "A timestamp for the end of the time period when we defer maintenance.",
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "deferMaintenanceIdentifier": {
+                    "description": "A unique identifier for the maintenance window.",
+                    "type": "string"
+                  },
+                  "deferMaintenanceStartTime": {
+                    "description": "A timestamp for the beginning of the time period when we defer maintenance.",
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "elasticIPStatus": {
+              "description": "The status of the elastic IP (EIP) address.",
+              "properties": {
+                "elasticIP": {
+                  "description": "The elastic IP (EIP) address for the cluster.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "The status of the elastic IP (EIP) address.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "elasticResizeNumberOfNodeOptions": {
+              "description": "The number of nodes that you can resize the cluster to with the elastic resize\nmethod.",
+              "type": "string"
+            },
+            "endpoint": {
+              "description": "Endpoint specifies the connection endpoint.",
+              "properties": {
+                "address": {
+                  "description": "Address specifies the DNS address of the cluster.",
+                  "type": "string"
+                },
+                "port": {
+                  "description": "Port specifies the port that the database engine is listening on.",
+                  "format": "int32",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "expectedNextSnapshotScheduleTime": {
+              "description": "The date and time when the next snapshot is expected to be taken for clusters\nwith a valid snapshot schedule and backups enabled.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "expectedNextSnapshotScheduleTimeStatus": {
+              "description": "The status of next expected snapshot for clusters having a valid snapshot\nschedule and backups enabled. Possible values are the following:\n\n\n   * OnTrack - The next snapshot is expected to be taken on time.\n\n\n   * Pending - The next snapshot is pending to be taken.",
+              "type": "string"
+            },
+            "hsmStatus": {
+              "description": "A value that reports whether the Amazon Redshift cluster has finished applying\nany hardware security module (HSM) settings changes specified in a modify\ncluster command.\n\n\nValues: active, applying",
+              "properties": {
+                "hsmClientCertificateIdentifier": {
+                  "description": "Specifies the name of the HSM client certificate the Amazon Redshift cluster\nuses to retrieve the data encryption keys stored in an HSM.",
+                  "type": "string"
+                },
+                "hsmConfigurationIdentifier": {
+                  "description": "Specifies the name of the HSM configuration that contains the information\nthe Amazon Redshift cluster can use to retrieve and store keys in an HSM.",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "Reports whether the Amazon Redshift cluster has finished applying any HSM\nsettings changes specified in a modify cluster command.\n\n\nValues: active, applying",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "modifyStatus": {
+              "description": "The status of a modify operation, if any, initiated for the cluster.",
+              "type": "string"
+            },
+            "nextMaintenanceWindowStartTime": {
+              "description": "The date and time in UTC when system maintenance can begin.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "pendingActions": {
+              "description": "Cluster operations that are waiting to be started.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "snapshotScheduleState": {
+              "description": "The current state of the cluster snapshot schedule.",
+              "type": "string"
+            },
+            "vpcId": {
+              "description": "The identifier of the VPC the cluster is in, if the cluster is in a VPC.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

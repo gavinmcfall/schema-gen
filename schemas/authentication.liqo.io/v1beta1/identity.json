@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/authentication.liqo.io/v1beta1/identity.json",
+  "title": "Identity",
+  "description": "Identity is the Schema for the identitys API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.899135+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "IdentitySpec defines the desired state of Identity.",
+      "properties": {
+        "authParams": {
+          "description": "AuthParams contains the parameters to create an Identity to use in the provider cluster.",
+          "properties": {
+            "apiServer": {
+              "type": "string"
+            },
+            "awsConfig": {
+              "description": "AwsConfig contains the AWS configuration and access key for the Liqo user and the current EKS cluster.",
+              "properties": {
+                "awsAccessKeyID": {
+                  "type": "string"
+                },
+                "awsClusterName": {
+                  "type": "string"
+                },
+                "awsRegion": {
+                  "type": "string"
+                },
+                "awsSecretAccessKey": {
+                  "type": "string"
+                },
+                "awsUserArn": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "awsAccessKeyID",
+                "awsClusterName",
+                "awsRegion",
+                "awsSecretAccessKey",
+                "awsUserArn"
+              ],
+              "type": "object"
+            },
+            "ca": {
+              "format": "byte",
+              "type": "string"
+            },
+            "proxyURL": {
+              "type": "string"
+            },
+            "signedCRT": {
+              "format": "byte",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "clusterID": {
+          "description": "ClusterID is the identity of the provider cluster.",
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+          "type": "string"
+        },
+        "namespace": {
+          "description": "Namespace is the namespace where to use the identity.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is the type of the identity.",
+          "enum": [
+            "ControlPlane",
+            "ResourceSlice"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "IdentityStatus defines the observed state of Identity.",
+      "properties": {
+        "kubeconfigSecretRef": {
+          "description": "KubeconfigSecretRef contains the reference to the secret containing the kubeconfig to access the provider cluster.",
+          "properties": {
+            "name": {
+              "default": "",
+              "description": "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/hub.traefik.io/v1alpha1/apiplan.json",
+  "title": "APIPlan",
+  "description": "APIPlan is the Schema for the apiplans API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "traefik",
+    "sourceVersion": "34.3.0",
+    "extractedAt": "2025-12-14T02:17:53.564522+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "The desired behavior of this APIPlan.",
+      "properties": {
+        "description": {
+          "description": "Description describes the plan.",
+          "type": "string"
+        },
+        "quota": {
+          "description": "Quota defines the quota policy.",
+          "properties": {
+            "limit": {
+              "description": "Limit is the maximum number of token in the bucket.",
+              "type": "integer"
+            },
+            "period": {
+              "description": "Period is the unit of time for the Limit.",
+              "format": "duration",
+              "type": "string"
+            }
+          },
+          "required": [
+            "limit"
+          ],
+          "type": "object"
+        },
+        "rateLimit": {
+          "description": "RateLimit defines the rate limit policy.",
+          "properties": {
+            "limit": {
+              "description": "Limit is the maximum number of token in the bucket.",
+              "type": "integer"
+            },
+            "period": {
+              "description": "Period is the unit of time for the Limit.",
+              "format": "duration",
+              "type": "string"
+            }
+          },
+          "required": [
+            "limit"
+          ],
+          "type": "object"
+        },
+        "title": {
+          "description": "Title is the human-readable name of the plan.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "The current status of this APIPlan.",
+      "properties": {
+        "hash": {
+          "description": "Hash is a hash representing the APIPlan.",
+          "type": "string"
+        },
+        "syncedAt": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/policy.linkerd.io/v1alpha1/serverauthorization.json",
+  "title": "ServerAuthorization",
+  "description": "ServerAuthorization is the Schema for the serverauthorizations API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "linkerd-crds",
+    "sourceVersion": "2025.12.2",
+    "extractedAt": "2025-12-14T02:18:13.692399+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "description": "Authorizes clients to communicate with Linkerd-proxied servers.",
+      "properties": {
+        "client": {
+          "description": "Describes clients authorized to access a server.",
+          "properties": {
+            "meshTLS": {
+              "properties": {
+                "identities": {
+                  "description": "Authorizes clients with the provided proxy identity strings (as provided via MTLS)\nThe `*` prefix can be used to match all identities in a domain. An identity string of `*` indicates that all authentication clients are authorized.",
+                  "items": {
+                    "pattern": "^(\\*|[a-z0-9]([-a-z0-9]*[a-z0-9])?)(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "serviceAccounts": {
+                  "description": "Authorizes clients with the provided proxy identity service accounts (as provided via MTLS)",
+                  "items": {
+                    "properties": {
+                      "name": {
+                        "description": "The ServiceAccount's name.",
+                        "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+                        "type": "string"
+                      },
+                      "namespace": {
+                        "description": "The ServiceAccount's namespace. If unset, the authorization's namespace is used.",
+                        "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "unauthenticatedTLS": {
+                  "description": "Indicates that no client identity is required for communication.\nThis is mostly important for the identity controller, which must terminate TLS connections from clients that do not yet have a certificate.",
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "networks": {
+              "description": "Limits the client IP addresses to which this authorization applies. If unset, the server chooses a default (typically, all IPs or the cluster's pod network).",
+              "items": {
+                "properties": {
+                  "cidr": {
+                    "type": "string"
+                  },
+                  "except": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "cidr"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "unauthenticated": {
+              "description": "Authorizes unauthenticated clients to access a server.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "server": {
+          "description": "Identifies servers in the same namespace for which this authorization applies.\nOnly one of `name` or `selector` may be specified.",
+          "oneOf": [
+            {
+              "required": [
+                "name"
+              ]
+            },
+            {
+              "required": [
+                "selector"
+              ]
+            }
+          ],
+          "properties": {
+            "name": {
+              "description": "References a `Server` instance by name",
+              "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+              "type": "string"
+            },
+            "selector": {
+              "description": "A label query over servers on which this authorization applies.",
+              "properties": {
+                "matchExpressions": {
+                  "items": {
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "operator": {
+                        "enum": [
+                          "In",
+                          "NotIn",
+                          "Exists",
+                          "DoesNotExist"
+                        ],
+                        "type": "string"
+                      },
+                      "values": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "operator"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "matchLabels": {
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "server",
+        "client"
+      ],
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "policy.linkerd.io/v1alpha1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "ServerAuthorization"
+      ]
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/networking.istio.io/v1beta1/proxyconfig.json",
+  "title": "ProxyConfig",
+  "description": "ProxyConfig is the Schema for the proxyconfigs API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "istio-base",
+    "sourceVersion": "1.24.2",
+    "extractedAt": "2025-12-14T02:18:07.455931+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "description": "Provides configuration for individual workloads. See more details at: https://istio.io/docs/reference/config/networking/proxy-config.html",
+      "properties": {
+        "concurrency": {
+          "description": "The number of worker threads to run.",
+          "format": "int32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "environmentVariables": {
+          "additionalProperties": {
+            "maxLength": 2048,
+            "type": "string"
+          },
+          "description": "Additional environment variables for the proxy.",
+          "type": "object"
+        },
+        "image": {
+          "description": "Specifies the details of the proxy image.",
+          "properties": {
+            "imageType": {
+              "description": "The image type of the image.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "selector": {
+          "description": "Optional.",
+          "properties": {
+            "matchLabels": {
+              "additionalProperties": {
+                "maxLength": 63,
+                "type": "string"
+              },
+              "description": "One or more labels that indicate a specific set of pods/VMs on which a policy should be applied.",
+              "maxProperties": 4096,
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "conditions": {
+          "description": "Current service state of the resource.",
+          "items": {
+            "properties": {
+              "lastProbeTime": {
+                "description": "Last time we probed the condition.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "lastTransitionTime": {
+                "description": "Last time the condition transitioned from one status to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "Human-readable message indicating details about last transition.",
+                "type": "string"
+              },
+              "reason": {
+                "description": "Unique, one-word, CamelCase reason for the condition's last transition.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status is the status of the condition.",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type is the type of the condition.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Resource Generation to which the Reconciled Condition refers."
+        },
+        "validationMessages": {
+          "description": "Includes any errors or warnings detected by Istio's analyzers.",
+          "items": {
+            "properties": {
+              "documentationUrl": {
+                "description": "A url pointing to the Istio documentation for this specific error type.",
+                "type": "string"
+              },
+              "level": {
+                "description": "Represents how severe a message is.\n\nValid Options: UNKNOWN, ERROR, WARNING, INFO",
+                "enum": [
+                  "UNKNOWN",
+                  "ERROR",
+                  "WARNING",
+                  "INFO"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "properties": {
+                  "code": {
+                    "description": "A 7 character code matching `^IST[0-9]{4}$` intended to uniquely identify the message type.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "A human-readable name for the message type.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "networking.istio.io/v1beta1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "ProxyConfig"
+      ]
+    }
+  }
+}

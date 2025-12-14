@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/traefik.io/v1alpha1/serverstransporttcp.json",
+  "title": "ServersTransportTCP",
+  "description": "ServersTransportTCP is the Schema for the serverstransporttcps API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "traefik",
+    "sourceVersion": "34.3.0",
+    "extractedAt": "2025-12-14T02:17:53.556102+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "ServersTransportTCPSpec defines the desired state of a ServersTransportTCP.",
+      "properties": {
+        "dialKeepAlive": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "DialKeepAlive is the interval between keep-alive probes for an active network connection. If zero, keep-alive probes are sent with a default value (currently 15 seconds), if supported by the protocol and operating system. Network protocols or operating systems that do not support keep-alives ignore this field. If negative, keep-alive probes are disabled."
+        },
+        "dialTimeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "DialTimeout is the amount of time to wait until a connection to a backend server can be established."
+        },
+        "terminationDelay": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "TerminationDelay defines the delay to wait before fully terminating the connection, after one connected peer has closed its writing capability."
+        },
+        "tls": {
+          "description": "TLS defines the TLS configuration",
+          "properties": {
+            "certificatesSecrets": {
+              "description": "CertificatesSecrets defines a list of secret storing client certificates for mTLS.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "insecureSkipVerify": {
+              "description": "InsecureSkipVerify disables TLS certificate verification.",
+              "type": "boolean"
+            },
+            "peerCertURI": {
+              "description": "MaxIdleConnsPerHost controls the maximum idle (keep-alive) to keep per-host.\nPeerCertURI defines the peer cert URI used to match against SAN URI during the peer certificate verification.",
+              "type": "string"
+            },
+            "rootCAsSecrets": {
+              "description": "RootCAsSecrets defines a list of CA secret used to validate self-signed certificates.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "serverName": {
+              "description": "ServerName defines the server name used to contact the server.",
+              "type": "string"
+            },
+            "spiffe": {
+              "description": "Spiffe defines the SPIFFE configuration.",
+              "properties": {
+                "ids": {
+                  "description": "IDs defines the allowed SPIFFE IDs (takes precedence over the SPIFFE TrustDomain).",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "trustDomain": {
+                  "description": "TrustDomain defines the allowed SPIFFE trust domain.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "metadata",
+    "spec"
+  ]
+}

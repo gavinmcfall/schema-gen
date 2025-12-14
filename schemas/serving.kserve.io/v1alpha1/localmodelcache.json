@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/serving.kserve.io/v1alpha1/localmodelcache.json",
+  "title": "LocalModelCache",
+  "description": "LocalModelCache is the Schema for the localmodelcaches API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "kserve",
+    "sourceVersion": "v0.14.1",
+    "extractedAt": "2025-12-14T02:25:52.679781+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "modelSize": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "pattern": "^(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))))?$"
+        },
+        "nodeGroups": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "type": "array"
+        },
+        "sourceModelUri": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "modelSize",
+        "nodeGroups",
+        "sourceModelUri"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "copies": {
+          "properties": {
+            "available": {
+              "type": "integer"
+            },
+            "failed": {
+              "type": "integer"
+            },
+            "total": {
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "inferenceServices": {
+          "items": {
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "nodeStatus": {
+          "additionalProperties": {
+            "enum": [
+              "",
+              "NodeNotReady",
+              "NodeDownloadPending",
+              "NodeDownloading",
+              "NodeDownloaded",
+              "NodeDownloadError"
+            ],
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

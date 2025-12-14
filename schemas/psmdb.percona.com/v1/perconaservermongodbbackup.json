@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/psmdb.percona.com/v1/perconaservermongodbbackup.json",
+  "title": "PerconaServerMongoDBBackup",
+  "description": "PerconaServerMongoDBBackup is the Schema for the perconaservermongodbbackups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "percona-server-mongodb-operator",
+    "sourceVersion": "1.19.1",
+    "extractedAt": "2025-12-14T02:20:32.392909+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "properties": {
+        "clusterName": {
+          "type": "string"
+        },
+        "compressionLevel": {
+          "type": "integer"
+        },
+        "compressionType": {
+          "type": "string"
+        },
+        "psmdbCluster": {
+          "type": "string"
+        },
+        "storageName": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "logical",
+            "physical"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "azure": {
+          "properties": {
+            "container": {
+              "type": "string"
+            },
+            "credentialsSecret": {
+              "type": "string"
+            },
+            "endpointUrl": {
+              "type": "string"
+            },
+            "prefix": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "credentialsSecret"
+          ],
+          "type": "object"
+        },
+        "completed": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "filesystem": {
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "type": "object"
+        },
+        "lastTransition": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "latestRestorableTime": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "pbmName": {
+          "type": "string"
+        },
+        "pbmPod": {
+          "type": "string"
+        },
+        "pbmPods": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "replsetNames": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "s3": {
+          "properties": {
+            "bucket": {
+              "type": "string"
+            },
+            "credentialsSecret": {
+              "type": "string"
+            },
+            "debugLogLevels": {
+              "type": "string"
+            },
+            "endpointUrl": {
+              "type": "string"
+            },
+            "forcePathStyle": {
+              "type": "boolean"
+            },
+            "insecureSkipTLSVerify": {
+              "type": "boolean"
+            },
+            "maxUploadParts": {
+              "type": "integer"
+            },
+            "prefix": {
+              "type": "string"
+            },
+            "region": {
+              "type": "string"
+            },
+            "retryer": {
+              "properties": {
+                "maxRetryDelay": {
+                  "type": "string"
+                },
+                "minRetryDelay": {
+                  "type": "string"
+                },
+                "numMaxRetries": {
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "serverSideEncryption": {
+              "properties": {
+                "kmsKeyID": {
+                  "type": "string"
+                },
+                "sseAlgorithm": {
+                  "type": "string"
+                },
+                "sseCustomerAlgorithm": {
+                  "type": "string"
+                },
+                "sseCustomerKey": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "storageClass": {
+              "type": "string"
+            },
+            "uploadPartSize": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "bucket"
+          ],
+          "type": "object"
+        },
+        "start": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "storageName": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,1345 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/stackgres.io/v1/sgconfig.json",
+  "title": "SGConfig",
+  "description": "SGConfig is the Schema for the sgconfigs API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "stackgres",
+    "sourceVersion": "1.18.2",
+    "extractedAt": "2025-12-14T02:28:30.441547+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "description": "Spec defines the desired state of SGConfig",
+      "properties": {
+        "adminui": {
+          "description": "Section to configure Web Console container",
+          "properties": {
+            "image": {
+              "description": "Section to configure Web Console image",
+              "properties": {
+                "name": {
+                  "default": "stackgres/admin-ui",
+                  "description": "Web Console image name",
+                  "type": "string"
+                },
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "description": "Web Console image pull policy",
+                  "type": "string"
+                },
+                "tag": {
+                  "description": "Web Console image tag",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "resources": {
+              "description": "Web Console resources. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#resourcerequirements-v1-core",
+              "type": "object"
+            },
+            "service": {
+              "description": "Section to configure Web Console service.",
+              "properties": {
+                "exposeHTTP": {
+                  "default": false,
+                  "description": "When set to `true` the HTTP port will be exposed in the Web Console Service",
+                  "type": "boolean"
+                },
+                "loadBalancerIP": {
+                  "description": "LoadBalancer will get created with the IP specified in\nthis field. This feature depends on whether the underlying cloud-provider supports specifying\nthe loadBalancerIP when a load balancer is created. This field will be ignored if the\ncloud-provider does not support the feature.\n",
+                  "type": "string"
+                },
+                "loadBalancerSourceRanges": {
+                  "description": "If specified and supported by the platform,\nthis will restrict traffic through the cloud-provider load-balancer will be restricted to the\nspecified client IPs. This field will be ignored if the cloud-provider does not support the\nfeature.\nMore info: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/\n",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "nodePort": {
+                  "description": "The HTTPS port used to expose the Service on Kubernetes nodes",
+                  "type": "integer"
+                },
+                "nodePortHTTP": {
+                  "description": "The HTTP port used to expose the Service on Kubernetes nodes",
+                  "type": "integer"
+                },
+                "type": {
+                  "default": "ClusterIP",
+                  "description": "The type used for the service of the UI:\n* Set to LoadBalancer to create a load balancer (if supported by the kubernetes cluster)\n  to allow connect from Internet to the UI. Note that enabling this feature will probably incurr in\n  some fee that depend on the host of the kubernetes cluster (for example this is true for EKS, GKE\n  and AKS).\n* Set to NodePort to expose admin UI from kubernetes nodes.\n",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "allowImpersonationForRestApi": {
+          "description": "When set to `true` the cluster role for impersonation will be created even if `disableClusterRole` is set to `true`.\n\nIt is `false` by default.\n\n> This value can only be set in operator helm chart.\n",
+          "type": "boolean"
+        },
+        "allowedNamespaceLabelSelector": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Section to configure namespaces that the operator is allowed to use. If allowedNamespaces is defined it will be used instead. If empty all namespaces will be allowed (default).\n\nSee https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#labelselector-v1-meta\n\n> This value can only be set in operator helm chart.\n",
+          "type": "object"
+        },
+        "allowedNamespaces": {
+          "description": "Section to configure allowed namespaces that the operator is allowed to use. If empty all namespaces will be allowed (default).\n\n> This value can only be set in operator helm chart or with the environment variable `ALLOWED_NAMESPACES`.\n>   It is set by OLM when [scoping the operator](https://olm.operatorframework.io/docs/advanced-tasks/operator-scoping-with-operatorgroups/).\n",
+          "items": {
+            "description": "A namespace that the operator is allowed to use.\n",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "authentication": {
+          "description": "Section to configure Web Console authentication",
+          "properties": {
+            "createAdminSecret": {
+              "default": true,
+              "description": "When `true` will create the secret used to store the admin user credentials to access the UI.\n",
+              "type": "boolean"
+            },
+            "oidc": {
+              "description": "Section to configure Web Console OIDC authentication",
+              "properties": {
+                "authServerUrl": {
+                  "type": "string"
+                },
+                "clientId": {
+                  "type": "string"
+                },
+                "clientIdSecretRef": {
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "credentialsSecret": {
+                  "type": "string"
+                },
+                "credentialsSecretSecretRef": {
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "tlsVerification": {
+                  "description": "Can be one of `required`, `certificate-validation` or `none`",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "password": {
+              "description": "The admin password that will be created for the Web Console.\n\nIf not specified a random password will be generated.\n",
+              "type": "string"
+            },
+            "secretRef": {
+              "description": "Allow to specify a reference to a Secret with the admin user credentials for the Web Console.\n\nIn order to assign properly permissions. Make sure the `user` field match the value of the `k8sUsername` key in the referenced Secret.\n",
+              "properties": {
+                "name": {
+                  "description": "The name of the Secret.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "type": {
+              "default": "jwt",
+              "description": "Specify the authentication mechanism to use. By default is `jwt`, see https://stackgres.io/doc/latest/api/rbac#local-secret-mechanism.\n If set to `oidc` then see https://stackgres.io/doc/latest/api/rbac/#openid-connect-provider-mechanism.\n",
+              "type": "string"
+            },
+            "user": {
+              "default": "admin",
+              "description": "The admin username that will be created for the Web Console\n\nOperator bundle installation can not change the default value of this field.\n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "cert": {
+          "description": "Section to configure the Operator, REST API and Web Console certificates and JWT RSA key-pair.",
+          "properties": {
+            "autoapprove": {
+              "default": true,
+              "description": "If set to `true` the CertificateSigningRequest used to generate the certificate used by\n Webhooks will be approved by the Operator Installation Job.\n",
+              "type": "boolean"
+            },
+            "certDuration": {
+              "description": "The duration in days of the generated certificate for the Operator after which it will expire and be regenerated.\nIf not specified it will be set to 730 (2 years) by default.\n",
+              "type": "integer"
+            },
+            "certManager": {
+              "description": "Section to configure cert-manager integration to generate Operator certificates",
+              "properties": {
+                "autoConfigure": {
+                  "default": false,
+                  "description": "When set to `true` then Issuer and Certificate for Operator, Web Console / REST API and OpenTelemetry Collector\n Pods will be generated\n",
+                  "type": "boolean"
+                },
+                "duration": {
+                  "default": "2160h",
+                  "description": "The requested duration (i.e. lifetime) of the Certificates. See https://cert-manager.io/docs/reference/api-docs/#cert-manager.io%2fv1",
+                  "type": "string"
+                },
+                "encoding": {
+                  "default": "PKCS1",
+                  "description": "The private key cryptography standards (PKCS) encoding for this certificate\u2019s private key to be encoded in. See https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.CertificatePrivateKey",
+                  "type": "string"
+                },
+                "renewBefore": {
+                  "default": "360h",
+                  "description": "How long before the currently issued certificate\u2019s expiry cert-manager should renew the certificate. See https://cert-manager.io/docs/reference/api-docs/#cert-manager.io%2fv1",
+                  "type": "string"
+                },
+                "size": {
+                  "default": 2048,
+                  "description": "Size is the key bit size of the corresponding private key for this certificate. See https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.CertificatePrivateKey",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "collectorCertDuration": {
+              "description": "The duration in days of the generated certificate for the OpenTelemetry Collector after which it will expire and be regenerated.\nIf not specified it will be set to 730 (2 years) by default.\n",
+              "type": "integer"
+            },
+            "collectorSecretName": {
+              "description": "The Secret name with the OpenTelemetry Collector certificate\n of type kubernetes.io/tls. See https://kubernetes.io/docs/concepts/configuration/secret/#tls-secrets\n",
+              "type": "string"
+            },
+            "createForCollector": {
+              "default": true,
+              "description": "When set to `true` the OpenTelemetry Collector certificate will be created.",
+              "type": "boolean"
+            },
+            "createForOperator": {
+              "default": true,
+              "description": "When set to `true` the Operator certificate will be created.",
+              "type": "boolean"
+            },
+            "createForWebApi": {
+              "default": true,
+              "description": "When set to `true` the Web Console / REST API certificate will be created.",
+              "type": "boolean"
+            },
+            "regenerateCert": {
+              "default": true,
+              "description": "When set to `true` the Operator certificates will be regenerated if `createForOperator` is set to `true`, and the certificate is expired or invalid.\n",
+              "type": "boolean"
+            },
+            "regenerateCollectorCert": {
+              "default": true,
+              "description": "When set to `true` the OpenTelemetry Collector certificates will be regenerated if `createForCollector` is set to `true`, and the certificate is expired or invalid.\n",
+              "type": "boolean"
+            },
+            "regenerateWebCert": {
+              "default": true,
+              "description": "When set to `true` the Web Console / REST API certificates will be regenerated if `createForWebApi` is set to `true`, and the certificate is expired or invalid.\n",
+              "type": "boolean"
+            },
+            "regenerateWebRsa": {
+              "default": true,
+              "description": "When set to `true` the Web Console / REST API RSA key pair will be regenerated if `createForWebApi` is set to `true`, and the certificate is expired or invalid.\n",
+              "type": "boolean"
+            },
+            "secretName": {
+              "description": "The Secret name with the Operator Webhooks certificate issued by the Kubernetes cluster CA\n of type kubernetes.io/tls. See https://kubernetes.io/docs/concepts/configuration/secret/#tls-secrets\n",
+              "type": "string"
+            },
+            "webCertDuration": {
+              "description": "The duration in days of the generated certificate for the Web Console / REST API after which it will expire and be regenerated.\nIf not specified it will be set to 730 (2 years) by default.\n",
+              "type": "integer"
+            },
+            "webRsaDuration": {
+              "description": "The duration in days of the generated RSA key pair for the Web Console / REST API after which it will expire and be regenerated.\nIf not specified it will be set to 730 (2 years) by default.\n",
+              "type": "integer"
+            },
+            "webSecretName": {
+              "description": "The Secret name with the Web Console / REST API certificate\n of type kubernetes.io/tls. See https://kubernetes.io/docs/concepts/configuration/secret/#tls-secrets\n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "collector": {
+          "default": {
+            "config": {
+              "exporters": {
+                "otlp": {
+                  "endpoint": "stackgres-collector:4317",
+                  "tls": {
+                    "ca_file": "/etc/operator/certs/tls.crt"
+                  }
+                },
+                "prometheus": {
+                  "enable_open_metrics": false,
+                  "endpoint": "0.0.0.0:9464",
+                  "metric_expiration": "5m",
+                  "resource_to_telemetry_conversion": {
+                    "enabled": false
+                  },
+                  "send_timestamps": true,
+                  "tls": {
+                    "ca_file": "/etc/operator/certs/tls.crt",
+                    "cert_file": "/etc/operator/certs/tls.crt",
+                    "key_file": "/etc/operator/certs/tls.key",
+                    "reload_interval": "10m"
+                  }
+                }
+              },
+              "processors": {
+                "memory_limiter": {
+                  "check_interval": "1s",
+                  "limit_percentage": 80,
+                  "spike_limit_percentage": 15
+                }
+              },
+              "receivers": {
+                "otlp": {
+                  "protocols": {
+                    "grpc": {
+                      "endpoint": "0.0.0.0:4317",
+                      "tls": {
+                        "ca_file": "/etc/operator/certs/tls.crt",
+                        "cert_file": "/etc/operator/certs/tls.crt",
+                        "key_file": "/etc/operator/certs/tls.key"
+                      }
+                    }
+                  }
+                }
+              },
+              "service": {
+                "pipelines": {
+                  "metrics": {
+                    "exporters": [
+                      "prometheus"
+                    ],
+                    "processors": [
+                      "memory_limiter"
+                    ],
+                    "receivers": [
+                      "prometheus"
+                    ]
+                  }
+                }
+              }
+            },
+            "ports": [
+              {
+                "containerPort": 9464,
+                "name": "prom-http",
+                "protocol": "TCP"
+              }
+            ],
+            "prometheusOperator": {
+              "allowDiscovery": true
+            },
+            "resources": {
+              "limits": {
+                "cpu": "1",
+                "memory": "4Gi"
+              },
+              "requests": {
+                "cpu": "250m",
+                "memory": "1Gi"
+              }
+            },
+            "service": {
+              "spec": {
+                "ports": [
+                  {
+                    "name": "prom-http",
+                    "port": 9464,
+                    "protocol": "TCP",
+                    "targetPort": "prom-http"
+                  }
+                ],
+                "type": "ClusterIP"
+              }
+            }
+          },
+          "description": "Section to configure OpenTelemetry Collector\n\nBy default a single instance of OpenTelemetry Collector will receive metrics\n from all monitored Pods and will then exports those metrics to\n a configured target (by default will expose a Prometheus exporter).\n\nSee receivers section to scale this architecture to a set of OpenTelemetry Collectors.\n",
+          "properties": {
+            "affinity": {
+              "description": "OpenTelemetry Collector Pod affinity. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#affinity-v1-core",
+              "type": "object"
+            },
+            "annotations": {
+              "description": "OpenTelemetry Collector Pod annotations",
+              "type": "object"
+            },
+            "config": {
+              "description": "Section to configure OpenTelemetry Collector Configuration. See https://opentelemetry.io/docs/collector/configuration",
+              "type": "object"
+            },
+            "name": {
+              "default": "stackgres-collector",
+              "description": "OpenTelemetry Collector Deploymnet/Deamonset base name",
+              "type": "string"
+            },
+            "nodeSelector": {
+              "description": "OpenTelemetry Collector Pod node selector",
+              "type": "object"
+            },
+            "ports": {
+              "description": "Section to configure OpenTelemetry Collector ports. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#containerport-v1-core",
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "prometheusOperator": {
+              "description": "Section to configure OpenTelemetry Collector integration with Prometheus Operator.",
+              "properties": {
+                "allowDiscovery": {
+                  "default": true,
+                  "description": "If set to false or monitors is set automatic bind to Prometheus\n created using the [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator) will be disabled.\n\nIf disabled the cluster will not be binded to Prometheus automatically and will require manual configuration.\n\nWill be ignored if monitors is set.\n",
+                  "type": "boolean"
+                },
+                "monitors": {
+                  "description": "Optional section to configure PodMonitors for specific Prometheus instances\n\n*WARNING*: resources created by this integration that does set\n the metadata namespace to the same as the operator will not\n be removed when removing the helm chart. Changing the namespace\n may require configure the Prometheus CR properly in order to\n discover PodMonitor in such namespace.\n",
+                  "items": {
+                    "description": "Section to configure a PodMonitor for a specific Prometheus instance that will scrape from the collector Pod pointing by default to the prometheus exporter",
+                    "properties": {
+                      "metadata": {
+                        "description": "Section to overwrite some PodMonitor metadata",
+                        "properties": {
+                          "annotations": {
+                            "description": "The labels to set for the PodMonitor",
+                            "type": "object"
+                          },
+                          "labels": {
+                            "description": "The labels to set for the PodMonitor",
+                            "type": "object"
+                          },
+                          "name": {
+                            "description": "The name of the PodMonitor",
+                            "type": "string"
+                          },
+                          "namespace": {
+                            "description": "The namespace of the PodMonitor. Changing the namespace may require configure the Prometheus CR properly in order to discover PodMonitor in such namespace.",
+                            "type": "string"
+                          },
+                          "ownerReferences": {
+                            "description": "The ownerReferences to set for the PodMonitor in order to be garbage collected by the specified object.",
+                            "items": {
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "name": {
+                        "description": "The name of the Prometheus resource that will scrape from the collector Pod pointing by default to the prometheus exporter",
+                        "type": "string"
+                      },
+                      "namespace": {
+                        "description": "The namespace of the Prometheus resource that will scrape from the collector Pod pointing by default to the prometheus exporter",
+                        "type": "string"
+                      },
+                      "spec": {
+                        "description": "The PodMonitor spec that will be overwritten by the operator. See https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#monitoring.coreos.com/v1.PodMonitorSpec",
+                        "type": "object"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "receivers": {
+              "description": "This section allow to configure a variable number of OpenTelemetry Collector\n receivers (by default equals to the number of Pod with metrics enabled)\n that will scrape the metrics separately and send them to a defined number\n of OpenTelemetry Collector exporters (by default 1) that exports those metrics\n to one or more configured targets (by default will expose a Prometheus exporter).\n",
+              "properties": {
+                "deployments": {
+                  "description": "A set of separate Deployments of 1 instance each that allow to set the OpenTelemetry Collectors receivers to a specified number of instances.\n\nWhen not set the number of Deployment of OpenTelemetry Collectors receivers will match the number of instances of all the existing SGClusters\n that has the field `.spec.configurations.observability.enableMetrics` set to `true`. Also, when not set, each Deployment will include a pod\n affinity rule matching any of the SGClusters Pods set defined below. This will allow to create an OpenTelemetry Collector receiver instance\n dedicated to each SGCluster Pod running in the same Node.\n\nEach Deployment will use a configuration for the OpenTelemetry Collector that will scrape from a set of SGClusters Pods that has the field\n `.spec.configurations.observability.enableMetrics` set to `true`. The set of Pods of each of those OpenTelemetry Collector configuration\n will be a partition of the list of SGClusters Pods that has the field `.spec.configurations.observability.enableMetrics` set to `true`\n ordered by the field `Pod.metadata.creationTimestamp` (from the oldest to the newest) and ordered crescently alphabetically by the fields\n `Pod.metadata.namespace` and `Pod.metadata.name`.\n\nIf is possible to override (even partially) the list of SGCluster Pods using the `sgClusters` section.\n",
+                  "items": {
+                    "properties": {
+                      "affinity": {
+                        "description": "OpenTelemetry Collector Pod affinity. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#affinity-v1-core",
+                        "type": "object"
+                      },
+                      "annotations": {
+                        "description": "OpenTelemetry Collector Pod annotations",
+                        "type": "object"
+                      },
+                      "nodeSelector": {
+                        "description": "OpenTelemetry Collector Pod node selector",
+                        "type": "object"
+                      },
+                      "resources": {
+                        "description": "OpenTelemetry Collector Pod resources. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#resourcerequirements-v1-core",
+                        "type": "object"
+                      },
+                      "sgClusters": {
+                        "description": "List of SGCluster Pods to scrape from this Deployment's Pod that will be included to the OpenTelemetry Collector\n configuration alongside the SGCluster Pods assigned as described in `SGConfig.spec.collector.receivers.deployments`.\n",
+                        "items": {
+                          "properties": {
+                            "indexes": {
+                              "description": "The indexes of the SGCluster's Pods that will be included to the OpenTelemetry Collector configuration alongside\n the SGCluster Pods assigned as described in `SGConfig.spec.collector.receivers.deployments`.\n\nIf not specified all the SGCluster's Pods will be included.\n",
+                              "items": {
+                                "type": "integer"
+                              },
+                              "type": "array"
+                            },
+                            "name": {
+                              "description": "The name of the SGCluster",
+                              "type": "string"
+                            },
+                            "namespace": {
+                              "description": "The namespace of the SGCluster",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "tolerations": {
+                        "description": "OpenTelemetry Collector Pod tolerations. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#toleration-v1-core",
+                        "items": {
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "enabled": {
+                  "default": false,
+                  "description": "When set to `true` it enables the creation of a set of OpenTelemetry Collectors receivers\n that will be scraping from the SGCluster Pods and allow to scale the observability\n architecture and a set of OpenTelemetry Collectors exporters that exports those metrics\n to one or more configured targets.\n",
+                  "type": "boolean"
+                },
+                "exporters": {
+                  "default": 1,
+                  "description": "When receivers are enabled indicates the number of OpenTelemetry Collectors exporters that\n exports metrics to one or more configured targets.\n",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "resources": {
+              "description": "OpenTelemetry Collector Pod resources. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#resourcerequirements-v1-core",
+              "type": "object"
+            },
+            "service": {
+              "description": "Section to configure OpenTelemetry Collector Service",
+              "properties": {
+                "annotations": {
+                  "description": "OpenTelemetry Collector Service annotations",
+                  "type": "object"
+                },
+                "spec": {
+                  "description": "Section to configure OpenTelemetry Collector Service specs. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#servicespec-v1-core",
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "serviceAccount": {
+              "description": "Section to configure OpenTelemetry Collector ServiceAccount",
+              "properties": {
+                "annotations": {
+                  "description": "OpenTelemetry Collector ServiceAccount annotations",
+                  "type": "object"
+                },
+                "repoCredentials": {
+                  "description": "Repositories credentials Secret names",
+                  "items": {
+                    "description": "Repository credentials Secret name",
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "tolerations": {
+              "description": "OpenTelemetry Collector Pod tolerations. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#toleration-v1-core",
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "volumeMounts": {
+              "description": "Section to configure OpenTelemetry Collector Volume Mounts. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volumemount-v1-core",
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "volumes": {
+              "description": "Section to configure OpenTelemetry Collector Volumes. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volume-v1-core",
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "containerRegistry": {
+          "default": "quay.io",
+          "description": "The container registry host (and port) where the images will be pulled from.\n\n> This value can only be set in operator helm chart or with the environment variable `SG_CONTAINER_REGISTRY`.\n",
+          "type": "string"
+        },
+        "deploy": {
+          "description": "Section to configure deployment aspects.",
+          "properties": {
+            "collector": {
+              "default": true,
+              "description": "When set to `true` the OpenTelemetry Collector will be deployed.",
+              "type": "boolean"
+            },
+            "operator": {
+              "default": true,
+              "description": "When set to `true` the Operator will be deployed.",
+              "type": "boolean"
+            },
+            "restapi": {
+              "default": true,
+              "description": "When set to `true` the Web Console / REST API will be deployed.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "developer": {
+          "description": "Section to configure developer options.\n\nFollowing options are for developers only, but can also be useful in some cases ;)\n",
+          "properties": {
+            "allowPullExtensionsFromImageRepository": {
+              "default": false,
+              "description": "If set to `true` and `extensions.cache.enabled` is also `true`\n it will try to download extensions from images (experimental)\n",
+              "type": "boolean"
+            },
+            "disableArbitraryUser": {
+              "default": false,
+              "description": "It set to `true` disable arbitrary user that is set for OpenShift clusters\n",
+              "type": "boolean"
+            },
+            "enableJvmDebug": {
+              "default": false,
+              "description": "Only work with JVM version and allow connect\n on port 8000 of operator Pod with jdb or similar\n",
+              "type": "boolean"
+            },
+            "enableJvmDebugSuspend": {
+              "default": false,
+              "description": "Only work with JVM version and if `enableJvmDebug` is `true`\n suspend the JVM until a debugger session is started\n",
+              "type": "boolean"
+            },
+            "externalOperatorIp": {
+              "description": "Set the external Operator IP",
+              "type": "string"
+            },
+            "externalOperatorPort": {
+              "description": "Set the external Operator port",
+              "type": "integer"
+            },
+            "externalRestApiIp": {
+              "description": "Set the external REST API IP",
+              "type": "string"
+            },
+            "externalRestApiPort": {
+              "description": "Set the external REST API port",
+              "type": "integer"
+            },
+            "logLevel": {
+              "description": "Set `quarkus.log.level`. See https://quarkus.io/guides/logging#root-logger-configuration",
+              "type": "string"
+            },
+            "patches": {
+              "description": "Section to define patches for some StackGres Pods\n",
+              "properties": {
+                "adminui": {
+                  "description": "Section to define volumes to be used by the adminui container\n",
+                  "properties": {
+                    "volumeMounts": {
+                      "description": "Pod's container volume mounts. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volumemount-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "volumes": {
+                      "description": "Pod volumes. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volume-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                "clusterController": {
+                  "description": "Section to define volumes to be used by the cluster controller container\n",
+                  "properties": {
+                    "volumeMounts": {
+                      "description": "Pod's container volume mounts. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volumemount-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "volumes": {
+                      "description": "Pod volumes. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volume-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                "operator": {
+                  "description": "Section to define volumes to be used by the operator container\n",
+                  "properties": {
+                    "volumeMounts": {
+                      "description": "Pod's container volume mounts. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volumemount-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "volumes": {
+                      "description": "Pod volumes. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volume-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                "restapi": {
+                  "description": "Section to define volumes to be used by the restapi container\n",
+                  "properties": {
+                    "volumeMounts": {
+                      "description": "Pod's container volume mounts. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volumemount-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "volumes": {
+                      "description": "Pod volumes. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volume-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                "stream": {
+                  "description": "Section to define volumes to be used by the stream container\n",
+                  "properties": {
+                    "volumeMounts": {
+                      "description": "Pod's container volume mounts. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volumemount-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "volumes": {
+                      "description": "Pod volumes. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#volume-v1-core",
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "showDebug": {
+              "default": false,
+              "description": "If set to `true` add extra debug to any script controlled by the reconciliation cycle of the operator configuration",
+              "type": "boolean"
+            },
+            "showStackTraces": {
+              "default": false,
+              "description": "Set `quarkus.log.console.format` to `%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{4.}] (%t) %s%e%n`. See https://quarkus.io/guides/logging#logging-format",
+              "type": "boolean"
+            },
+            "useJvmImages": {
+              "default": false,
+              "description": "The operator will use JVM version of the images\n",
+              "type": "boolean"
+            },
+            "version": {
+              "description": "Set the operator version (used for testing)",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "disableClusterRole": {
+          "description": "When set to `true` the creation of the operator ClusterRole and ClusterRoleBinding is disabled.\n Also, when `true`, some features that rely on unnamespaced resources premissions will be disabled:\n\n* Creation and upgrade of CustomResourceDefinitions\n* Set CA bundle for Webhooks\n* Check existence of CustomResourceDefinition when listing custom resources\n* Validation of StorageClass\n* REST API endpoint `can-i/{verb}/{resource}` and `can-i` will always return the full list of permissions for any resource and verb since they rely on creation of subjectaccessreviews unnamespaced resource that requires a cluster role.\n* Other REST API endpoints will not work since they rely on impersonation that requires a cluster role.\n  This point in particular breaks the Web Console completely. You may still enable this specific cluster role with `.allowImpersonationForRestApi`.\n  If you do not need the Web Console you may still disable it completely by setting `.deploy.restapi` to `false`.\n\nWhen set to `true` and `allowedNamespaces` is not set or is empty then `allowedNamespaces` will be considered set and containing only the namespace of the operator.\n\nIt is `false` by default.\n\n> This value can only be set in operator helm chart.\n",
+          "type": "boolean"
+        },
+        "disableCrdsAndWebhooksUpdate": {
+          "description": "When set to `true` the cluster role to update or patch CRDs will be disabled.\n\nIt is `false` by default.\n\n> This value can only be set in operator helm chart.\n",
+          "type": "boolean"
+        },
+        "extensions": {
+          "description": "Section to configure extensions",
+          "properties": {
+            "cache": {
+              "description": "Section to configure extensions cache (experimental).\n\nThis feature is in beta and may cause failures, please use with caution and report any\n error to https://gitlab.com/ongresinc/stackgres/-/issues/new\n",
+              "properties": {
+                "enabled": {
+                  "default": false,
+                  "description": "When set to `true` enable the extensions cache.\n\nThis feature is in beta and may cause failures, please use with caution and report any\n error to https://gitlab.com/ongresinc/stackgres/-/issues/new\n",
+                  "type": "boolean"
+                },
+                "hostPath": {
+                  "description": "If set, will use a host path volume with the specified path for the extensions cache\n instead of a PersistentVolume\n",
+                  "type": "string"
+                },
+                "persistentVolume": {
+                  "description": "Section to configure the extensions cache PersistentVolume",
+                  "properties": {
+                    "size": {
+                      "default": "1Gi",
+                      "description": "The PersistentVolume size for the extensions cache\n\nOnly use whole numbers (e.g. not 1e6) and K/Ki/M/Mi/G/Gi as units\n",
+                      "type": "string"
+                    },
+                    "storageClass": {
+                      "description": "If defined set storage class\nIf set to \"-\" (equivalent to storageClass: \"\" in a PV spec) disables\n dynamic provisioning\nIf undefined (the default) or set to null, no storageClass spec is\n set, choosing the default provisioner.  (gp2 on AWS, standard on\n GKE, AWS & OpenStack)\n",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "preloadedExtensions": {
+                  "default": [
+                    "x86_64/linux/timescaledb-1\\.7\\.4-pg12"
+                  ],
+                  "description": "An array of extensions pattern used to pre-loaded estensions into the extensions cache",
+                  "items": {
+                    "description": "An extension pattern used to pre-loaded estensions into the extensions cache",
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "repositoryUrls": {
+              "default": [
+                "https://extensions.stackgres.io/postgres/repository"
+              ],
+              "description": "A list of extensions repository URLs used to retrieve extensions\n\nTo set a proxy for extensions repository add parameter proxyUrl to the URL:\n    `https://extensions.stackgres.io/postgres/repository?proxyUrl=<proxy scheme>%3A%2F%2F<proxy host>[%3A<proxy port>]` (URL encoded)\n\nOther URL parameters are:\n\n* `skipHostnameVerification`: set it to `true` in order to use a server or a proxy with a self signed certificate\n* `retry`: set it to `<max retriex>[:<sleep before next retry>]` in order to retry a request on failure\n* `setHttpScheme`: set it to `true` in order to force using HTTP scheme\n",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "grafana": {
+          "description": "Section to configure Grafana integration",
+          "properties": {
+            "autoEmbed": {
+              "default": false,
+              "description": "When set to `true` embed automatically Grafana into the Web Console by creating the\n StackGres dashboard and the read-only role used to read it from the Web Console \n",
+              "type": "boolean"
+            },
+            "dashboardConfigMap": {
+              "description": "The ConfigMap name with the dashboard JSON in the key `grafana-dashboard.json`\n that will be created in Grafana. If not set the default\n",
+              "type": "string"
+            },
+            "dashboardId": {
+              "description": "The dashboard id that will be create in Grafana\n (see https://grafana.com/grafana/dashboards). By default 9628. (used to embed automatically\n Grafana)\n\nManual Steps:\n \nCreate grafana dashboard for postgres exporter and copy/paste share URL:\n- Grafana > Create > Import > Grafana.com Dashboard 9628\nCopy/paste grafana dashboard URL for postgres exporter:\n- Grafana > Dashboard > Manage > Select postgres exporter dashboard > Copy URL\n",
+              "type": "string"
+            },
+            "datasourceName": {
+              "default": "Prometheus",
+              "description": "The datasource name used to create the StackGres Dashboard into Grafana",
+              "type": "string"
+            },
+            "password": {
+              "default": "prom-operator",
+              "description": "The password to access Grafana. By default prom-operator (the default in for\n kube-prometheus-stack helm chart). (used to embed automatically Grafana)\n",
+              "type": "string"
+            },
+            "schema": {
+              "default": "http",
+              "description": "The schema to access Grafana. By default http. (used to embed manually and\n automatically grafana)\n",
+              "type": "string"
+            },
+            "secretName": {
+              "description": "The name of secret with credentials to access Grafana. (used to embed\n automatically Grafana, alternative to use `user` and `password`)\n",
+              "type": "string"
+            },
+            "secretNamespace": {
+              "description": "The namespace of secret with credentials to access Grafana. (used to\n embed automatically Grafana, alternative to use `user` and `password`)\n",
+              "type": "string"
+            },
+            "secretPasswordKey": {
+              "description": "The key of secret with password used to access Grafana. (used to\n embed automatically Grafana, alternative to use `user` and `password`)\n",
+              "type": "string"
+            },
+            "secretUserKey": {
+              "description": "The key of secret with username used to access Grafana. (used to embed\n automatically Grafana, alternative to use `user` and `password`)\n",
+              "type": "string"
+            },
+            "token": {
+              "description": "The Grafana API token to access the PostgreSQL dashboard created\n in Grafana (used to embed manually Grafana)\n\nManual Steps:\n \nCreate and copy/paste grafana API token:\n- Grafana > Configuration > API Keys > Add API key (for viewer) > Copy key value\n",
+              "type": "string"
+            },
+            "url": {
+              "description": "The URL of the PostgreSQL dashboard created in Grafana (used to embed manually\n Grafana)\n",
+              "type": "string"
+            },
+            "user": {
+              "default": "admin",
+              "description": "The username to access Grafana. By default admin. (used to embed automatically\n Grafana)\n",
+              "type": "string"
+            },
+            "webHost": {
+              "description": "The service host name to access grafana (used to embed manually and\n automatically Grafana). \nThe parameter value should point to the grafana service following the \n [DNS reference](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/) `svc_name.namespace`\n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "imagePullPolicy": {
+          "default": "IfNotPresent",
+          "description": "Image pull policy used for images loaded by the Operator",
+          "type": "string"
+        },
+        "imagePullSecrets": {
+          "description": "The list of references to secrets in the same namespace where a ServiceAccount is created by the operator to use for pulling any images in pods that reference such ServiceAccount. ImagePullSecrets are distinct from Secrets because Secrets can be mounted in the pod, but ImagePullSecrets are only accessed by the kubelet. More info: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod\n",
+          "items": {
+            "description": "A reference to a secrets in the same namespace where a ServiceAccount is created by the operator to use for pulling any images in pods that reference such ServiceAccount.",
+            "properties": {
+              "name": {
+                "description": "The name of the referenced Secret.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "jobs": {
+          "description": "Section to configure Operator Installation Jobs",
+          "properties": {
+            "affinity": {
+              "description": "Operator Installation Jobs affinity. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#affinity-v1-core",
+              "type": "object"
+            },
+            "annotations": {
+              "description": "Operator Installation Jobs annotations",
+              "type": "object"
+            },
+            "image": {
+              "description": "Section to configure Operator Installation Jobs image",
+              "properties": {
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "description": "Operator Installation Jobs image pull policy",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "nodeSelector": {
+              "description": "Operator Installation Jobs node selector",
+              "type": "object"
+            },
+            "resources": {
+              "description": "Operator Installation Jobs resources. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#resourcerequirements-v1-core",
+              "type": "object"
+            },
+            "serviceAccount": {
+              "description": "Section to configure Jobs ServiceAccount",
+              "properties": {
+                "annotations": {
+                  "description": "Jobs ServiceAccount annotations",
+                  "type": "object"
+                },
+                "repoCredentials": {
+                  "description": "Repositories credentials Secret names",
+                  "items": {
+                    "description": "Repository credentials Secret name",
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "tolerations": {
+              "description": "Operator Installation Jobs tolerations. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#toleration-v1-core",
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "operator": {
+          "description": "Section to configure Operator Pod",
+          "properties": {
+            "affinity": {
+              "description": "Operator Pod affinity. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#affinity-v1-core\n\n> This value can only be set in operator helm chart.\n",
+              "type": "object"
+            },
+            "annotations": {
+              "description": "Operator Pod annotations",
+              "type": "object"
+            },
+            "hostNetwork": {
+              "default": false,
+              "description": "Host networking requested for this pod. Use the host's network namespace. If this option is set, the ports that will be used must be specified. Default to false.\n\n> This value can only be set in operator helm chart.\n",
+              "type": "boolean"
+            },
+            "image": {
+              "description": "Section to configure Operator image",
+              "properties": {
+                "name": {
+                  "default": "stackgres/operator",
+                  "description": "Operator image name\n\n> This value can only be set in operator helm chart.\n",
+                  "type": "string"
+                },
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "description": "Operator image pull policy\n\n> This value can only be set in operator helm chart.\n",
+                  "type": "string"
+                },
+                "tag": {
+                  "description": "Operator image tag\n\n> This value can only be set in operator helm chart.\n",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "internalHttpPort": {
+              "default": 8080,
+              "description": "The port that the operator will use to listen for HTTP\n\n> This value can only be set in operator helm chart or with the environment variable `OPERATOR_HTTP_PORT`.\n",
+              "type": "integer"
+            },
+            "internalHttpsPort": {
+              "default": 8443,
+              "description": "The port that the operator will use to listen for HTTPS\n\n> This value can only be set in operator helm chart or with the environment variable `OPERATOR_HTTPS_PORT`.\n",
+              "type": "integer"
+            },
+            "nodeSelector": {
+              "description": "Operator Pod node selector\n\n> This value can only be set in operator helm chart.\n",
+              "type": "object"
+            },
+            "port": {
+              "default": 443,
+              "description": "The port that will be exposed by the operator Service for HTTPS\n\n> This value can only be set in operator helm chart.\n",
+              "type": "integer"
+            },
+            "resources": {
+              "description": "Operator Pod resources. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#resourcerequirements-v1-core\n\n> This value can only be set in operator helm chart.\n",
+              "type": "object"
+            },
+            "service": {
+              "description": "Section to configure Operator Service",
+              "properties": {
+                "annotations": {
+                  "description": "Section to configure Operator Service annotations\n\n> This value can only be set in operator helm chart.\n",
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "serviceAccount": {
+              "description": "Section to configure Operator ServiceAccount",
+              "properties": {
+                "annotations": {
+                  "description": "Section to configure Operator ServiceAccount annotations\n\n> This value can only be set in operator helm chart.\n",
+                  "type": "object"
+                },
+                "repoCredentials": {
+                  "description": "Repositories credentials Secret names\n\n> This value can only be set in operator helm chart.\n",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "tolerations": {
+              "description": "Operator Pod tolerations. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#toleration-v1-core\n\n> This value can only be set in operator helm chart.\n",
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "prometheus": {
+          "description": "**Deprecated** this section has been replaced by `.spec.collector.prometheusOperator`.\n\nSection to configure Prometheus integration.\n",
+          "properties": {
+            "allowAutobind": {
+              "default": true,
+              "description": "**Deprecated** this field has been replaced by `.spec.collector.prometheusOperator.allowDiscovery`.\n\nIf set to false disable automatic bind to Prometheus\n  created using the [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator).\nIf disabled the cluster will not be binded to Prometheus automatically and will require manual\n  intervention by the Kubernetes cluster administrator.\n",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "rbac": {
+          "description": "Section to configure RBAC for Web Console admin user",
+          "properties": {
+            "create": {
+              "default": true,
+              "description": "When set to `true` the admin user is assigned the `cluster-admin` ClusterRole by creating\n ClusterRoleBinding.\n",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "restapi": {
+          "description": "Section to configure REST API Pod",
+          "properties": {
+            "affinity": {
+              "description": "REST API Pod affinity. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#affinity-v1-core",
+              "type": "object"
+            },
+            "annotations": {
+              "description": "REST API Pod annotations",
+              "type": "object"
+            },
+            "image": {
+              "description": "Section to configure REST API image",
+              "properties": {
+                "name": {
+                  "default": "stackgres/restapi",
+                  "description": "REST API image name",
+                  "type": "string"
+                },
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "description": "REST API image pull policy",
+                  "type": "string"
+                },
+                "tag": {
+                  "description": "REST API image tag",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "default": "stackgres-restapi",
+              "description": "REST API Deployment name",
+              "type": "string"
+            },
+            "nodeSelector": {
+              "description": "REST API Pod node selector",
+              "type": "object"
+            },
+            "resources": {
+              "description": "REST API Pod resources. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#resourcerequirements-v1-core",
+              "type": "object"
+            },
+            "service": {
+              "description": "Section to configure REST API Service",
+              "properties": {
+                "annotations": {
+                  "description": "REST API Service annotations",
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "serviceAccount": {
+              "description": "Section to configure REST API ServiceAccount",
+              "properties": {
+                "annotations": {
+                  "description": "REST API ServiceAccount annotations",
+                  "type": "object"
+                },
+                "repoCredentials": {
+                  "description": "Repositories credentials Secret names",
+                  "items": {
+                    "description": "Repository credentials Secret name",
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "tolerations": {
+              "description": "REST API Pod tolerations. See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#toleration-v1-core",
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "serviceAccount": {
+          "description": "Section to configure Operator Installation ServiceAccount",
+          "properties": {
+            "annotations": {
+              "description": "Section to configure Installation ServiceAccount annotations",
+              "type": "object"
+            },
+            "create": {
+              "default": true,
+              "description": "If `true` the Operator Installation ServiceAccount will be created\n\n> This value can only be set in operator helm chart.\n",
+              "type": "boolean"
+            },
+            "repoCredentials": {
+              "description": "Repositories credentials Secret names\n\n> This value can only be set in operator helm chart.\n",
+              "items": {
+                "description": "Repository credentials Secret name\n\n> This value can only be set in operator helm chart.\n",
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "sgConfigNamespace": {
+          "description": "When set will indicate the namespace where the SGConfig used by the operator will be created.\n\nBy default the SGConfig will be created in the same namespace as the operator.\n\n> This value can only be set in operator helm chart.\n",
+          "type": "string"
+        },
+        "shardingSphere": {
+          "description": "Section to configure integration with ShardingSphere operator",
+          "properties": {
+            "serviceAccount": {
+              "description": "Section to configure ServiceAccount used by ShardingSphere operator.\n\nYou may configure a specific value for a sharded cluster under section\n `SGShardedCluster.speccoordinator.configurations.shardingSphere.serviceAccount`.\n",
+              "properties": {
+                "name": {
+                  "description": "The name of the ServiceAccount used by ShardingSphere operator",
+                  "type": "string"
+                },
+                "namespace": {
+                  "description": "The namespace of the ServiceAccount used by ShardingSphere operator",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "namespace",
+                "name"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "description": "Status defines the observed state of SGConfig",
+      "properties": {
+        "conditions": {
+          "items": {
+            "properties": {
+              "lastTransitionTime": {
+                "description": "Last time the condition transitioned from one status to another.",
+                "type": "string"
+              },
+              "message": {
+                "description": "A human readable message indicating details about the transition.",
+                "type": "string"
+              },
+              "reason": {
+                "description": "The reason for the condition's last transition.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of the condition, one of True, False, Unknown.",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of deployment condition.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "existingCrUpdatedToVersion": {
+          "description": "Indicate the version to which existing CRs have been updated to",
+          "type": "string"
+        },
+        "grafana": {
+          "properties": {
+            "configHash": {
+              "description": "Grafana configuration hash",
+              "type": "string"
+            },
+            "token": {
+              "description": "Grafana Token that allow to access dashboards",
+              "type": "string"
+            },
+            "urls": {
+              "description": "Grafana URLs to StackGres dashboards",
+              "items": {
+                "description": "Grafana URL to StackGres dashboards preceded by the dashboard name and a semicolon `:`",
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "removeOldOperatorBundleResources": {
+          "description": "Indicate when the old operator bundle resources has been removed",
+          "type": "boolean"
+        },
+        "version": {
+          "description": "Latest version of the operator used to check for updates",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "stackgres.io/v1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "SGConfig"
+      ]
+    }
+  }
+}

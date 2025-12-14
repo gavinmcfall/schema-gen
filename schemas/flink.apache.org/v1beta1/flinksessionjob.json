@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/flink.apache.org/v1beta1/flinksessionjob.json",
+  "title": "FlinkSessionJob",
+  "description": "FlinkSessionJob is the Schema for the flinksessionjobs API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "flink-operator",
+    "sourceVersion": "1.10.0",
+    "extractedAt": "2025-12-14T02:25:42.811266+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "properties": {
+        "deploymentName": {
+          "type": "string"
+        },
+        "flinkConfiguration": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "job": {
+          "properties": {
+            "allowNonRestoredState": {
+              "type": "boolean"
+            },
+            "args": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "checkpointTriggerNonce": {
+              "type": "integer"
+            },
+            "entryClass": {
+              "type": "string"
+            },
+            "initialSavepointPath": {
+              "type": "string"
+            },
+            "jarURI": {
+              "type": "string"
+            },
+            "parallelism": {
+              "type": "integer"
+            },
+            "savepointRedeployNonce": {
+              "type": "integer"
+            },
+            "savepointTriggerNonce": {
+              "type": "integer"
+            },
+            "state": {
+              "enum": [
+                "running",
+                "suspended"
+              ],
+              "type": "string"
+            },
+            "upgradeMode": {
+              "enum": [
+                "last-state",
+                "savepoint",
+                "stateless"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "restartNonce": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "status": {
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "jobStatus": {
+          "properties": {
+            "checkpointInfo": {
+              "properties": {
+                "formatType": {
+                  "enum": [
+                    "FULL",
+                    "INCREMENTAL",
+                    "UNKNOWN"
+                  ],
+                  "type": "string"
+                },
+                "lastCheckpoint": {
+                  "properties": {
+                    "formatType": {
+                      "enum": [
+                        "FULL",
+                        "INCREMENTAL",
+                        "UNKNOWN"
+                      ],
+                      "type": "string"
+                    },
+                    "timeStamp": {
+                      "type": "integer"
+                    },
+                    "triggerNonce": {
+                      "type": "integer"
+                    },
+                    "triggerType": {
+                      "enum": [
+                        "MANUAL",
+                        "PERIODIC",
+                        "UNKNOWN",
+                        "UPGRADE"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "lastPeriodicCheckpointTimestamp": {
+                  "type": "integer"
+                },
+                "triggerId": {
+                  "type": "string"
+                },
+                "triggerTimestamp": {
+                  "type": "integer"
+                },
+                "triggerType": {
+                  "enum": [
+                    "MANUAL",
+                    "PERIODIC",
+                    "UNKNOWN",
+                    "UPGRADE"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "jobId": {
+              "type": "string"
+            },
+            "jobName": {
+              "type": "string"
+            },
+            "savepointInfo": {
+              "properties": {
+                "formatType": {
+                  "enum": [
+                    "CANONICAL",
+                    "NATIVE",
+                    "UNKNOWN"
+                  ],
+                  "type": "string"
+                },
+                "lastPeriodicSavepointTimestamp": {
+                  "type": "integer"
+                },
+                "lastSavepoint": {
+                  "properties": {
+                    "formatType": {
+                      "enum": [
+                        "CANONICAL",
+                        "NATIVE",
+                        "UNKNOWN"
+                      ],
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    },
+                    "timeStamp": {
+                      "type": "integer"
+                    },
+                    "triggerNonce": {
+                      "type": "integer"
+                    },
+                    "triggerType": {
+                      "enum": [
+                        "MANUAL",
+                        "PERIODIC",
+                        "UNKNOWN",
+                        "UPGRADE"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "savepointHistory": {
+                  "items": {
+                    "properties": {
+                      "formatType": {
+                        "enum": [
+                          "CANONICAL",
+                          "NATIVE",
+                          "UNKNOWN"
+                        ],
+                        "type": "string"
+                      },
+                      "location": {
+                        "type": "string"
+                      },
+                      "timeStamp": {
+                        "type": "integer"
+                      },
+                      "triggerNonce": {
+                        "type": "integer"
+                      },
+                      "triggerType": {
+                        "enum": [
+                          "MANUAL",
+                          "PERIODIC",
+                          "UNKNOWN",
+                          "UPGRADE"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "triggerId": {
+                  "type": "string"
+                },
+                "triggerTimestamp": {
+                  "type": "integer"
+                },
+                "triggerType": {
+                  "enum": [
+                    "MANUAL",
+                    "PERIODIC",
+                    "UNKNOWN",
+                    "UPGRADE"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "startTime": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "CANCELED",
+                "CANCELLING",
+                "CREATED",
+                "FAILED",
+                "FAILING",
+                "FINISHED",
+                "INITIALIZING",
+                "RECONCILING",
+                "RESTARTING",
+                "RUNNING",
+                "SUSPENDED"
+              ],
+              "type": "string"
+            },
+            "updateTime": {
+              "type": "string"
+            },
+            "upgradeSavepointPath": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "lifecycleState": {
+          "enum": [
+            "CREATED",
+            "DEPLOYED",
+            "FAILED",
+            "ROLLED_BACK",
+            "ROLLING_BACK",
+            "STABLE",
+            "SUSPENDED",
+            "UPGRADING"
+          ],
+          "type": "string"
+        },
+        "observedGeneration": {
+          "type": "integer"
+        },
+        "reconciliationStatus": {
+          "properties": {
+            "lastReconciledSpec": {
+              "type": "string"
+            },
+            "lastStableSpec": {
+              "type": "string"
+            },
+            "reconciliationTimestamp": {
+              "type": "integer"
+            },
+            "state": {
+              "enum": [
+                "DEPLOYED",
+                "ROLLED_BACK",
+                "ROLLING_BACK",
+                "UPGRADING"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "flink.apache.org/v1beta1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "FlinkSessionJob"
+      ]
+    }
+  }
+}

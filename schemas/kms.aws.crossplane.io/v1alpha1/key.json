@@ -1,0 +1,456 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/kms.aws.crossplane.io/v1alpha1/key.json",
+  "title": "Key",
+  "description": "Key is the Schema for the keys API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.455295+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "KeySpec defines the desired state of Key",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "KeyParameters defines the desired state of Key",
+          "properties": {
+            "bypassPolicyLockoutSafetyCheck": {
+              "description": "Skips (\"bypasses\") the key policy lockout safety check. The default value\nis false.\n\n\nSetting this value to true increases the risk that the KMS key becomes unmanageable.\nDo not set this value to true indiscriminately.\n\n\nFor more information, see Default key policy (https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key)\nin the Key Management Service Developer Guide.\n\n\nUse this parameter only when you intend to prevent the principal that is\nmaking the request from making a subsequent PutKeyPolicy request on the KMS\nkey.",
+              "type": "boolean"
+            },
+            "customKeyStoreID": {
+              "description": "Creates the KMS key in the specified custom key store (https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html).\nThe ConnectionState of the custom key store must be CONNECTED. To find the\nCustomKeyStoreID and ConnectionState use the DescribeCustomKeyStores operation.\n\n\nThis parameter is valid only for symmetric encryption KMS keys in a single\nRegion. You cannot create any other type of KMS key in a custom key store.\n\n\nWhen you create a KMS key in an CloudHSM key store, KMS generates a non-exportable\n256-bit symmetric key in its associated CloudHSM cluster and associates it\nwith the KMS key. When you create a KMS key in an external key store, you\nmust use the XksKeyId parameter to specify an external key that serves as\nkey material for the KMS key.",
+              "type": "string"
+            },
+            "customerMasterKeySpec": {
+              "description": "Instead, use the KeySpec parameter.\n\n\nThe KeySpec and CustomerMasterKeySpec parameters work the same way. Only\nthe names differ. We recommend that you use KeySpec parameter in your code.\nHowever, to avoid breaking changes, KMS supports both parameters.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A description of the KMS key. Use a description that helps you decide whether\nthe KMS key is appropriate for a task. The default value is an empty string\n(no description).\n\n\nDo not include confidential or sensitive information in this field. This\nfield may be displayed in plaintext in CloudTrail logs and other output.\n\n\nTo set or change the description after the key is created, use UpdateKeyDescription.",
+              "type": "string"
+            },
+            "enableKeyRotation": {
+              "description": "Specifies if key rotation is enabled for the corresponding key",
+              "type": "boolean"
+            },
+            "enabled": {
+              "description": "Specifies whether the CMK is enabled.",
+              "type": "boolean"
+            },
+            "keySpec": {
+              "description": "Specifies the type of KMS key to create. The default value, SYMMETRIC_DEFAULT,\ncreates a KMS key with a 256-bit AES-GCM key that is used for encryption\nand decryption, except in China Regions, where it creates a 128-bit symmetric\nkey that uses SM4 encryption. For help choosing a key spec for your KMS key,\nsee Choosing a KMS key type (https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose)\nin the Key Management Service Developer Guide .\n\n\nThe KeySpec determines whether the KMS key contains a symmetric key or an\nasymmetric key pair. It also determines the algorithms that the KMS key supports.\nYou can't change the KeySpec after the KMS key is created. To further restrict\nthe algorithms that can be used with the KMS key, use a condition key in\nits key policy or IAM policy. For more information, see kms:EncryptionAlgorithm\n(https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm),\nkms:MacAlgorithm (https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm)\nor kms:Signing Algorithm (https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm)\nin the Key Management Service Developer Guide .\n\n\nAmazon Web Services services that are integrated with KMS (http://aws.amazon.com/kms/features/#AWS_Service_Integration)\nuse symmetric encryption KMS keys to protect your data. These services do\nnot support asymmetric KMS keys or HMAC KMS keys.\n\n\nKMS supports the following key specs for KMS keys:\n\n\n   * Symmetric encryption key (default) SYMMETRIC_DEFAULT\n\n\n   * HMAC keys (symmetric) HMAC_224 HMAC_256 HMAC_384 HMAC_512\n\n\n   * Asymmetric RSA key pairs RSA_2048 RSA_3072 RSA_4096\n\n\n   * Asymmetric NIST-recommended elliptic curve key pairs ECC_NIST_P256 (secp256r1)\n   ECC_NIST_P384 (secp384r1) ECC_NIST_P521 (secp521r1)\n\n\n   * Other asymmetric elliptic curve key pairs ECC_SECG_P256K1 (secp256k1),\n   commonly used for cryptocurrencies.\n\n\n   * SM2 key pairs (China Regions only) SM2",
+              "type": "string"
+            },
+            "keyUsage": {
+              "description": "Determines the cryptographic operations (https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations)\nfor which you can use the KMS key. The default value is ENCRYPT_DECRYPT.\nThis parameter is optional when you are creating a symmetric encryption KMS\nkey; otherwise, it is required. You can't change the KeyUsage value after\nthe KMS key is created.\n\n\nSelect only one valid value.\n\n\n   * For symmetric encryption KMS keys, omit the parameter or specify ENCRYPT_DECRYPT.\n\n\n   * For HMAC KMS keys (symmetric), specify GENERATE_VERIFY_MAC.\n\n\n   * For asymmetric KMS keys with RSA key material, specify ENCRYPT_DECRYPT\n   or SIGN_VERIFY.\n\n\n   * For asymmetric KMS keys with ECC key material, specify SIGN_VERIFY.\n\n\n   * For asymmetric KMS keys with SM2 key material (China Regions only),\n   specify ENCRYPT_DECRYPT or SIGN_VERIFY.",
+              "type": "string"
+            },
+            "multiRegion": {
+              "description": "Creates a multi-Region primary key that you can replicate into other Amazon\nWeb Services Regions. You cannot change this value after you create the KMS\nkey.\n\n\nFor a multi-Region key, set this parameter to True. For a single-Region KMS\nkey, omit this parameter or set it to False. The default value is False.\n\n\nThis operation supports multi-Region keys, an KMS feature that lets you create\nmultiple interoperable KMS keys in different Amazon Web Services Regions.\nBecause these KMS keys have the same key ID, key material, and other metadata,\nyou can use them interchangeably to encrypt data in one Amazon Web Services\nRegion and decrypt it in a different Amazon Web Services Region without re-encrypting\nthe data or making a cross-Region call. For more information about multi-Region\nkeys, see Multi-Region keys in KMS (https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html)\nin the Key Management Service Developer Guide.\n\n\nThis value creates a primary key, not a replica. To create a replica key,\nuse the ReplicateKey operation.\n\n\nYou can create a symmetric or asymmetric multi-Region key, and you can create\na multi-Region key with imported key material. However, you cannot create\na multi-Region key in a custom key store.",
+              "type": "boolean"
+            },
+            "origin": {
+              "description": "The source of the key material for the KMS key. You cannot change the origin\nafter you create the KMS key. The default is AWS_KMS, which means that KMS\ncreates the key material.\n\n\nTo create a KMS key with no key material (https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html)\n(for imported key material), set this value to EXTERNAL. For more information\nabout importing key material into KMS, see Importing Key Material (https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html)\nin the Key Management Service Developer Guide. The EXTERNAL origin value\nis valid only for symmetric KMS keys.\n\n\nTo create a KMS key in an CloudHSM key store (https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html)\nand create its key material in the associated CloudHSM cluster, set this\nvalue to AWS_CLOUDHSM. You must also use the CustomKeyStoreId parameter to\nidentify the CloudHSM key store. The KeySpec value must be SYMMETRIC_DEFAULT.\n\n\nTo create a KMS key in an external key store (https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html),\nset this value to EXTERNAL_KEY_STORE. You must also use the CustomKeyStoreId\nparameter to identify the external key store and the XksKeyId parameter to\nidentify the associated external key. The KeySpec value must be SYMMETRIC_DEFAULT.",
+              "type": "string"
+            },
+            "pendingWindowInDays": {
+              "description": "Specifies how many days the Key is retained when scheduled for deletion. Defaults to 30 days.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "policy": {
+              "description": "The key policy to attach to the KMS key.\n\n\nIf you provide a key policy, it must meet the following criteria:\n\n\n   * The key policy must allow the calling principal to make a subsequent\n   PutKeyPolicy request on the KMS key. This reduces the risk that the KMS\n   key becomes unmanageable. For more information, see Default key policy\n   (https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key)\n   in the Key Management Service Developer Guide. (To omit this condition,\n   set BypassPolicyLockoutSafetyCheck to true.)\n\n\n   * Each statement in the key policy must contain one or more principals.\n   The principals in the key policy must exist and be visible to KMS. When\n   you create a new Amazon Web Services principal, you might need to enforce\n   a delay before including the new principal in a key policy because the\n   new principal might not be immediately visible to KMS. For more information,\n   see Changes that I make are not always immediately visible (https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency)\n   in the Amazon Web Services Identity and Access Management User Guide.\n\n\nIf you do not provide a key policy, KMS attaches a default key policy to\nthe KMS key. For more information, see Default key policy (https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default)\nin the Key Management Service Developer Guide.\n\n\nThe key policy size quota is 32 kilobytes (32768 bytes).\n\n\nFor help writing and formatting a JSON policy document, see the IAM JSON\nPolicy Reference (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html)\nin the Identity and Access Management User Guide .",
+              "type": "string"
+            },
+            "region": {
+              "description": "Region is which region the Key will be created.",
+              "type": "string"
+            },
+            "tags": {
+              "description": "Assigns one or more tags to the KMS key. Use this parameter to tag the KMS\nkey when it is created. To tag an existing KMS key, use the TagResource operation.\n\n\nDo not include confidential or sensitive information in this field. This\nfield may be displayed in plaintext in CloudTrail logs and other output.\n\n\nTagging or untagging a KMS key can allow or deny permission to the KMS key.\nFor details, see ABAC for KMS (https://docs.aws.amazon.com/kms/latest/developerguide/abac.html)\nin the Key Management Service Developer Guide.\n\n\nTo use this parameter, you must have kms:TagResource (https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html)\npermission in an IAM policy.\n\n\nEach tag consists of a tag key and a tag value. Both the tag key and the\ntag value are required, but the tag value can be an empty (null) string.\nYou cannot have more than one tag on a KMS key with the same tag key. If\nyou specify an existing tag key with a different tag value, KMS replaces\nthe current tag value with the specified one.\n\n\nWhen you add tags to an Amazon Web Services resource, Amazon Web Services\ngenerates a cost allocation report with usage and costs aggregated by tags.\nTags can also be used to control access to a KMS key. For details, see Tagging\nKeys (https://docs.aws.amazon.com/kms/latest/developerguide/tagging-keys.html).",
+              "items": {
+                "properties": {
+                  "tagKey": {
+                    "type": "string"
+                  },
+                  "tagValue": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "xksKeyID": {
+              "description": "Identifies the external key (https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-external-key)\nthat serves as key material for the KMS key in an external key store (https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html).\nSpecify the ID that the external key store proxy (https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-xks-proxy)\nuses to refer to the external key. For help, see the documentation for your\nexternal key store proxy.\n\n\nThis parameter is required for a KMS key with an Origin value of EXTERNAL_KEY_STORE.\nIt is not valid for KMS keys with any other Origin value.\n\n\nThe external key must be an existing 256-bit AES symmetric encryption key\nhosted outside of Amazon Web Services in an external key manager associated\nwith the external key store specified by the CustomKeyStoreId parameter.\nThis key must be enabled and configured to perform encryption and decryption.\nEach KMS key in an external key store must use a different external key.\nFor details, see Requirements for a KMS key in an external key store (https://docs.aws.amazon.com/create-xks-keys.html#xks-key-requirements)\nin the Key Management Service Developer Guide.\n\n\nEach KMS key in an external key store is associated two backing keys. One\nis key material that KMS generates. The other is the external key specified\nby this parameter. When you use the KMS key in an external key store to encrypt\ndata, the encryption operation is performed first by KMS using the KMS key\nmaterial, and then by the external key manager using the specified external\nkey, a process known as double encryption. For details, see Double encryption\n(https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-double-encryption)\nin the Key Management Service Developer Guide.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "region"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "KeyStatus defines the observed state of Key.",
+      "properties": {
+        "atProvider": {
+          "description": "KeyObservation defines the observed state of Key",
+          "properties": {
+            "arn": {
+              "description": "The Amazon Resource Name (ARN) of the KMS key. For examples, see Key Management\nService (KMS) (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-kms)\nin the Example ARNs section of the Amazon Web Services General Reference.",
+              "type": "string"
+            },
+            "awsAccountID": {
+              "description": "The twelve-digit account ID of the Amazon Web Services account that owns\nthe KMS key.",
+              "type": "string"
+            },
+            "cloudHsmClusterID": {
+              "description": "The cluster ID of the CloudHSM cluster that contains the key material for\nthe KMS key. When you create a KMS key in an CloudHSM custom key store (https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html),\nKMS creates the key material for the KMS key in the associated CloudHSM cluster.\nThis field is present only when the KMS key is created in an CloudHSM key\nstore.",
+              "type": "string"
+            },
+            "creationDate": {
+              "description": "The date and time when the KMS key was created.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "deletionDate": {
+              "description": "The date and time after which KMS deletes this KMS key. This value is present\nonly when the KMS key is scheduled for deletion, that is, when its KeyState\nis PendingDeletion.\n\n\nWhen the primary key in a multi-Region key is scheduled for deletion but\nstill has replica keys, its key state is PendingReplicaDeletion and the length\nof its waiting period is displayed in the PendingDeletionWindowInDays field.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "enabled": {
+              "description": "Specifies whether the KMS key is enabled. When KeyState is Enabled this value\nis true, otherwise it is false.",
+              "type": "boolean"
+            },
+            "encryptionAlgorithms": {
+              "description": "The encryption algorithms that the KMS key supports. You cannot use the KMS\nkey with other encryption algorithms within KMS.\n\n\nThis value is present only when the KeyUsage of the KMS key is ENCRYPT_DECRYPT.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "expirationModel": {
+              "description": "Specifies whether the KMS key's key material expires. This value is present\nonly when Origin is EXTERNAL, otherwise this value is omitted.",
+              "type": "string"
+            },
+            "keyID": {
+              "description": "The globally unique identifier for the KMS key.",
+              "type": "string"
+            },
+            "keyManager": {
+              "description": "The manager of the KMS key. KMS keys in your Amazon Web Services account\nare either customer managed or Amazon Web Services managed. For more information\nabout the difference, see KMS keys (https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#kms_keys)\nin the Key Management Service Developer Guide.",
+              "type": "string"
+            },
+            "keyState": {
+              "description": "The current status of the KMS key.\n\n\nFor more information about how key state affects the use of a KMS key, see\nKey states of KMS keys (https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html)\nin the Key Management Service Developer Guide.",
+              "type": "string"
+            },
+            "macAlgorithms": {
+              "description": "The message authentication code (MAC) algorithm that the HMAC KMS key supports.\n\n\nThis value is present only when the KeyUsage of the KMS key is GENERATE_VERIFY_MAC.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "multiRegionConfiguration": {
+              "description": "Lists the primary and replica keys in same multi-Region key. This field is\npresent only when the value of the MultiRegion field is True.\n\n\nFor more information about any listed KMS key, use the DescribeKey operation.\n\n\n   * MultiRegionKeyType indicates whether the KMS key is a PRIMARY or REPLICA\n   key.\n\n\n   * PrimaryKey displays the key ARN and Region of the primary key. This\n   field displays the current KMS key if it is the primary key.\n\n\n   * ReplicaKeys displays the key ARNs and Regions of all replica keys. This\n   field includes the current KMS key if it is a replica key.",
+              "properties": {
+                "multiRegionKeyType": {
+                  "type": "string"
+                },
+                "primaryKey": {
+                  "description": "Describes the primary or replica key in a multi-Region key.",
+                  "properties": {
+                    "arn": {
+                      "type": "string"
+                    },
+                    "region": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "replicaKeys": {
+                  "items": {
+                    "properties": {
+                      "arn": {
+                        "type": "string"
+                      },
+                      "region": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "pendingDeletionWindowInDays": {
+              "description": "The waiting period before the primary key in a multi-Region key is deleted.\nThis waiting period begins when the last of its replica keys is deleted.\nThis value is present only when the KeyState of the KMS key is PendingReplicaDeletion.\nThat indicates that the KMS key is the primary key in a multi-Region key,\nit is scheduled for deletion, and it still has existing replica keys.\n\n\nWhen a single-Region KMS key or a multi-Region replica key is scheduled for\ndeletion, its deletion date is displayed in the DeletionDate field. However,\nwhen the primary key in a multi-Region key is scheduled for deletion, its\nwaiting period doesn't begin until all of its replica keys are deleted. This\nvalue displays that waiting period. When the last replica key in the multi-Region\nkey is deleted, the KeyState of the scheduled primary key changes from PendingReplicaDeletion\nto PendingDeletion and the deletion date appears in the DeletionDate field.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "signingAlgorithms": {
+              "description": "The signing algorithms that the KMS key supports. You cannot use the KMS\nkey with other signing algorithms within KMS.\n\n\nThis field appears only when the KeyUsage of the KMS key is SIGN_VERIFY.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "validTo": {
+              "description": "The time at which the imported key material expires. When the key material\nexpires, KMS deletes the key material and the KMS key becomes unusable. This\nvalue is present only for KMS keys whose Origin is EXTERNAL and whose ExpirationModel\nis KEY_MATERIAL_EXPIRES, otherwise this value is omitted.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "xksKeyConfiguration": {
+              "description": "Information about the external key that is associated with a KMS key in an\nexternal key store.\n\n\nFor more information, see External key (https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-external-key)\nin the Key Management Service Developer Guide.",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

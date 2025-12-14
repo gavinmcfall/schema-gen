@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/solr.bloomberg.com/v1beta1/solrcollectionalias.json",
+  "title": "SolrCollectionAlias",
+  "description": "SolrCollectionAlias is the Schema for the solrcollectionaliass API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "solr-operator",
+    "sourceVersion": "0.2.7",
+    "extractedAt": "2025-12-13T23:57:19.616450+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "SolrCollectionAliasSpec defines the desired state of SolrCollectionAlias",
+      "properties": {
+        "aliasType": {
+          "description": "AliasType is a either standard or routed, right now we support standard",
+          "type": "string"
+        },
+        "collections": {
+          "description": "Collections is a list of collections to apply alias to",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "solrCloud": {
+          "description": "A reference to the SolrCloud to create alias on",
+          "type": "string"
+        }
+      },
+      "required": [
+        "aliasType",
+        "collections",
+        "solrCloud"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "SolrCollectionAliasStatus defines the observed state of SolrCollectionAlias",
+      "properties": {
+        "collections": {
+          "description": "Associated collections to the alias",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "created": {
+          "description": "Created or not status",
+          "type": "boolean"
+        },
+        "createdTime": {
+          "description": "Time the alias was created",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

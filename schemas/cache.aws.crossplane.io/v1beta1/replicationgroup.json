@@ -1,0 +1,957 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/cache.aws.crossplane.io/v1beta1/replicationgroup.json",
+  "title": "ReplicationGroup",
+  "description": "ReplicationGroup is the Schema for the replicationgroups API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "crossplane-aws-provider",
+    "sourceVersion": "v0.50.1",
+    "extractedAt": "2025-12-14T02:24:15.369002+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "A ReplicationGroupSpec defines the desired state of a ReplicationGroup.",
+      "properties": {
+        "deletionPolicy": {
+          "default": "Delete",
+          "description": "DeletionPolicy specifies what will happen to the underlying external\nwhen this managed resource is deleted - either \"Delete\" or \"Orphan\" the\nexternal resource.\nThis field is planned to be deprecated in favor of the ManagementPolicies\nfield in a future release. Currently, both could be set independently and\nnon-default values would be honored if the feature flag is enabled.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223",
+          "enum": [
+            "Orphan",
+            "Delete"
+          ],
+          "type": "string"
+        },
+        "forProvider": {
+          "description": "ReplicationGroupParameters define the desired state of an AWS ElastiCache\nReplication Group. Most fields map directly to an AWS ReplicationGroup:\nhttps://docs.aws.amazon.com/AmazonElastiCache/latest/APIReference/API_CreateReplicationGroup.html#API_CreateReplicationGroup_RequestParameters",
+          "properties": {
+            "applyModificationsImmediately": {
+              "description": "If true, this parameter causes the modifications in this request and any\npending modifications to be applied, asynchronously and as soon as possible,\nregardless of the PreferredMaintenanceWindow setting for the replication\ngroup.\n\n\nIf false, changes to the nodes in the replication group are applied on the\nnext maintenance reboot, or the next failure reboot, whichever occurs first.",
+              "type": "boolean"
+            },
+            "atRestEncryptionEnabled": {
+              "description": "AtRestEncryptionEnabled enables encryption at rest when set to true.\n\n\nYou cannot modify the value of AtRestEncryptionEnabled after the replication\ngroup is created. To enable encryption at rest on a replication group you\nmust set AtRestEncryptionEnabled to true when you create the replication\ngroup.\n\n\nOnly available when creating a replication group in an Amazon VPC\nusing redis version 3.2.6 or 4.x.",
+              "type": "boolean"
+            },
+            "authEnabled": {
+              "description": "AuthEnabled enables mandatory authentication when connecting to the\nmanaged replication group. AuthEnabled requires TransitEncryptionEnabled\nto be true.\n\n\nWhile ReplicationGroupSpec mirrors the fields of the upstream replication\ngroup object as closely as possible, we expose a boolean here rather than\nrequiring the operator pass in a string authentication token. Crossplane\nwill generate a token automatically and expose it via a Secret.",
+              "type": "boolean"
+            },
+            "automaticFailoverEnabled": {
+              "description": "AutomaticFailoverEnabled specifies whether a read-only replica is\nautomatically promoted to read/write primary if the existing primary\nfails. Must be set to true if Multi-AZ is enabled for this replication group.\nIf false, Multi-AZ cannot be enabled for this replication group.\n\n\nAutomaticFailoverEnabled must be enabled for Redis (cluster mode enabled)\nreplication groups.\n\n\nAmazon ElastiCache for Redis does not support Multi-AZ with automatic\nfailover on:\n* Redis versions earlier than 2.8.6.\n* Redis (cluster mode disabled): T1 and T2 cache node types.\n* Redis (cluster mode enabled): T1 node types.",
+              "type": "boolean"
+            },
+            "cacheNodeType": {
+              "description": "CacheNodeType specifies the compute and memory capacity of the nodes in\nthe node group (shard).\nFor a complete listing of node types and specifications, see:\n* Amazon ElastiCache Product Features and Details (http://aws.amazon.com/elasticache/details)\n* Cache Node Type-Specific Parameters for Memcached (http://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/ParameterGroups.Memcached.html#ParameterGroups.Memcached.NodeSpecific)\n* Cache Node Type-Specific Parameters for Redis (http://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/ParameterGroups.Redis.html#ParameterGroups.Redis.NodeSpecific)",
+              "type": "string"
+            },
+            "cacheParameterGroupName": {
+              "description": "CacheParameterGroupName specifies the name of the parameter group to\nassociate with this replication group. If this argument is omitted, the\ndefault cache parameter group for the specified engine is used.\n\n\nIf you are running Redis version 3.2.4 or later, only one node group (shard),\nand want to use a default parameter group, we recommend that you specify\nthe parameter group by name.\n* To create a Redis (cluster mode disabled) replication group,\nuse CacheParameterGroupName=default.redis3.2.\n* To create a Redis (cluster mode enabled) replication group,\nuse CacheParameterGroupName=default.redis3.2.cluster.on.",
+              "type": "string"
+            },
+            "cacheSecurityGroupNameRefs": {
+              "description": "CacheSecurityGroupNameRefs are references to SecurityGroups used to set\nthe CacheSecurityGroupNames.",
+              "items": {
+                "description": "A Reference to a named object.",
+                "properties": {
+                  "name": {
+                    "description": "Name of the referenced object.",
+                    "type": "string"
+                  },
+                  "policy": {
+                    "description": "Policies for referencing.",
+                    "properties": {
+                      "resolution": {
+                        "default": "Required",
+                        "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                        "enum": [
+                          "Required",
+                          "Optional"
+                        ],
+                        "type": "string"
+                      },
+                      "resolve": {
+                        "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                        "enum": [
+                          "Always",
+                          "IfNotPresent"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "cacheSecurityGroupNameSelector": {
+              "description": "CacheSecurityGroupNameSelector selects references to SecurityGroups.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "cacheSecurityGroupNames": {
+              "description": "CacheSecurityGroupNames specifies a list of cache security group names to\nassociate with this replication group. Only for EC2-Classic mode.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "cacheSubnetGroupName": {
+              "description": "CacheSubnetGroupName specifies the name of the cache subnet group to be\nused for the replication group. If you're going to launch your cluster in\nan Amazon VPC, you need to create a subnet group before you start\ncreating a cluster. For more information, see Subnets and Subnet Groups\n(http://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/SubnetGroups.html).",
+              "type": "string"
+            },
+            "cacheSubnetGroupNameRef": {
+              "description": "CacheSubnetGroupNameRef is a reference to a Subnet Group used to set\nthe CacheSubnetGroupName.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "cacheSubnetGroupNameRefs": {
+              "description": "DeprecatedCacheSubnetGroupNameRef is a reference to a Subnet Group\nused to set the CacheSubnetGroupName.\n\n\nDeprecated: Use CacheSubnetGroupNameRef. This field exists because we\nintroduced it with the JSON tag cacheSubnetGroupNameRefs (plural)\nwhen it should have been cacheSubnetGroupNameRef (singular). This is\na bug that we need to avoid a breaking change to this v1beta1 API.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "cacheSubnetGroupNameSelector": {
+              "description": "CacheSubnetGroupNameSelector selects a reference to a CacheSubnetGroup.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "engine": {
+              "description": "Engine is the name of the cache engine (memcached or redis) to be used\nfor the clusters in this replication group.",
+              "type": "string"
+            },
+            "engineVersion": {
+              "description": "EngineVersion specifies the version number of the cache engine to be\nused for the clusters in this replication group. To view the supported\ncache engine versions, use the DescribeCacheEngineVersions operation.\n\n\nImportant: You can upgrade to a newer engine version (see Selecting a Cache\nEngine and Version (http://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/SelectEngine.html#VersionManagement))\nin the ElastiCache User Guide, but you cannot downgrade to an earlier engine\nversion. If you want to use an earlier engine version, you must delete the\nexisting cluster or replication group and create it anew with the earlier\nengine version.",
+              "type": "string"
+            },
+            "multiAZEnabled": {
+              "description": "MultiAZEnabled specifies if Multi-AZ is enabled to enhance fault tolerance\nYou must have nodes across two or more Availability Zones in order to enable\nthis feature.\nIf this feature is set, automaticFailoverEnabled must be set to true.",
+              "type": "boolean"
+            },
+            "nodeGroupConfiguration": {
+              "description": "NodeGroupConfigurationSpec specifies a list of node group (shard)\nconfiguration options.\n\n\nIf you're creating a Redis (cluster mode disabled) or a Redis (cluster mode\nenabled) replication group, you can use this parameter to individually configure\neach node group (shard), or you can omit this parameter. However, when seeding\na Redis (cluster mode enabled) cluster from a S3 rdb file, you must configure\neach node group (shard) using this parameter because you must specify the\nslots for each node group.",
+              "items": {
+                "description": "A NodeGroupConfigurationSpec specifies the desired state of a node group.",
+                "properties": {
+                  "primaryAvailabilityZone": {
+                    "description": "PrimaryAvailabilityZone specifies the Availability Zone where the primary\nnode of this node group (shard) is launched.",
+                    "type": "string"
+                  },
+                  "replicaAvailabilityZones": {
+                    "description": "ReplicaAvailabilityZones specifies a list of Availability Zones to be\nused for the read replicas. The number of Availability Zones in this list\nmust match the value of ReplicaCount or ReplicasPerNodeGroup if not\nspecified.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "replicaCount": {
+                    "description": "ReplicaCount specifies the number of read replica nodes in this node\ngroup (shard).",
+                    "type": "integer"
+                  },
+                  "slots": {
+                    "description": "Slots specifies the keyspace for a particular node group. Keyspaces range\nfrom 0 to 16,383. The string is in the format startkey-endkey.\n\n\nExample: \"0-3999\"",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "notificationTopicArn": {
+              "description": "NotificationTopicARN specifies the Amazon Resource Name (ARN) of the\nAmazon Simple Notification Service (SNS) topic to which notifications are\nsent. The Amazon SNS topic owner must be the same as the cluster owner.",
+              "type": "string"
+            },
+            "notificationTopicArnRef": {
+              "description": "NotificationTopicARNRef references an SNS Topic to retrieve its NotificationTopicARN",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "notificationTopicArnSelector": {
+              "description": "NotificationTopicARNSelector selects a reference to an SNS Topic to retrieve its NotificationTopicARN",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "notificationTopicStatus": {
+              "description": "NotificationTopicStatus is the status of the Amazon SNS notification\ntopic for the replication group. Notifications are sent only if the status\nis active.\n\n\nValid values: active | inactive",
+              "type": "string"
+            },
+            "numCacheClusters": {
+              "description": "NumCacheClusters specifies the number of clusters this replication group\ninitially has. This parameter is not used if there is more than one node\ngroup (shard). You should use ReplicasPerNodeGroup instead.\n\n\nIf AutomaticFailoverEnabled is true, the value of this parameter must be\nat least 2. If AutomaticFailoverEnabled is false you can omit this\nparameter (it will default to 1), or you can explicitly set it to a value\nbetween 2 and 6.\n\n\nThe maximum permitted value for NumCacheClusters is 6 (1 primary plus 5 replicas).",
+              "maximum": 6,
+              "type": "integer"
+            },
+            "numNodeGroups": {
+              "description": "NumNodeGroups specifies the number of node groups (shards) for this Redis\n(cluster mode enabled) replication group. For Redis (cluster mode\ndisabled) either omit this parameter or set it to 1.\n\n\nDefault: 1",
+              "type": "integer"
+            },
+            "port": {
+              "description": "Port number on which each member of the replication group accepts\nconnections.",
+              "type": "integer"
+            },
+            "preferredCacheClusterAzs": {
+              "description": "PreferredCacheClusterAZs specifies a list of EC2 Availability Zones in\nwhich the replication group's clusters are created. The order of the\nAvailability Zones in the list is the order in which clusters are\nallocated. The primary cluster is created in the first AZ in the list.\n\n\nThis parameter is not used if there is more than one node group (shard).\nYou should use NodeGroupConfigurationSpec instead.\n\n\nIf you are creating your replication group in an Amazon VPC (recommended),\nyou can only locate clusters in Availability Zones associated with the subnets\nin the selected subnet group.\n\n\nThe number of Availability Zones listed must equal the value of NumCacheClusters.\n\n\nDefault: system chosen Availability Zones.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "preferredMaintenanceWindow": {
+              "description": "PreferredMaintenanceWindow specifies the weekly time range during which\nmaintenance on the cluster is performed. It is specified as a range in\nthe format ddd:hh24:mi-ddd:hh24:mi (24H Clock UTC). The minimum\nmaintenance window is a 60 minute period.\n\n\nExample: sun:23:00-mon:01:30",
+              "type": "string"
+            },
+            "primaryClusterId": {
+              "description": "PrimaryClusterId is the identifier of the cluster that serves as the\nprimary for this replication group. This cluster must already exist\nand have a status of available.\n\n\nThis parameter is not required if NumCacheClusters, NumNodeGroups or\nReplicasPerNodeGroup is specified.",
+              "type": "string"
+            },
+            "region": {
+              "description": "Region is the region you'd like your ReplicationGroup to be created in.",
+              "type": "string"
+            },
+            "replicasPerNodeGroup": {
+              "description": "ReplicasPerNodeGroup specifies the number of replica nodes in each node\ngroup (shard). Valid values are 0 to 5.",
+              "type": "integer"
+            },
+            "replicationGroupDescription": {
+              "description": "ReplicationGroupDescription is the description for the replication group.",
+              "type": "string"
+            },
+            "securityGroupIdRefs": {
+              "description": "SecurityGroupIDRefs are references to SecurityGroups used to set\nthe SecurityGroupIDs.",
+              "items": {
+                "description": "A Reference to a named object.",
+                "properties": {
+                  "name": {
+                    "description": "Name of the referenced object.",
+                    "type": "string"
+                  },
+                  "policy": {
+                    "description": "Policies for referencing.",
+                    "properties": {
+                      "resolution": {
+                        "default": "Required",
+                        "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                        "enum": [
+                          "Required",
+                          "Optional"
+                        ],
+                        "type": "string"
+                      },
+                      "resolve": {
+                        "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                        "enum": [
+                          "Always",
+                          "IfNotPresent"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "securityGroupIdSelector": {
+              "description": "SecurityGroupIDSelector selects references to SecurityGroups used to set\nthe SecurityGroupIDs.",
+              "properties": {
+                "matchControllerRef": {
+                  "description": "MatchControllerRef ensures an object with the same controller reference\nas the selecting object is selected.",
+                  "type": "boolean"
+                },
+                "matchLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "MatchLabels ensures an object with matching labels is selected.",
+                  "type": "object"
+                },
+                "policy": {
+                  "description": "Policies for selection.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "securityGroupIds": {
+              "description": "SecurityGroupIDs specifies one or more Amazon VPC security groups\nassociated with this replication group. Use this parameter only when you\nare creating a replication group in an Amazon VPC.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "snapshotArns": {
+              "description": "SnapshotARNs specifies a list of Amazon Resource Names (ARN) that\nuniquely identify the Redis RDB snapshot files stored in Amazon S3. The\nsnapshot files are used to populate the new replication group. The Amazon\nS3 object name in the ARN cannot contain any commas. The new replication\ngroup will have the number of node groups (console: shards) specified by\nthe parameter NumNodeGroups or the number of node groups configured by\nNodeGroupConfigurationSpec regardless of the number of ARNs specified here.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "snapshotName": {
+              "description": "SnapshotName specifies the name of a snapshot from which to restore data\ninto the new replication group. The snapshot status changes to restoring\nwhile the new replication group is being created.",
+              "type": "string"
+            },
+            "snapshotRetentionLimit": {
+              "description": "SnapshotRetentionLimit specifies the number of days for which ElastiCache\nretains automatic snapshots before deleting them. For example, if you set\nSnapshotRetentionLimit to 5, a snapshot that was taken today is retained\nfor 5 days before being deleted.\nDefault: 0 (i.e., automatic backups are disabled for this cluster).",
+              "type": "integer"
+            },
+            "snapshotWindow": {
+              "description": "SnapshotWindow specifies the daily time range (in UTC) during which\nElastiCache begins taking a daily snapshot of your node group (shard).\n\n\nExample: 05:00-09:00\n\n\nIf you do not specify this parameter, ElastiCache automatically chooses an\nappropriate time range.",
+              "type": "string"
+            },
+            "snapshottingClusterID": {
+              "description": "SnapshottingClusterID is used as the daily snapshot source for the replication\ngroup. This parameter cannot be set for Redis (cluster mode enabled) replication\ngroups.",
+              "type": "string"
+            },
+            "tags": {
+              "description": "A list of cost allocation tags to be added to this resource. A tag is a key-value\npair.",
+              "items": {
+                "description": "A Tag is used to tag the ElastiCache resources in AWS.",
+                "properties": {
+                  "key": {
+                    "description": "Key for the tag.",
+                    "type": "string"
+                  },
+                  "value": {
+                    "description": "Value of the tag.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "key",
+                  "value"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "transitEncryptionEnabled": {
+              "description": "TransitEncryptionEnabled enables in-transit encryption when set to true.\n\n\nYou cannot modify the value of TransitEncryptionEnabled after the cluster\nis created. To enable in-transit encryption on a cluster you must\nTransitEncryptionEnabled to true when you create a cluster.\n\n\nThis parameter is valid only if the Engine parameter is redis, the EngineVersion\nparameter is 3.2.6 or 4.x, and the cluster is being created in an Amazon\nVPC.\n\n\nIf you enable in-transit encryption, you must also specify a value for CacheSubnetGroup.\n\n\nRequired: Only available when creating a replication group in an Amazon VPC\nusing redis version 3.2.6 or 4.x.\n\n\nDefault: false\n\n\nFor HIPAA compliance, you must specify TransitEncryptionEnabled as true,\nan AuthToken, and a CacheSubnetGroup.",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "applyModificationsImmediately",
+            "cacheNodeType",
+            "engine",
+            "replicationGroupDescription"
+          ],
+          "type": "object"
+        },
+        "managementPolicies": {
+          "default": [
+            "*"
+          ],
+          "description": "THIS IS A BETA FIELD. It is on by default but can be opted out\nthrough a Crossplane feature flag.\nManagementPolicies specify the array of actions Crossplane is allowed to\ntake on the managed and external resources.\nThis field is planned to replace the DeletionPolicy field in a future\nrelease. Currently, both could be set independently and non-default\nvalues would be honored if the feature flag is enabled. If both are\ncustom, the DeletionPolicy field will be ignored.\nSee the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223\nand this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md",
+          "items": {
+            "description": "A ManagementAction represents an action that the Crossplane controllers\ncan take on an external resource.",
+            "enum": [
+              "Observe",
+              "Create",
+              "Update",
+              "Delete",
+              "LateInitialize",
+              "*"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "providerConfigRef": {
+          "default": {
+            "name": "default"
+          },
+          "description": "ProviderConfigReference specifies how the provider that will be used to\ncreate, observe, update, and delete this managed resource should be\nconfigured.",
+          "properties": {
+            "name": {
+              "description": "Name of the referenced object.",
+              "type": "string"
+            },
+            "policy": {
+              "description": "Policies for referencing.",
+              "properties": {
+                "resolution": {
+                  "default": "Required",
+                  "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                  "enum": [
+                    "Required",
+                    "Optional"
+                  ],
+                  "type": "string"
+                },
+                "resolve": {
+                  "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                  "enum": [
+                    "Always",
+                    "IfNotPresent"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "publishConnectionDetailsTo": {
+          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
+          "properties": {
+            "configRef": {
+              "default": {
+                "name": "default"
+              },
+              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
+              "properties": {
+                "name": {
+                  "description": "Name of the referenced object.",
+                  "type": "string"
+                },
+                "policy": {
+                  "description": "Policies for referencing.",
+                  "properties": {
+                    "resolution": {
+                      "default": "Required",
+                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
+                      "enum": [
+                        "Required",
+                        "Optional"
+                      ],
+                      "type": "string"
+                    },
+                    "resolve": {
+                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
+                      "enum": [
+                        "Always",
+                        "IfNotPresent"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "metadata": {
+              "description": "Metadata is the metadata for connection secret.",
+              "properties": {
+                "annotations": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "labels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name is the name of the connection secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "writeConnectionSecretToRef": {
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "properties": {
+            "name": {
+              "description": "Name of the secret.",
+              "type": "string"
+            },
+            "namespace": {
+              "description": "Namespace of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "namespace"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "forProvider"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "A ReplicationGroupStatus defines the observed state of a ReplicationGroup.",
+      "properties": {
+        "atProvider": {
+          "description": "ReplicationGroupObservation contains the observation of the status of\nthe given ReplicationGroup.",
+          "properties": {
+            "automaticFailoverStatus": {
+              "description": "AutomaticFailover indicates the status of Multi-AZ with automatic failover\nfor this Redis replication group.",
+              "type": "string"
+            },
+            "clusterEnabled": {
+              "description": "ClusterEnabled is a flag indicating whether or not this replication group\nis cluster enabled; i.e., whether its data can be partitioned across\nmultiple shards (API/CLI: node groups).",
+              "type": "boolean"
+            },
+            "configurationEndpoint": {
+              "description": "ConfigurationEndpoint for this replication group. Use the configuration\nendpoint to connect to this replication group.",
+              "properties": {
+                "address": {
+                  "description": "Address is the DNS hostname of the cache node.",
+                  "type": "string"
+                },
+                "port": {
+                  "description": "Port number that the cache engine is listening on.",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "memberClusters": {
+              "description": "MemberClusters is the list of names of all the cache clusters that are\npart of this replication group.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "nodeGroups": {
+              "description": "NodeGroups is a list of node groups in this replication group.\nFor Redis (cluster mode disabled) replication groups, this is a\nsingle-element list. For Redis (cluster mode enabled) replication groups,\nthe list contains an entry for each node group (shard).",
+              "items": {
+                "description": "NodeGroup represents a collection of cache nodes in a replication group.\nOne node in the node group is the read/write primary node. All the other\nnodes are read-only Replica nodes.\nPlease also see https://docs.aws.amazon.com/goto/WebAPI/elasticache-2015-02-02/NodeGroup",
+                "properties": {
+                  "nodeGroupID": {
+                    "description": "NodeGroupID is the identifier for the node group (shard). A Redis\n(cluster mode disabled) replication group contains only 1 node group;\ntherefore, the node group ID is 0001. A Redis (cluster mode enabled)\nreplication group contains 1 to 15 node groups numbered 0001 to 0015.",
+                    "type": "string"
+                  },
+                  "nodeGroupMembers": {
+                    "description": "NodeGroupMembers is a list containing information about individual nodes\nwithin the node group (shard).",
+                    "items": {
+                      "description": "NodeGroupMember represents a single node within a node group (shard).\nPlease also see https://docs.aws.amazon.com/goto/WebAPI/elasticache-2015-02-02/NodeGroupMember",
+                      "properties": {
+                        "cacheClusterId": {
+                          "description": "CacheClusterID is the ID of the cluster to which the node belongs.",
+                          "type": "string"
+                        },
+                        "cacheNodeId": {
+                          "description": "CacheNodeID is the ID of the node within its cluster. A node ID is a\nnumeric identifier (0001, 0002, etc.).",
+                          "type": "string"
+                        },
+                        "currentRole": {
+                          "description": "CurrentRole is the role that is currently assigned to the node - primary\nor replica. This member is only applicable for Redis (cluster mode\ndisabled) replication groups.",
+                          "type": "string"
+                        },
+                        "preferredAvailabilityZone": {
+                          "description": "PreferredAvailabilityZone is the name of the Availability Zone in\nwhich the node is located.",
+                          "type": "string"
+                        },
+                        "readEndpoint": {
+                          "description": "ReadEndpoint is the information required for client programs to connect to a\nnode for read operations. The read endpoint is only applicable on Redis\n(cluster mode disabled) clusters.",
+                          "properties": {
+                            "address": {
+                              "description": "Address is the DNS hostname of the cache node.",
+                              "type": "string"
+                            },
+                            "port": {
+                              "description": "Port number that the cache engine is listening on.",
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "primaryEndpoint": {
+                    "description": "PrimaryEndpoint is the endpoint of the primary node in this\nnode group (shard).",
+                    "properties": {
+                      "address": {
+                        "description": "Address is the DNS hostname of the cache node.",
+                        "type": "string"
+                      },
+                      "port": {
+                        "description": "Port number that the cache engine is listening on.",
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "readerEndpoint": {
+                    "description": "ReaderEndpoint is the endpoint of the replica nodes in this node group (shard).",
+                    "properties": {
+                      "address": {
+                        "description": "Address is the DNS hostname of the cache node.",
+                        "type": "string"
+                      },
+                      "port": {
+                        "description": "Port number that the cache engine is listening on.",
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "slots": {
+                    "description": "Slots is the keyspace for this node group (shard).",
+                    "type": "string"
+                  },
+                  "status": {
+                    "description": "Status of this replication group - creating, available, etc.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "pendingModifiedValues": {
+              "description": "PendingModifiedValues is a group of settings to be applied to the\nreplication group, either immediately or during the next maintenance window.",
+              "properties": {
+                "automaticFailoverStatus": {
+                  "description": "AutomaticFailoverStatus indicates the status of Multi-AZ with automatic\nfailover for this Redis replication group.",
+                  "type": "string"
+                },
+                "primaryClusterId": {
+                  "description": "PrimaryClusterID that is applied immediately or during the next\nmaintenance window.",
+                  "type": "string"
+                },
+                "resharding": {
+                  "description": "Resharding is the status of an online resharding operation.",
+                  "properties": {
+                    "slotMigration": {
+                      "description": "Represents the progress of an online resharding operation.",
+                      "properties": {
+                        "progressPercentage": {
+                          "description": "ProgressPercentage is the percentage of the slot migration\nthat is complete.",
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "progressPercentage"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "slotMigration"
+                  ],
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
+            "status": {
+              "description": "Status is the current state of this replication group - creating,\navailable, modifying, deleting, create-failed, snapshotting.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "description": "Conditions of the resource.",
+          "items": {
+            "description": "A Condition that may apply to a resource.",
+            "properties": {
+              "lastTransitionTime": {
+                "description": "LastTransitionTime is the last time this condition transitioned from one\nstatus to another.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "message": {
+                "description": "A Message containing details about this condition's last transition from\none status to another, if any.",
+                "type": "string"
+              },
+              "observedGeneration": {
+                "description": "ObservedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "A Reason for this condition's last transition from one status to another.",
+                "type": "string"
+              },
+              "status": {
+                "description": "Status of this condition; is it currently True, False, or Unknown?",
+                "type": "string"
+              },
+              "type": {
+                "description": "Type of this condition. At most one of each condition type may apply to\na resource at any point in time.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastTransitionTime",
+              "reason",
+              "status",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "observedGeneration": {
+          "description": "ObservedGeneration is the latest metadata.generation\nwhich resulted in either a ready state, or stalled due to error\nit can not recover from without human intervention.",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

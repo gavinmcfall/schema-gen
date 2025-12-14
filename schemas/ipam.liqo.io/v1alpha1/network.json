@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/ipam.liqo.io/v1alpha1/network.json",
+  "title": "Network",
+  "description": "Network is the Schema for the networks API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "liqo",
+    "sourceVersion": "v1.0.1",
+    "extractedAt": "2025-12-14T02:27:06.902041+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "NetworkSpec defines the desired state of Network.",
+      "properties": {
+        "cidr": {
+          "description": "CIDR is the desired CIDR for the remote cluster.",
+          "format": "cidr",
+          "type": "string"
+        },
+        "preAllocated": {
+          "description": "PreAllocated is the number of IPs to pre-allocate (reserve) in the CIDR, starting from the first IP.",
+          "format": "int32",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "cidr"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "NetworkStatus defines the observed state of Network.",
+      "properties": {
+        "cidr": {
+          "description": "CIDR is the remapped CIDR for the remote cluster.",
+          "format": "cidr",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

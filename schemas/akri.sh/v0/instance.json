@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/akri.sh/v0/instance.json",
+  "title": "Instance",
+  "description": "Instance is the Schema for the instances API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "akri",
+    "sourceVersion": "0.12.20",
+    "extractedAt": "2025-12-14T02:26:29.235784+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "spec": {
+      "properties": {
+        "brokerProperties": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "configurationName": {
+          "type": "string"
+        },
+        "deviceUsage": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "nodes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "shared": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "apiVersion": {
+      "type": "string",
+      "description": "APIVersion defines the versioned schema of this representation of an object.",
+      "enum": [
+        "akri.sh/v0"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "description": "Kind is a string value representing the REST resource this object represents.",
+      "enum": [
+        "Instance"
+      ]
+    }
+  }
+}

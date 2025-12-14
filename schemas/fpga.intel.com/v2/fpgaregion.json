@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/fpga.intel.com/v2/fpgaregion.json",
+  "title": "FpgaRegion",
+  "description": "FpgaRegion is the Schema for the fpgaregions API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "intel-device-plugins-operator",
+    "sourceVersion": "0.32.0",
+    "extractedAt": "2025-12-14T02:26:24.806425+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "spec": {
+      "description": "FpgaRegionSpec contains actual specs for FpgaRegion.",
+      "properties": {
+        "interfaceId": {
+          "pattern": "^[0-9a-f]{8,32}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "interfaceId"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "description": "FpgaRegionStatus is an empty object used to satisfy operator-sdk.",
+      "type": "object"
+    }
+  },
+  "required": [
+    "spec"
+  ]
+}

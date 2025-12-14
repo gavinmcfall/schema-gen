@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://k8s-schemas.io/scylla.scylladb.com/v1alpha1/remoteowner.json",
+  "title": "RemoteOwner",
+  "description": "RemoteOwner is the Schema for the remoteowners API",
+  "type": "object",
+  "x-kubernetes-schema-metadata": {
+    "sourceName": "scylladb-operator",
+    "sourceVersion": "v1.16.0",
+    "extractedAt": "2025-12-13T23:52:02.817962+00:00",
+    "generator": "k8s-schemas.io"
+  },
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
+}

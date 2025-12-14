@@ -1,0 +1,1354 @@
+# yaml-language-server: $schema=./schemas/sources.schema.json
+#
+# k8s-schemas.io source definitions
+# Comprehensive list of Kubernetes CRD sources discovered from:
+#   - Artifact Hub (top Helm charts)
+#   - OperatorHub (OLM operators)
+#   - GitHub topics (k8s-at-home, kubernetes-operator)
+#   - kubesearch.dev (community deployments)
+#
+# Source Types:
+#   helm   - Helm chart containing CRDs (OCI or HTTP registry)
+#   github - GitHub release assets containing CRD manifests
+#
+# Adding a new source:
+#   1. Add entry below with appropriate type
+#   2. Run: python scripts/extract.py --source <name> --version <version>
+#   3. Renovate will auto-update versions via PR
+
+sources:
+  # ============================================================================
+  # GITOPS & DEPLOYMENT
+  # ============================================================================
+  - name: flux
+    type: helm
+    registry: oci://ghcr.io/fluxcd-community/charts
+    chart: flux2
+    version: 2.14.1
+
+  - name: argo-cd
+    type: helm
+    registry: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    version: 7.7.16
+
+  - name: argo-rollouts
+    type: helm
+    registry: https://argoproj.github.io/argo-helm
+    chart: argo-rollouts
+    version: 2.40.5
+
+  - name: argo-workflows
+    type: helm
+    registry: https://argoproj.github.io/argo-helm
+    chart: argo-workflows
+    version: 0.45.6
+
+  - name: argo-events
+    type: helm
+    registry: https://argoproj.github.io/argo-helm
+    chart: argo-events
+    version: 2.4.12
+
+  - name: argocd-image-updater
+    type: helm
+    registry: https://argoproj.github.io/argo-helm
+    chart: argocd-image-updater
+    version: 0.12.1
+
+  # ============================================================================
+  # CERTIFICATE MANAGEMENT
+  # ============================================================================
+  - name: cert-manager
+    type: helm
+    registry: https://charts.jetstack.io
+    chart: cert-manager
+    version: 1.17.1
+    values:
+      crds:
+        enabled: true
+
+  - name: trust-manager
+    type: helm
+    registry: https://charts.jetstack.io
+    chart: trust-manager
+    version: 0.16.0
+
+  # ============================================================================
+  # SECRETS MANAGEMENT
+  # ============================================================================
+  - name: external-secrets
+    type: helm
+    registry: https://charts.external-secrets.io
+    chart: external-secrets
+    version: 0.14.3
+
+  - name: sealed-secrets
+    type: helm
+    registry: https://bitnami-labs.github.io/sealed-secrets
+    chart: sealed-secrets
+    version: 2.17.1
+
+  - name: vault
+    type: helm
+    registry: https://helm.releases.hashicorp.com
+    chart: vault
+    version: 0.29.1
+
+  - name: vault-secrets-operator
+    type: helm
+    registry: https://helm.releases.hashicorp.com
+    chart: vault-secrets-operator
+    version: 0.10.0
+
+  # ============================================================================
+  # GATEWAY / INGRESS / SERVICE MESH
+  # ============================================================================
+  - name: gateway-api
+    type: github
+    repo: kubernetes-sigs/gateway-api
+    version: v1.2.1
+    assets:
+      - standard-install.yaml
+      - experimental-install.yaml
+
+  - name: envoy-gateway
+    type: helm
+    registry: oci://docker.io/envoyproxy
+    chart: gateway-helm
+    version: 1.3.0
+
+  - name: cilium
+    type: github
+    repo: cilium/cilium
+    version: v1.17.0
+    # Cilium CRDs are not in the Helm chart - they're installed by the operator.
+    # We discover them automatically from the GitHub repo directory.
+    crd_path: pkg/k8s/apis/cilium.io/client/crds
+
+  - name: ingress-nginx
+    type: helm
+    registry: https://kubernetes.github.io/ingress-nginx
+    chart: ingress-nginx
+    version: 4.12.0
+
+  - name: traefik
+    type: helm
+    registry: https://traefik.github.io/charts
+    chart: traefik
+    version: 34.3.0
+
+  - name: contour
+    type: helm
+    registry: https://projectcontour.github.io/helm-charts
+    chart: contour
+    version: 0.2.0
+
+  - name: kong
+    type: helm
+    registry: https://charts.konghq.com
+    chart: kong
+    version: 2.47.0
+
+  - name: nginx-ingress
+    type: helm
+    registry: https://helm.nginx.com/stable
+    chart: nginx-ingress
+    version: 2.1.0
+
+  - name: istio-base
+    type: helm
+    registry: https://istio-release.storage.googleapis.com/charts
+    chart: base
+    version: 1.24.2
+
+  - name: istiod
+    type: helm
+    registry: https://istio-release.storage.googleapis.com/charts
+    chart: istiod
+    version: 1.24.2
+
+  - name: linkerd-crds
+    type: helm
+    registry: https://helm.linkerd.io/edge
+    chart: linkerd-crds
+    version: 2025.12.2
+
+  # linkerd-control-plane requires identity issuer - CRDs are in linkerd-crds
+  # - name: linkerd-control-plane
+  #   type: helm
+  #   registry: https://helm.linkerd.io/edge
+  #   chart: linkerd-control-plane
+  #   version: 2025.12.2
+
+  - name: apisix
+    type: helm
+    registry: https://charts.apiseven.com
+    chart: apisix
+    version: 2.10.0
+
+  - name: emissary-ingress
+    type: helm
+    registry: https://app.getambassador.io
+    chart: emissary-ingress
+    version: 8.9.1
+
+  # ============================================================================
+  # NETWORKING
+  # ============================================================================
+  - name: metallb
+    type: helm
+    registry: https://metallb.github.io/metallb
+    chart: metallb
+    version: 0.14.9
+
+  - name: calico
+    type: helm
+    registry: https://docs.tigera.io/calico/charts
+    chart: tigera-operator
+    version: 3.29.1
+
+  - name: multus
+    type: github
+    repo: k8snetworkplumbingwg/multus-cni
+    version: v4.1.4
+    assets:
+      - deployments/multus-daemonset.yml
+
+  - name: external-dns
+    type: helm
+    registry: https://kubernetes-sigs.github.io/external-dns
+    chart: external-dns
+    version: 1.15.0
+
+  # ============================================================================
+  # STORAGE
+  # ============================================================================
+  - name: rook-ceph
+    type: helm
+    registry: https://charts.rook.io/release
+    chart: rook-ceph
+    version: 1.16.2
+
+  - name: rook-ceph-cluster
+    type: helm
+    registry: https://charts.rook.io/release
+    chart: rook-ceph-cluster
+    version: 1.16.2
+
+  - name: longhorn
+    type: helm
+    registry: https://charts.longhorn.io
+    chart: longhorn
+    version: 1.7.2
+
+  - name: openebs
+    type: helm
+    registry: https://openebs.github.io/openebs
+    chart: openebs
+    version: 4.2.0
+
+  - name: volsync
+    type: helm
+    registry: https://backube.github.io/helm-charts
+    chart: volsync
+    version: 0.11.0
+
+  - name: snapshot-controller
+    type: github
+    repo: kubernetes-csi/external-snapshotter
+    version: v8.2.0
+    assets:
+      - client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
+      - client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
+      - client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml
+
+  # piraeus-operator chart has been replaced by linstor-operator
+  # See: https://piraeus.io/ for latest guidance
+  - name: piraeus
+    type: helm
+    registry: https://piraeus.io/helm-charts
+    chart: piraeus-ha-controller
+    version: 1.3.1
+
+  # democratic-csi - requires complex driver config, no CRDs anyway
+  # - name: democratic-csi
+  #   type: helm
+  #   registry: https://democratic-csi.github.io/charts
+  #   chart: democratic-csi
+  #   version: 0.14.7
+  #   values:
+  #     csiDriver:
+  #       name: org.democratic-csi.nfs
+
+  - name: ceph-csi-rbd
+    type: helm
+    registry: https://ceph.github.io/csi-charts
+    chart: ceph-csi-rbd
+    version: 3.13.0
+
+  - name: ceph-csi-cephfs
+    type: helm
+    registry: https://ceph.github.io/csi-charts
+    chart: ceph-csi-cephfs
+    version: 3.13.0
+
+  # ============================================================================
+  # MONITORING / OBSERVABILITY
+  # ============================================================================
+  - name: kube-prometheus-stack
+    type: helm
+    registry: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    version: 68.4.0
+
+  - name: prometheus-operator-crds
+    type: helm
+    registry: https://prometheus-community.github.io/helm-charts
+    chart: prometheus-operator-crds
+    version: 17.0.2
+
+  - name: grafana-operator
+    type: helm
+    registry: oci://ghcr.io/grafana/helm-charts
+    chart: grafana-operator
+    version: v5.20.0
+
+  - name: loki
+    type: helm
+    registry: https://grafana.github.io/helm-charts
+    chart: loki
+    version: 6.24.0
+    values:
+      loki:
+        useTestSchema: true
+        storage:
+          bucketNames:
+            chunks: chunks
+            ruler: ruler
+            admin: admin
+          type: s3
+          s3:
+            endpoint: http://minio:9000
+            region: us-east-1
+            secretAccessKey: supersecret
+            accessKeyId: minioaccess
+            s3ForcePathStyle: true
+            insecure: true
+
+  - name: tempo
+    type: helm
+    registry: https://grafana.github.io/helm-charts
+    chart: tempo
+    version: 1.18.1
+
+  - name: mimir
+    type: helm
+    registry: https://grafana.github.io/helm-charts
+    chart: mimir-distributed
+    version: 5.6.0
+
+  - name: alloy
+    type: helm
+    registry: https://grafana.github.io/helm-charts
+    chart: alloy
+    version: 0.12.0
+
+  - name: victoria-metrics-operator
+    type: helm
+    registry: https://victoriametrics.github.io/helm-charts
+    chart: victoria-metrics-operator
+    version: 0.40.1
+
+  - name: victoria-metrics-k8s-stack
+    type: helm
+    registry: https://victoriametrics.github.io/helm-charts
+    chart: victoria-metrics-k8s-stack
+    version: 0.30.3
+
+  - name: opentelemetry-operator
+    type: helm
+    registry: https://open-telemetry.github.io/opentelemetry-helm-charts
+    chart: opentelemetry-operator
+    version: 0.75.1
+    values:
+      manager:
+        collectorImage:
+          repository: otel/opentelemetry-collector-contrib
+
+  - name: opentelemetry-collector
+    type: helm
+    registry: https://open-telemetry.github.io/opentelemetry-helm-charts
+    chart: opentelemetry-collector
+    version: 0.115.0
+    values:
+      image:
+        repository: otel/opentelemetry-collector-contrib
+      mode: deployment
+
+  - name: jaeger-operator
+    type: helm
+    registry: https://jaegertracing.github.io/helm-charts
+    chart: jaeger-operator
+    version: 2.57.0
+
+  - name: elastic-operator
+    type: helm
+    registry: https://helm.elastic.co
+    chart: eck-operator
+    version: 2.16.0
+
+  - name: kube-logging
+    type: helm
+    registry: https://kube-logging.github.io/helm-charts
+    chart: logging-operator
+    version: 4.2.3
+
+  - name: fluentbit-operator
+    type: helm
+    registry: https://fluent.github.io/helm-charts
+    chart: fluent-operator
+    version: 3.2.0
+
+  - name: datadog-operator
+    type: helm
+    registry: https://helm.datadoghq.com
+    chart: datadog-operator
+    version: 2.15.2
+
+  - name: newrelic-k8s-metadata-injection
+    type: helm
+    registry: https://helm-charts.newrelic.com
+    chart: nri-metadata-injection
+    version: 2.2.1
+
+  - name: trivy-operator
+    type: helm
+    registry: https://aquasecurity.github.io/helm-charts
+    chart: trivy-operator
+    version: 0.28.1
+
+  # ============================================================================
+  # DATABASE
+  # ============================================================================
+  - name: cloudnative-pg
+    type: helm
+    registry: https://cloudnative-pg.github.io/charts
+    chart: cloudnative-pg
+    version: 0.23.0
+
+  - name: postgres-operator
+    type: helm
+    registry: https://opensource.zalando.com/postgres-operator/charts/postgres-operator
+    chart: postgres-operator
+    version: 1.13.0
+
+  - name: crunchy-postgres-operator
+    type: github
+    repo: CrunchyData/postgres-operator
+    version: v5.7.9
+    crd_path: config/crd/bases
+
+  - name: percona-postgresql-operator
+    type: helm
+    registry: https://percona.github.io/percona-helm-charts
+    chart: pg-operator
+    version: 2.8.0
+
+  - name: percona-xtradb-cluster-operator
+    type: helm
+    registry: https://percona.github.io/percona-helm-charts
+    chart: pxc-operator
+    version: 1.16.1
+
+  - name: percona-server-mongodb-operator
+    type: helm
+    registry: https://percona.github.io/percona-helm-charts
+    chart: psmdb-operator
+    version: 1.19.1
+
+  - name: mongodb-kubernetes-operator
+    type: github
+    repo: mongodb/mongodb-kubernetes-operator
+    version: v0.11.0
+    assets:
+      - config/crd/bases/mongodbcommunity.mongodb.com_mongodbcommunity.yaml
+
+  - name: dragonfly-operator
+    type: helm
+    registry: oci://ghcr.io/dragonflydb/dragonfly-operator/helm
+    chart: dragonfly-operator
+    version: v1.3.1
+
+  - name: redis-operator
+    type: helm
+    registry: https://ot-container-kit.github.io/helm-charts
+    chart: redis-operator
+    version: 0.18.2
+
+  - name: mariadb-operator
+    type: helm
+    registry: https://helm.mariadb.com/mariadb-operator
+    chart: mariadb-operator
+    version: 0.36.0
+
+  - name: mysql-operator
+    type: github
+    repo: mysql/mysql-operator
+    version: 9.5.0-2.2.6
+    assets:
+      - deploy/deploy-crds.yaml
+
+  - name: clickhouse-operator
+    type: github
+    repo: Altinity/clickhouse-operator
+    version: 0.24.2
+    assets:
+      - deploy/operator/clickhouse-operator-install-bundle.yaml
+
+  - name: strimzi-kafka-operator
+    type: helm
+    registry: https://strimzi.io/charts
+    chart: strimzi-kafka-operator
+    version: 0.45.0
+
+  - name: rabbitmq-cluster-operator
+    type: github
+    repo: rabbitmq/cluster-operator
+    version: v2.18.0
+    crd_path: config/crd/bases
+
+  - name: nats
+    type: helm
+    registry: https://nats-io.github.io/k8s/helm/charts
+    chart: nats
+    version: 1.2.8
+
+  - name: redpanda-operator
+    type: helm
+    registry: https://charts.redpanda.com
+    chart: operator
+    version: 25.3.1
+
+  - name: cassandra-operator
+    type: github
+    repo: k8ssandra/cass-operator
+    version: v1.23.1
+    assets:
+      - config/crd/bases/cassandra.datastax.com_cassandradatacenters.yaml
+
+  - name: scylladb-operator
+    type: helm
+    registry: https://scylla-operator-charts.storage.googleapis.com/stable
+    chart: scylla-operator
+    version: 1.14.0
+
+  - name: cockroachdb
+    type: helm
+    registry: https://charts.cockroachdb.com
+    chart: cockroachdb
+    version: 19.0.1
+
+  - name: tidb-operator
+    type: helm
+    registry: https://charts.pingcap.org
+    chart: tidb-operator
+    version: 1.6.1
+
+  - name: vitess-operator
+    type: github
+    repo: planetscale/vitess-operator
+    version: v2.14.0
+    assets:
+      - deploy/crds/planetscale.com_etcdlockservers.yaml
+      - deploy/crds/planetscale.com_vitesskeyspaces.yaml
+      - deploy/crds/planetscale.com_vitessshards.yaml
+      - deploy/crds/planetscale.com_vitessclusters.yaml
+      - deploy/crds/planetscale.com_vitesscells.yaml
+
+  - name: solr-operator
+    type: helm
+    registry: https://solr.apache.org/charts
+    chart: solr-operator
+    version: 0.9.0
+
+  - name: minio-operator
+    type: helm
+    registry: https://operator.min.io
+    chart: operator
+    version: 6.0.4
+
+  # influxdb-operator - abandoned project, skipping
+  # - name: influxdb-operator
+  #   type: github
+  #   repo: influxdata/influxdb-operator
+  #   version: v0.0.1
+  #   assets:
+  #     - config/crd/bases/influxdata.com_influxdbs.yaml
+
+  # ============================================================================
+  # AUTH / IDENTITY
+  # ============================================================================
+  - name: authentik
+    type: helm
+    registry: https://charts.goauthentik.io
+    chart: authentik
+    version: 2025.2.0
+
+  - name: keycloak-operator
+    type: github
+    repo: keycloak/keycloak-k8s-resources
+    version: 26.4.7
+    assets:
+      - kubernetes/keycloaks.k8s.keycloak.org-v1.yml
+      - kubernetes/keycloakrealmimports.k8s.keycloak.org-v1.yml
+
+  - name: dex
+    type: helm
+    registry: https://charts.dexidp.io
+    chart: dex
+    version: 0.19.1
+
+  - name: oauth2-proxy
+    type: helm
+    registry: https://oauth2-proxy.github.io/manifests
+    chart: oauth2-proxy
+    version: 7.8.1
+
+  - name: zitadel
+    type: helm
+    registry: https://charts.zitadel.com
+    chart: zitadel
+    version: 8.10.0
+    values:
+      zitadel:
+        masterkey: "dummy-key-for-schema-extraction-only"
+
+  # ============================================================================
+  # POLICY / SECURITY
+  # ============================================================================
+  - name: kyverno
+    type: helm
+    registry: https://kyverno.github.io/kyverno
+    chart: kyverno
+    version: 3.3.7
+
+  - name: kyverno-policies
+    type: helm
+    registry: https://kyverno.github.io/kyverno
+    chart: kyverno-policies
+    version: 3.3.3
+
+  - name: gatekeeper
+    type: helm
+    registry: https://open-policy-agent.github.io/gatekeeper/charts
+    chart: gatekeeper
+    version: 3.18.2
+
+  - name: falco
+    type: helm
+    registry: https://falcosecurity.github.io/charts
+    chart: falco
+    version: 4.18.0
+
+  - name: kubearmor
+    type: helm
+    registry: https://kubearmor.github.io/charts
+    chart: kubearmor
+    version: v1.6.5
+
+  - name: kubewarden-controller
+    type: helm
+    registry: https://charts.kubewarden.io
+    chart: kubewarden-controller
+    version: 5.9.0
+
+  - name: neuvector
+    type: helm
+    registry: https://neuvector.github.io/neuvector-helm
+    chart: core
+    version: 2.8.3
+
+  - name: tetragon
+    type: helm
+    registry: https://helm.cilium.io
+    chart: tetragon
+    version: 1.3.0
+
+  # ============================================================================
+  # CROSSPLANE & INFRASTRUCTURE
+  # ============================================================================
+  - name: crossplane
+    type: helm
+    registry: https://charts.crossplane.io/stable
+    chart: crossplane
+    version: 1.19.0
+
+  - name: crossplane-aws-provider
+    type: github
+    repo: crossplane-contrib/provider-aws
+    version: v0.50.1
+    crd_path: package/crds
+
+  - name: terraform-controller
+    type: helm
+    registry: https://helm.releases.hashicorp.com
+    chart: terraform
+    version: 1.1.2
+
+  # ============================================================================
+  # AUTOSCALING / SCHEDULING
+  # ============================================================================
+  - name: keda
+    type: helm
+    registry: https://kedacore.github.io/charts
+    chart: keda
+    version: 2.16.1
+
+  - name: karpenter
+    type: helm
+    registry: oci://public.ecr.aws/karpenter
+    chart: karpenter
+    version: 1.1.1
+
+  - name: cluster-autoscaler
+    type: helm
+    registry: https://kubernetes.github.io/autoscaler
+    chart: cluster-autoscaler
+    version: 9.43.2
+
+  - name: descheduler
+    type: helm
+    registry: https://kubernetes-sigs.github.io/descheduler
+    chart: descheduler
+    version: 0.32.2
+
+  - name: vpa
+    type: helm
+    registry: https://charts.fairwinds.com/stable
+    chart: vpa
+    version: 4.7.1
+
+  - name: goldilocks
+    type: helm
+    registry: https://charts.fairwinds.com/stable
+    chart: goldilocks
+    version: 9.0.1
+
+  # ============================================================================
+  # CI/CD & BUILDS
+  # ============================================================================
+  - name: actions-runner-controller
+    type: helm
+    registry: oci://ghcr.io/actions/actions-runner-controller-charts
+    chart: gha-runner-scale-set-controller
+    version: 0.10.1
+
+  - name: tekton-pipelines
+    type: github
+    repo: tektoncd/pipeline
+    version: v1.7.0
+    crd_path: config/300-crds
+
+  - name: tekton-triggers
+    type: github
+    repo: tektoncd/triggers
+    version: v0.34.0
+    crd_path: config
+
+  # drone - requires DRONE_* env vars to template, no CRDs anyway
+  # - name: drone
+  #   type: helm
+  #   registry: https://charts.drone.io
+  #   chart: drone
+  #   version: 0.6.5
+
+  # buildkit - doesn't have CRDs, just example manifests
+  # - name: buildkit
+  #   type: github
+  #   repo: moby/buildkit
+  #   version: v0.18.2
+  #   assets:
+  #     - examples/kubernetes/buildkitd.yaml
+
+  # ============================================================================
+  # SERVERLESS / KNATIVE
+  # ============================================================================
+  - name: knative-serving
+    type: github
+    repo: knative/serving
+    version: knative-v1.16.0
+    assets:
+      - third_party/kourier-latest/kourier.yaml
+
+  - name: knative-eventing
+    type: github
+    repo: knative/eventing
+    version: knative-v1.20.0
+    crd_path: config/core/resources
+
+  - name: openfaas
+    type: helm
+    registry: https://openfaas.github.io/faas-netes
+    chart: openfaas
+    version: 14.2.77
+
+  - name: fission
+    type: helm
+    registry: https://fission.github.io/fission-charts
+    chart: fission-all
+    version: 1.20.5
+
+  # kubeless - archived project, skipping
+  # - name: kubeless
+  #   type: github
+  #   repo: vmware-archive/kubeless
+  #   version: v1.0.8
+  #   assets:
+  #     - manifests/kubeless-v1.0.8/kubeless-non-rbac.yaml
+
+  # ============================================================================
+  # SERVICE MESH DATA PLANES
+  # ============================================================================
+  - name: kiali-operator
+    type: helm
+    registry: https://kiali.org/helm-charts
+    chart: kiali-operator
+    version: 2.2.0
+
+  # ============================================================================
+  # BACKUP / DISASTER RECOVERY
+  # ============================================================================
+  - name: velero
+    type: helm
+    registry: https://vmware-tanzu.github.io/helm-charts
+    chart: velero
+    version: 8.2.0
+
+  - name: kasten-k10
+    type: helm
+    registry: https://charts.kasten.io
+    chart: k10
+    version: 8.0.14
+
+  - name: stash
+    type: helm
+    registry: https://charts.appscode.com/stable
+    chart: stash
+    version: v2024.12.18
+
+  # ============================================================================
+  # ML / AI
+  # ============================================================================
+  # kubeflow - CRD paths changed, use direct knative-serving instead
+  # - name: kubeflow
+  #   type: github
+  #   repo: kubeflow/manifests
+  #   version: v1.9.1
+  #   assets:
+  #     - common/knative/knative-serving/base/upstream/serving-crds.yaml
+
+  - name: nvidia-gpu-operator
+    type: helm
+    registry: https://helm.ngc.nvidia.com/nvidia
+    chart: gpu-operator
+    version: 24.9.2
+
+  - name: kuberay-operator
+    type: helm
+    registry: https://ray-project.github.io/kuberay-helm
+    chart: kuberay-operator
+    version: 1.2.2
+
+  - name: spark-operator
+    type: helm
+    registry: https://kubeflow.github.io/spark-operator
+    chart: spark-operator
+    version: 2.1.0
+
+  - name: flink-operator
+    type: helm
+    registry: https://downloads.apache.org/flink/flink-kubernetes-operator-1.10.0
+    chart: flink-kubernetes-operator
+    version: 1.10.0
+
+  - name: seldon-core
+    type: helm
+    registry: https://storage.googleapis.com/seldon-charts
+    chart: seldon-core-operator
+    version: 1.17.1
+
+  - name: kserve
+    type: github
+    repo: kserve/kserve
+    version: v0.14.1
+    crd_path: config/crd/full
+
+  # mlflow-operator - repo archived, skipping
+  # - name: mlflow-operator
+  #   type: github
+  #   repo: Babylonpartners/mlflow-operator
+  #   version: v0.3.0
+  #   crd_path: config/crd/bases
+
+  # ============================================================================
+  # CHAOS ENGINEERING
+  # ============================================================================
+  - name: chaos-mesh
+    type: helm
+    registry: https://charts.chaos-mesh.org
+    chart: chaos-mesh
+    version: 2.7.0
+
+  - name: litmus
+    type: helm
+    registry: https://litmuschaos.github.io/litmus-helm
+    chart: litmus
+    version: 3.14.0
+
+  # ============================================================================
+  # COST MANAGEMENT
+  # ============================================================================
+  - name: kubecost
+    type: helm
+    registry: https://kubecost.github.io/cost-analyzer
+    chart: cost-analyzer
+    version: 2.5.2
+
+  - name: opencost
+    type: helm
+    registry: https://opencost.github.io/opencost-helm-chart
+    chart: opencost
+    version: 2.4.1
+
+  # ============================================================================
+  # MULTI-TENANCY
+  # ============================================================================
+  - name: capsule
+    type: helm
+    registry: https://projectcapsule.github.io/charts
+    chart: capsule
+    version: 0.7.2
+
+  - name: vcluster
+    type: helm
+    registry: https://charts.loft.sh
+    chart: vcluster
+    version: 0.21.1
+
+  # hierarchical-namespaces - retired but CRDs in release assets
+  - name: hierarchical-namespaces
+    type: url
+    url: https://github.com/kubernetes-retired/hierarchical-namespaces/releases/download/{version}/default.yaml
+    version: v1.1.0
+
+  # ============================================================================
+  # HARDWARE / DEVICE PLUGINS
+  # ============================================================================
+  - name: intel-device-plugins-operator
+    type: helm
+    registry: https://intel.github.io/helm-charts
+    chart: intel-device-plugins-operator
+    version: 0.32.0
+
+  - name: node-feature-discovery
+    type: helm
+    registry: https://kubernetes-sigs.github.io/node-feature-discovery/charts
+    chart: node-feature-discovery
+    version: 0.17.1
+
+  - name: akri
+    type: helm
+    registry: https://project-akri.github.io/akri
+    chart: akri
+    version: 0.12.20
+
+  # ============================================================================
+  # REGISTRY / ARTIFACTS
+  # ============================================================================
+  - name: harbor
+    type: helm
+    registry: https://helm.goharbor.io
+    chart: harbor
+    version: 1.16.1
+
+  - name: dragonfly
+    type: helm
+    registry: https://dragonflyoss.github.io/helm-charts
+    chart: dragonfly
+    version: 1.2.1
+
+  - name: spegel
+    type: helm
+    registry: oci://ghcr.io/spegel-org/helm-charts
+    chart: spegel
+    version: v0.0.27
+
+  # ============================================================================
+  # DNS
+  # ============================================================================
+  - name: k8s-gateway
+    type: helm
+    registry: https://ori-edge.github.io/k8s_gateway
+    chart: k8s-gateway
+    version: 2.4.0
+    values:
+      domain: example.com
+
+  - name: coredns
+    type: helm
+    registry: https://coredns.github.io/helm
+    chart: coredns
+    version: 1.36.1
+
+  # ============================================================================
+  # HOMELAB / SELF-HOSTED
+  # ============================================================================
+  - name: home-assistant
+    type: helm
+    registry: https://pajikos.github.io/home-assistant-helm-chart
+    chart: home-assistant
+    version: 0.2.77
+
+  # ============================================================================
+  # WORKFLOW / ORCHESTRATION
+  # ============================================================================
+  - name: airflow
+    type: helm
+    registry: https://airflow.apache.org
+    chart: airflow
+    version: 1.16.0
+
+  - name: temporal
+    type: helm
+    registry: https://go.temporal.io/helm-charts
+    chart: temporal
+    version: 0.72.0
+
+  - name: dagster
+    type: helm
+    registry: https://dagster-io.github.io/helm
+    chart: dagster
+    version: 1.9.10
+
+  - name: prefect-server
+    type: helm
+    registry: https://prefecthq.github.io/prefect-helm
+    chart: prefect-server
+    version: 2025.12.11201923
+
+  # ============================================================================
+  # NETWORKING EXTENSIONS
+  # ============================================================================
+  - name: submariner
+    type: helm
+    registry: https://submariner-io.github.io/submariner-charts/charts
+    chart: submariner-operator
+    version: 0.18.1
+
+  - name: liqo
+    type: helm
+    registry: https://helm.liqo.io
+    chart: liqo
+    version: v1.0.1
+
+  # ============================================================================
+  # AWS CONTROLLERS FOR KUBERNETES (ACK)
+  # https://aws-controllers-k8s.github.io/community/
+  # ============================================================================
+  - name: ack-ec2-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: ec2-chart
+    version: 1.2.23
+
+  - name: ack-s3-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: s3-chart
+    version: 1.0.18
+
+  - name: ack-rds-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: rds-chart
+    version: 1.4.10
+
+  - name: ack-lambda-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: lambda-chart
+    version: 1.5.4
+
+  - name: ack-dynamodb-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: dynamodb-chart
+    version: 1.2.16
+
+  - name: ack-sqs-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: sqs-chart
+    version: 1.0.17
+
+  - name: ack-sns-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: sns-chart
+    version: 1.3.0
+
+  - name: ack-iam-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: iam-chart
+    version: 1.3.14
+
+  - name: ack-eks-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: eks-chart
+    version: 1.4.5
+
+  - name: ack-ecr-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: ecr-chart
+    version: 1.0.18
+
+  - name: ack-elasticache-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: elasticache-chart
+    version: 1.0.2
+
+  - name: ack-route53-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: route53-chart
+    version: 1.2.0
+
+  - name: ack-secretsmanager-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: secretsmanager-chart
+    version: 1.0.13
+
+  - name: ack-cloudwatch-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: cloudwatch-chart
+    version: 1.0.1
+
+  - name: ack-kms-controller
+    type: helm
+    registry: oci://public.ecr.aws/aws-controllers-k8s
+    chart: kms-chart
+    version: 1.0.17
+
+  # ============================================================================
+  # AZURE SERVICE OPERATOR (ASO)
+  # https://azure.github.io/azure-service-operator/
+  # ============================================================================
+  - name: azure-service-operator
+    type: helm
+    registry: https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
+    chart: azure-service-operator
+    version: 2.11.0
+
+  # ============================================================================
+  # GOOGLE CONFIG CONNECTOR (KCC)
+  # https://cloud.google.com/config-connector/docs/overview
+  # ============================================================================
+  # config-connector - file paths changed, needs investigation
+  # - name: config-connector
+  #   type: github
+  #   repo: GoogleCloudPlatform/k8s-config-connector
+  #   version: v1.127.0
+  #   assets:
+  #     - operator-system/autopilot-configconnector-operator.yaml
+
+  # ============================================================================
+  # CLUSTER API
+  # ============================================================================
+  - name: cluster-api
+    type: github
+    repo: kubernetes-sigs/cluster-api
+    version: v1.12.0
+    crd_path: config/crd/bases
+
+  - name: cluster-api-provider-aws
+    type: github
+    repo: kubernetes-sigs/cluster-api-provider-aws
+    version: v2.10.0
+    crd_path: config/crd/bases
+
+  - name: cluster-api-provider-azure
+    type: github
+    repo: kubernetes-sigs/cluster-api-provider-azure
+    version: v1.19.1
+    crd_path: config/crd/bases
+
+  - name: cluster-api-provider-gcp
+    type: github
+    repo: kubernetes-sigs/cluster-api-provider-gcp
+    version: v1.10.0
+    crd_path: config/crd/bases
+
+  - name: cluster-api-provider-vsphere
+    type: github
+    repo: kubernetes-sigs/cluster-api-provider-vsphere
+    version: v1.14.0
+    crd_path: config/default/crd/bases
+
+  - name: cluster-api-provider-openstack
+    type: github
+    repo: kubernetes-sigs/cluster-api-provider-openstack
+    version: v0.12.0
+    crd_path: config/crd/bases
+
+  # ============================================================================
+  # KUBEVIRT
+  # ============================================================================
+  - name: kubevirt
+    type: github
+    repo: kubevirt/kubevirt
+    version: v1.4.0
+    assets:
+      - api/openapi-spec/swagger.json
+
+  - name: containerized-data-importer
+    type: url
+    url: https://github.com/kubevirt/containerized-data-importer/releases/download/{version}/cdi-operator.yaml
+    version: v1.61.0
+
+  # ============================================================================
+  # TALOS
+  # ============================================================================
+  - name: talos
+    type: github
+    repo: siderolabs/talos
+    version: v1.9.1
+    assets:
+      - pkg/machinery/config/schemas/config.schema.json
+
+  # ============================================================================
+  # ADDITIONAL OPERATORS
+  # ============================================================================
+  - name: awx-operator
+    type: github
+    repo: ansible/awx-operator
+    version: 2.19.1
+    crd_path: config/crd/bases
+
+  - name: gitlab-operator
+    type: helm
+    registry: https://charts.gitlab.io
+    chart: gitlab-operator
+    version: 1.6.1
+
+  - name: mattermost-operator
+    type: github
+    repo: mattermost/mattermost-operator
+    version: v1.25.2
+    crd_path: config/crd/bases
+
+  - name: postgres-operator-ui
+    type: helm
+    registry: https://opensource.zalando.com/postgres-operator/charts/postgres-operator-ui
+    chart: postgres-operator-ui
+    version: 1.13.0
+
+  - name: stackgres
+    type: helm
+    registry: https://stackgres.io/downloads/stackgres-k8s/stackgres/helm
+    chart: stackgres-operator
+    version: 1.18.2
+
+  - name: kubegres
+    type: github
+    repo: reactive-tech/kubegres
+    version: v1.18
+    crd_path: config/crd/bases
+
+  - name: emqx-operator
+    type: helm
+    registry: https://repos.emqx.io/charts
+    chart: emqx-operator
+    version: 2.2.28
+
+  # memcached-operator - abandoned project, skipping
+  # - name: memcached-operator
+  #   type: github
+  #   repo: ianlewis/memcached-operator
+  #   version: v0.0.2
+  #   crd_path: deploy/crds
+
+  # ============================================================================
+  # GITOPS ADDITIONAL
+  # ============================================================================
+  - name: flagger
+    type: helm
+    registry: https://flagger.app
+    chart: flagger
+    version: 1.40.0
+
+  # weave-gitops - repository may be deprecated/unreachable, skipping
+  # - name: weave-gitops
+  #   type: helm
+  #   registry: https://helm.gitops.weave.works
+  #   chart: weave-gitops
+  #   version: 4.0.36
+
+  # ============================================================================
+  # SECURITY ADDITIONAL
+  # ============================================================================
+  # cert-manager-trust has been renamed to trust-manager (see trust-manager entry above)
+  # Keeping for backwards compatibility - uses the old chart name
+  - name: cert-manager-trust
+    type: helm
+    registry: https://charts.jetstack.io
+    chart: cert-manager-trust
+    version: v0.2.1
+
+  - name: secrets-store-csi-driver
+    type: helm
+    registry: https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+    chart: secrets-store-csi-driver
+    version: 1.4.7
+
+  - name: reloader
+    type: helm
+    registry: https://stakater.github.io/stakater-charts
+    chart: reloader
+    version: 1.2.1
+
+  # ============================================================================
+  # SERVICE CATALOG
+  # ============================================================================
+  - name: service-binding
+    type: github
+    repo: servicebinding/runtime
+    version: v1.0.0
+    crd_path: config/crd/bases
+
+  # ============================================================================
+  # CNCF GRADUATED / INCUBATING
+  # ============================================================================
+  - name: dapr
+    type: helm
+    registry: https://dapr.github.io/helm-charts
+    chart: dapr
+    version: 1.14.4
+
+  # nats-operator - archived, CRDs created dynamically by operator (not in assets)
+  # - name: nats-operator
+  #   type: url
+  #   url: https://github.com/nats-io/nats-operator/releases/download/{version}/00-prereqs.yaml
+  #   version: v0.4.3
+
+  - name: open-cluster-management
+    type: github
+    repo: open-cluster-management-io/ocm
+    version: v0.15.0
+    crd_path: deploy/cluster-manager/config/crds
