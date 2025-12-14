@@ -53,11 +53,13 @@ def generate_index(schemas_dir: Path) -> dict:
             except (json.JSONDecodeError, IOError):
                 pass
 
-            groups[group][version].append({
-                "kind": kind,
-                "source": source_name,
-                "sourceVersion": source_version,
-            })
+            groups[group][version].append(
+                {
+                    "kind": kind,
+                    "source": source_name,
+                    "sourceVersion": source_version,
+                }
+            )
             total_schemas += 1
 
         except ValueError:
@@ -68,10 +70,7 @@ def generate_index(schemas_dir: Path) -> dict:
     for group in sorted(groups.keys()):
         sorted_groups[group] = {}
         for version in sorted(groups[group].keys(), reverse=True):
-            sorted_groups[group][version] = sorted(
-                groups[group][version],
-                key=lambda x: x["kind"]
-            )
+            sorted_groups[group][version] = sorted(groups[group][version], key=lambda x: x["kind"])
 
     return {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -86,16 +85,8 @@ def generate_index(schemas_dir: Path) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description="Generate schema index")
-    parser.add_argument(
-        "--schemas-dir",
-        default="schemas",
-        help="Directory containing schemas"
-    )
-    parser.add_argument(
-        "--output",
-        default="schemas/schemas-index.json",
-        help="Output index file"
-    )
+    parser.add_argument("--schemas-dir", default="schemas", help="Directory containing schemas")
+    parser.add_argument("--output", default="schemas/schemas-index.json", help="Output index file")
 
     args = parser.parse_args()
 

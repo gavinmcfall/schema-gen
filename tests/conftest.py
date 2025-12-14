@@ -114,41 +114,55 @@ def sample_sources_dir(temp_dir):
     # Helm source
     helm_dir = sources_dir / "helm" / "test-helm"
     helm_dir.mkdir(parents=True)
-    (helm_dir / "helmrelease.yaml").write_text(yaml.dump({
-        "repository": "https://charts.example.io",
-        "chart": "test-chart",
-        "version": "1.0.0",
-    }))
+    (helm_dir / "helmrelease.yaml").write_text(
+        yaml.dump(
+            {
+                "repository": "https://charts.example.io",
+                "chart": "test-chart",
+                "version": "1.0.0",
+            }
+        )
+    )
 
     # Kustomize source (github with crd_path)
     kustomize_dir = sources_dir / "kustomize" / "test-kustomize"
     kustomize_dir.mkdir(parents=True)
-    (kustomize_dir / "kustomization.yaml").write_text(yaml.dump({
-        "apiVersion": "kustomize.config.k8s.io/v1beta1",
-        "kind": "Kustomization",
-        "resources": ["https://github.com/example/test-repo//config/crds?ref=v1.0.0"],
-    }))
+    (kustomize_dir / "kustomization.yaml").write_text(
+        yaml.dump(
+            {
+                "apiVersion": "kustomize.config.k8s.io/v1beta1",
+                "kind": "Kustomization",
+                "resources": ["https://github.com/example/test-repo//config/crds?ref=v1.0.0"],
+            }
+        )
+    )
 
     # GitHub source (with assets)
     github_dir = sources_dir / "github" / "test-github-assets"
     github_dir.mkdir(parents=True)
     with open(github_dir / "source.yaml", "w") as f:
         f.write("# renovate: datasource=github-releases depName=example/test-repo\n")
-        yaml.dump({
-            "repository": "example/test-repo",
-            "version": "v1.0.0",
-            "assets": ["crds/crd1.yaml", "crds/crd2.yaml"],
-        }, f)
+        yaml.dump(
+            {
+                "repository": "example/test-repo",
+                "version": "v1.0.0",
+                "assets": ["crds/crd1.yaml", "crds/crd2.yaml"],
+            },
+            f,
+        )
 
     # URL source
     url_dir = sources_dir / "url" / "test-url"
     url_dir.mkdir(parents=True)
     with open(url_dir / "source.yaml", "w") as f:
         f.write("# renovate: datasource=github-releases depName=example/test-repo\n")
-        yaml.dump({
-            "url": "https://example.com/releases/{version}/crds.yaml",
-            "version": "v1.0.0",
-        }, f)
+        yaml.dump(
+            {
+                "url": "https://example.com/releases/{version}/crds.yaml",
+                "version": "v1.0.0",
+            },
+            f,
+        )
 
     return sources_dir
 

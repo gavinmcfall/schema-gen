@@ -46,14 +46,16 @@ def load_sources(sources_dir: Path) -> list[dict]:
             if helmrelease.exists():
                 with open(helmrelease) as f:
                     data = yaml.safe_load(f)
-                sources.append({
-                    "name": source_dir.name,
-                    "type": "helm",
-                    "registry": data["repository"],
-                    "chart": data["chart"],
-                    "version": str(data["version"]),
-                    "values": data.get("values", {}),
-                })
+                sources.append(
+                    {
+                        "name": source_dir.name,
+                        "type": "helm",
+                        "registry": data["repository"],
+                        "chart": data["chart"],
+                        "version": str(data["version"]),
+                        "values": data.get("values", {}),
+                    }
+                )
 
     # Load Kustomize sources (GitHub with crd_path)
     kustomize_dir = sources_dir / "kustomize"
@@ -69,18 +71,17 @@ def load_sources(sources_dir: Path) -> list[dict]:
                 # Format: https://github.com/owner/repo//path?ref=version
                 resource = data.get("resources", [None])[0]
                 if resource:
-                    match = re.match(
-                        r"https://github\.com/([^/]+/[^/]+)//(.+)\?ref=(.+)",
-                        resource
-                    )
+                    match = re.match(r"https://github\.com/([^/]+/[^/]+)//(.+)\?ref=(.+)", resource)
                     if match:
-                        sources.append({
-                            "name": source_dir.name,
-                            "type": "github",
-                            "repo": match.group(1),
-                            "crd_path": match.group(2),
-                            "version": match.group(3),
-                        })
+                        sources.append(
+                            {
+                                "name": source_dir.name,
+                                "type": "github",
+                                "repo": match.group(1),
+                                "crd_path": match.group(2),
+                                "version": match.group(3),
+                            }
+                        )
 
     # Load GitHub sources (with assets)
     github_dir = sources_dir / "github"
@@ -92,13 +93,15 @@ def load_sources(sources_dir: Path) -> list[dict]:
             if source_file.exists():
                 with open(source_file) as f:
                     data = yaml.safe_load(f)
-                sources.append({
-                    "name": source_dir.name,
-                    "type": "github",
-                    "repo": data["repository"],
-                    "version": str(data["version"]),
-                    "assets": data.get("assets", []),
-                })
+                sources.append(
+                    {
+                        "name": source_dir.name,
+                        "type": "github",
+                        "repo": data["repository"],
+                        "version": str(data["version"]),
+                        "assets": data.get("assets", []),
+                    }
+                )
 
     # Load URL sources
     url_dir = sources_dir / "url"
@@ -110,12 +113,14 @@ def load_sources(sources_dir: Path) -> list[dict]:
             if source_file.exists():
                 with open(source_file) as f:
                     data = yaml.safe_load(f)
-                sources.append({
-                    "name": source_dir.name,
-                    "type": "url",
-                    "url": data["url"],
-                    "version": str(data["version"]),
-                })
+                sources.append(
+                    {
+                        "name": source_dir.name,
+                        "type": "url",
+                        "url": data["url"],
+                        "version": str(data["version"]),
+                    }
+                )
 
     return sources
 

@@ -59,6 +59,7 @@ class SafeLoaderWithTags(yaml.SafeLoader):
     Some CRDs (like kube-prometheus-stack) use special YAML tags like
     `tag:yaml.org,2002:value` that aren't handled by safe_load.
     """
+
     pass
 
 
