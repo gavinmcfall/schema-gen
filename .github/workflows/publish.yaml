@@ -28,6 +28,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: pip install requests pyyaml
+
       - name: Prepare deployment directory
         run: |
           # Create deployment directory with schemas
