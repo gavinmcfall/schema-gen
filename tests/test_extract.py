@@ -32,20 +32,11 @@ class TestExtractSource:
 class TestGitHubExtraction:
     """Tests for GitHub-based CRD extraction."""
 
-    @patch("extract.requests.get")
-    def test_discover_github_yaml_files(self, mock_get):
+    @patch("extract.get_http_session")
+    def test_discover_github_yaml_files(self, mock_get_session):
         """Test discovering YAML files from GitHub directory."""
-        # Mock GitHub API response
-        mock_get.return_value = MagicMock(
-            status_code=200,
-            json=lambda: [
-                {"name": "crd1.yaml", "path": "crds/crd1.yaml", "type": "file"},
-                {"name": "crd2.yml", "path": "crds/crd2.yml", "type": "file"},
-                {"name": "README.md", "path": "crds/README.md", "type": "file"},
-                {"name": "subdir", "path": "crds/subdir", "type": "dir"},
-            ],
-        )
-        mock_get.return_value.raise_for_status = MagicMock()
+        mock_session = MagicMock()
+        mock_get_session.return_value = mock_session
 
         # Mock the recursive call for subdir (empty)
         def side_effect(url, *args, **kwargs):
@@ -62,9 +53,9 @@ class TestGitHubExtraction:
                 ]
             return response
 
-        mock_get.side_effect = side_effect
+        mock_session.get.side_effect = side_effect
 
-        files = discover_github_yaml_files("owner/repo", "v1.0.0", "crds", {})
+        files = discover_github_yaml_files("owner/repo", "v1.0.0", "crds")
 
         # Should find yaml/yml files, skip README.md, recurse into subdir
         assert len(files) == 3
@@ -72,10 +63,13 @@ class TestGitHubExtraction:
         assert "crds/crd2.yml" in files
         assert "crds/subdir/crd3.yaml" in files
 
-    @patch("extract.requests.get")
+    @patch("extract.get_http_session")
     @patch("extract.discover_github_yaml_files")
-    def test_extract_github_crds_with_crd_path(self, mock_discover, mock_get, temp_dir):
+    def test_extract_github_crds_with_crd_path(self, mock_discover, mock_get_session, temp_dir):
         """Test extracting CRDs using crd_path discovery."""
+        mock_session = MagicMock()
+        mock_get_session.return_value = mock_session
+
         # Mock discovery returning file paths
         mock_discover.return_value = ["crds/test.yaml"]
 
@@ -101,7 +95,7 @@ spec:
           type: object
 """
         mock_response.raise_for_status = MagicMock()
-        mock_get.return_value = mock_response
+        mock_session.get.return_value = mock_response
 
         source = {
             "name": "test-source",
@@ -116,9 +110,12 @@ spec:
         assert len(crd_files) == 1
         assert crd_files[0].exists()
 
-    @patch("extract.requests.get")
-    def test_extract_github_crds_with_assets(self, mock_get, temp_dir):
+    @patch("extract.get_http_session")
+    def test_extract_github_crds_with_assets(self, mock_get_session, temp_dir):
         """Test extracting CRDs using explicit assets list."""
+        mock_session = MagicMock()
+        mock_get_session.return_value = mock_session
+
         mock_response = MagicMock()
         mock_response.text = """
 apiVersion: apiextensions.k8s.io/v1
@@ -140,7 +137,7 @@ spec:
           type: object
 """
         mock_response.raise_for_status = MagicMock()
-        mock_get.return_value = mock_response
+        mock_session.get.return_value = mock_response
 
         source = {
             "name": "test-source",
@@ -154,8 +151,8 @@ spec:
 
         assert len(crd_files) == 1
         # Verify URL was constructed correctly
-        mock_get.assert_called()
-        call_url = mock_get.call_args[0][0]
+        mock_session.get.assert_called()
+        call_url = mock_session.get.call_args[0][0]
         assert "raw.githubusercontent.com" in call_url
         assert "v1.0.0" in call_url
 

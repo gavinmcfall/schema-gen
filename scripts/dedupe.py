@@ -13,10 +13,14 @@ Usage:
 """
 
 import argparse
+import json
+import logging
 from collections import defaultdict
 from pathlib import Path
 
-from common import compute_schema_hash, load_schema, save_schema
+from common import compute_schema_hash, load_schema, parse_schema_path, save_schema
+
+logger = logging.getLogger(__name__)
 
 # Priority order for canonical sources (lower = higher priority)
 # When same schema exists from multiple sources, prefer the "official" one
@@ -72,19 +76,22 @@ def scan_schemas(schemas_dir: Path) -> dict:
 
         try:
             schema = load_schema(json_file)
-        except Exception:
-            print(f"Warning: Invalid JSON in {json_file}")
+        except json.JSONDecodeError as e:
+            logger.warning("Invalid JSON in %s: %s", json_file, e)
+            continue
+        except FileNotFoundError:
+            logger.warning("File not found: %s", json_file)
+            continue
+        except OSError as e:
+            logger.warning("Could not read %s: %s", json_file, e)
             continue
 
         # Extract API path from file path: {group}/{version}/{kind}.json
-        rel_path = json_file.relative_to(schemas_dir)
-        parts = rel_path.parts
-
-        if len(parts) != 3:
+        parsed = parse_schema_path(json_file, schemas_dir)
+        if not parsed:
             continue
 
-        group, version, kind_file = parts
-        kind = kind_file.replace(".json", "")
+        group, version, kind = parsed
         api_path = f"{group}/{version}/{kind}"
 
         # Get source from metadata
@@ -118,25 +125,25 @@ def find_duplicates(schemas: dict) -> dict:
 
 def report_duplicates(schemas_dir: Path):
     """Report on duplicate schemas."""
-    print(f"Scanning {schemas_dir}...")
+    logger.info("Scanning %s...", schemas_dir)
     schemas = scan_schemas(schemas_dir)
 
     total_schemas = sum(len(entries) for entries in schemas.values())
     unique_apis = len(schemas)
 
-    print(f"\nTotal schema files: {total_schemas}")
-    print(f"Unique API paths: {unique_apis}")
+    logger.info("Total schema files: %d", total_schemas)
+    logger.info("Unique API paths: %d", unique_apis)
 
     duplicates = find_duplicates(schemas)
 
     if not duplicates:
-        print("\nNo duplicates found!")
+        logger.info("No duplicates found!")
         return
 
-    print(f"\nDuplicates found: {len(duplicates)} API paths\n")
+    logger.info("Duplicates found: %d API paths", len(duplicates))
 
     for api_path, entries in sorted(duplicates.items()):
-        print(f"  {api_path}:")
+        logger.info("  %s:", api_path)
 
         # Group by hash
         by_hash = defaultdict(list)
@@ -144,13 +151,13 @@ def report_duplicates(schemas_dir: Path):
             by_hash[entry["hash"]].append(entry)
 
         if len(by_hash) == 1:
-            print(f"    └─ IDENTICAL content from {len(entries)} sources:")
+            logger.info("    └─ IDENTICAL content from %d sources:", len(entries))
         else:
-            print(f"    └─ DIFFERENT content ({len(by_hash)} variants):")
+            logger.info("    └─ DIFFERENT content (%d variants):", len(by_hash))
 
         for hash_val, hash_entries in by_hash.items():
             sources = [f"{e['source']}@{e['source_version']}" for e in hash_entries]
-            print(f"       [{hash_val}] {', '.join(sources)}")
+            logger.info("       [%s] %s", hash_val, ", ".join(sources))
 
 
 def dedupe_schemas(schemas_dir: Path, dry_run: bool = True):
@@ -160,12 +167,12 @@ def dedupe_schemas(schemas_dir: Path, dry_run: bool = True):
     For schemas with identical content: keep highest priority, delete others
     For schemas with different content: keep all, add hash suffix
     """
-    print(f"Scanning {schemas_dir}...")
+    logger.info("Scanning %s...", schemas_dir)
     schemas = scan_schemas(schemas_dir)
     duplicates = find_duplicates(schemas)
 
     if not duplicates:
-        print("No duplicates to process.")
+        logger.info("No duplicates to process.")
         return
 
     actions = []
@@ -202,31 +209,33 @@ def dedupe_schemas(schemas_dir: Path, dry_run: bool = True):
             )
 
     # Execute actions
-    print(f"\nProcessing {len(actions)} duplicate groups...")
+    logger.info("Processing %d duplicate groups...", len(actions))
 
     for action in actions:
         if action["type"] == "dedupe_identical":
             keep = action["keep"]
             remove = action["remove"]
 
-            print(f"\n  {action['api_path']}:")
-            print(f"    KEEP: {keep['source']}@{keep['source_version']}")
+            logger.info("  %s:", action["api_path"])
+            logger.info("    KEEP: %s@%s", keep["source"], keep["source_version"])
 
             for entry in remove:
-                print(f"    {'WOULD DELETE' if dry_run else 'DELETE'}: {entry['source']}@{entry['source_version']}")
-                if not dry_run:
+                if dry_run:
+                    logger.info("    WOULD DELETE: %s@%s", entry["source"], entry["source_version"])
+                else:
+                    logger.info("    DELETE: %s@%s", entry["source"], entry["source_version"])
                     entry["path"].unlink()
 
         elif action["type"] == "different_content":
-            print(f"\n  {action['api_path']}: {len(action['variants'])} different versions (keeping all)")
+            logger.info("  %s: %d different versions (keeping all)", action["api_path"], len(action["variants"]))
 
     if dry_run:
-        print("\n[DRY RUN - no files modified. Use --execute to apply changes]")
+        logger.info("[DRY RUN - no files modified. Use --execute to apply changes]")
 
 
 def add_provenance(schemas_dir: Path, source_name: str, source_version: str):
     """Add provenance metadata to schemas missing it."""
-    print(f"Adding provenance: source={source_name}, version={source_version}")
+    logger.info("Adding provenance: source=%s, version=%s", source_name, source_version)
 
     count = 0
     for json_file in schemas_dir.rglob("*.json"):
@@ -235,7 +244,8 @@ def add_provenance(schemas_dir: Path, source_name: str, source_version: str):
 
         try:
             schema = load_schema(json_file)
-        except Exception:
+        except (json.JSONDecodeError, OSError) as e:
+            logger.warning("Skipping %s: %s", json_file, e)
             continue
 
         # Check if already has metadata
@@ -251,7 +261,7 @@ def add_provenance(schemas_dir: Path, source_name: str, source_version: str):
         save_schema(json_file, schema)
         count += 1
 
-    print(f"Updated {count} schemas")
+    logger.info("Updated %d schemas", count)
 
 
 def main():
@@ -263,8 +273,15 @@ def main():
     parser.add_argument(
         "--add-provenance", nargs=2, metavar=("SOURCE", "VERSION"), help="Add provenance to schemas without it"
     )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
+
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+    )
+
     schemas_dir = Path(args.schemas_dir)
 
     if args.report:

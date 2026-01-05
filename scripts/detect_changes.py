@@ -23,6 +23,7 @@ def get_changed_files(old_commit: str, new_commit: str) -> list[str]:
         ["git", "diff", "--name-only", old_commit, new_commit],
         capture_output=True,
         text=True,
+        timeout=30,
     )
     if result.returncode != 0:
         return []

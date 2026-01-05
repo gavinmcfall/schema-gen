@@ -186,7 +186,7 @@ class TestSchemaConversion:
         assert "kind" in schema["properties"]
 
     def test_convert_openapi_strips_k8s_extensions(self):
-        """Test that Kubernetes-specific extensions are stripped."""
+        """Test that Kubernetes-specific extensions are stripped or converted."""
         openapi_schema = {
             "type": "object",
             "x-kubernetes-preserve-unknown-fields": True,
@@ -196,10 +196,62 @@ class TestSchemaConversion:
 
         schema = convert_openapi_to_jsonschema(openapi_schema, "test.io", "v1", "Test")
 
-        # Extensions should be stripped
-        assert "x-kubernetes-preserve-unknown-fields" not in schema
+        # Extensions should be stripped (not present as raw keys)
         assert "x-kubernetes-validations" not in schema
         assert "x-kubernetes-int-or-string" not in schema["properties"]["field"]
+        # x-kubernetes-preserve-unknown-fields converts to additionalProperties
+        assert schema.get("additionalProperties") is True
+
+    def test_convert_int_or_string(self):
+        """Test that x-kubernetes-int-or-string converts to anyOf."""
+        openapi_schema = {
+            "type": "object",
+            "properties": {
+                "port": {
+                    "description": "Port can be a number or named port",
+                    "x-kubernetes-int-or-string": True,
+                }
+            },
+        }
+
+        schema = convert_openapi_to_jsonschema(openapi_schema, "test.io", "v1", "Test")
+
+        port_schema = schema["properties"]["port"]
+        assert "anyOf" in port_schema
+        assert {"type": "integer"} in port_schema["anyOf"]
+        assert {"type": "string"} in port_schema["anyOf"]
+        assert port_schema["description"] == "Port can be a number or named port"
+
+    def test_convert_nullable(self):
+        """Test that nullable: true converts to type array with null."""
+        openapi_schema = {
+            "type": "object",
+            "properties": {
+                "optional": {
+                    "type": "string",
+                    "nullable": True,
+                }
+            },
+        }
+
+        schema = convert_openapi_to_jsonschema(openapi_schema, "test.io", "v1", "Test")
+
+        optional_schema = schema["properties"]["optional"]
+        assert optional_schema["type"] == ["string", "null"]
+
+    def test_convert_preserve_unknown_fields(self):
+        """Test that x-kubernetes-preserve-unknown-fields sets additionalProperties."""
+        openapi_schema = {
+            "type": "object",
+            "x-kubernetes-preserve-unknown-fields": True,
+            "properties": {
+                "data": {"type": "string"},
+            },
+        }
+
+        schema = convert_openapi_to_jsonschema(openapi_schema, "test.io", "v1", "Test")
+
+        assert schema.get("additionalProperties") is True
 
 
 class TestSchemaIO:

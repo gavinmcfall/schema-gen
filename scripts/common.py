@@ -11,30 +11,71 @@ This module contains shared functionality used across all extraction scripts:
 
 import hashlib
 import json
+import logging
+import os
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import requests
 import yaml
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+logger = logging.getLogger(__name__)
 
 # =============================================================================
-# SOURCE CONFIGURATION
+# HTTP UTILITIES
 # =============================================================================
 
-
-def load_sources(sources_file: str = "sources.yaml") -> dict:
-    """Load the sources configuration file."""
-    with open(sources_file) as f:
-        return yaml.safe_load(f)
+# Module-level session for connection reuse
+_http_session: requests.Session | None = None
 
 
-def get_source_by_name(sources: dict, name: str) -> dict | None:
-    """Find a source by name."""
-    for source in sources.get("sources", []):
-        if source["name"] == name:
-            return source
-    return None
+def get_http_session() -> requests.Session:
+    """
+    Get a configured HTTP session with retry logic.
+
+    Features:
+    - Retries on 429, 500, 502, 503, 504 errors
+    - Exponential backoff (0.5s, 1s, 2s)
+    - Connection pooling for efficiency
+    - GitHub token auth if GITHUB_TOKEN is set
+    """
+    global _http_session
+    if _http_session is not None:
+        return _http_session
+
+    session = requests.Session()
+
+    # Configure retry strategy
+    retries = Retry(
+        total=3,
+        backoff_factor=0.5,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["GET", "HEAD"],
+    )
+    adapter = HTTPAdapter(max_retries=retries)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+
+    # Add GitHub token if available
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        session.headers["Authorization"] = f"token {token}"
+
+    _http_session = session
+    return session
+
+
+def get_github_headers() -> dict:
+    """Get headers for GitHub API requests."""
+    headers = {"Accept": "application/vnd.github.v3+json"}
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"token {token}"
+    return headers
 
 
 # =============================================================================
@@ -42,9 +83,9 @@ def get_source_by_name(sources: dict, name: str) -> dict | None:
 # =============================================================================
 
 
-def run_command(cmd: list[str], cwd: str | None = None) -> tuple[int, str, str]:
+def run_command(cmd: list[str], cwd: str | None = None, timeout: int = 120) -> tuple[int, str, str]:
     """Run a shell command and return exit code, stdout, stderr."""
-    result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd)
+    result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=timeout)
     return result.returncode, result.stdout, result.stderr
 
 
@@ -95,7 +136,7 @@ def parse_crds_from_files(crd_files: list[Path]) -> list[dict]:
                     crds.append(doc)
 
         except yaml.YAMLError as e:
-            print(f"  Error parsing {filepath}: {e}")
+            logger.error("Error parsing %s: %s", filepath, e)
 
     return crds
 
@@ -159,6 +200,9 @@ def convert_openapi_to_jsonschema(
     source_version: str | None = None,
 ) -> dict:
     """Convert OpenAPI v3 schema to JSON Schema."""
+    # First, convert the entire OpenAPI schema to handle k8s extensions
+    converted = deep_convert_schema(openapi_schema)
+
     schema = {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": f"https://k8s-schemas.io/{group}/{version}/{kind.lower()}.json",
@@ -176,10 +220,10 @@ def convert_openapi_to_jsonschema(
             "generator": "k8s-schemas.io",
         }
 
-    # Copy over the properties, required fields, etc.
+    # Copy over the converted properties, required fields, etc.
     for key in ["properties", "required", "additionalProperties"]:
-        if key in openapi_schema:
-            schema[key] = deep_convert_schema(openapi_schema[key])
+        if key in converted:
+            schema[key] = converted[key]
 
     # Ensure standard k8s fields are present
     if "properties" not in schema:
@@ -204,11 +248,33 @@ def convert_openapi_to_jsonschema(
 
 
 def deep_convert_schema(obj: Any) -> Any:
-    """Recursively convert OpenAPI schema to JSON Schema."""
+    """Recursively convert OpenAPI schema to JSON Schema.
+
+    Handles Kubernetes-specific OpenAPI extensions:
+    - x-kubernetes-int-or-string: Converts to anyOf[integer, string]
+    - x-kubernetes-preserve-unknown-fields: Sets additionalProperties: true
+    - nullable: Converts type to union with null
+    """
     if not isinstance(obj, dict):
         return obj
 
     result = {}
+
+    # Check for x-kubernetes-int-or-string before processing
+    if obj.get("x-kubernetes-int-or-string"):
+        # This field can be either an integer or a string
+        result["anyOf"] = [{"type": "integer"}, {"type": "string"}]
+        # Copy description if present
+        if "description" in obj:
+            result["description"] = obj["description"]
+        return result
+
+    # Check for x-kubernetes-preserve-unknown-fields
+    if obj.get("x-kubernetes-preserve-unknown-fields"):
+        result["additionalProperties"] = True
+
+    # Track if nullable for later processing
+    is_nullable = obj.get("nullable", False)
 
     for key, value in obj.items():
         # Skip OpenAPI-specific fields not in JSON Schema
@@ -221,12 +287,8 @@ def deep_convert_schema(obj: Any) -> Any:
             "x-kubernetes-map-type",
             "x-kubernetes-group-version-kind",
             "x-kubernetes-validations",
+            "nullable",  # Handled separately below
         ]:
-            continue
-
-        # Handle nullable (OpenAPI 3.0)
-        if key == "nullable" and value is True:
-            # In JSON Schema, we'd use oneOf with null type
             continue
 
         # Recursively convert nested objects
@@ -237,12 +299,43 @@ def deep_convert_schema(obj: Any) -> Any:
         else:
             result[key] = value
 
+    # Handle nullable by converting type to array including null
+    if is_nullable and "type" in result:
+        current_type = result["type"]
+        if isinstance(current_type, list):
+            if "null" not in current_type:
+                result["type"] = current_type + ["null"]
+        else:
+            result["type"] = [current_type, "null"]
+
     return result
 
 
 # =============================================================================
 # SCHEMA I/O
 # =============================================================================
+
+
+def parse_schema_path(schema_path: Path, base_dir: Path) -> tuple[str, str, str] | None:
+    """Parse a schema file path to extract group, version, kind.
+
+    Expected path structure: {base_dir}/{group}/{version}/{kind}.json
+
+    Returns:
+        Tuple of (group, version, kind) or None if path doesn't match expected structure.
+    """
+    try:
+        rel_path = schema_path.relative_to(base_dir)
+        parts = rel_path.parts
+
+        if len(parts) != 3:
+            return None
+
+        group, version, kind_file = parts
+        kind = kind_file.replace(".json", "")
+        return (group, version, kind)
+    except ValueError:
+        return None
 
 
 def load_schema(path: Path) -> dict:
@@ -266,7 +359,7 @@ def write_schema(output_dir: Path, group: str, version: str, kind: str, schema: 
     schema_path = schema_dir / f"{kind}.json"
     save_schema(schema_path, schema)
 
-    print(f"  Wrote: {schema_path}")
+    logger.debug("Wrote: %s", schema_path)
 
 
 def compute_schema_hash(schema: dict) -> str:

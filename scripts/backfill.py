@@ -12,7 +12,7 @@ Usage:
 """
 
 import argparse
-import os
+import logging
 import re
 import subprocess
 import sys
@@ -20,18 +20,19 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-import requests
 import yaml
 from common import (
     crd_to_jsonschema,
-    get_source_by_name,
-    load_sources,
+    get_http_session,
     parse_crds_from_files,
     write_schema,
 )
 
 # Import extraction functions from extract.py
-from extract import extract_github_crds, extract_helm_crds
+from extract import extract_github_crds, extract_helm_crds, get_source_by_name, load_sources
+from requests import RequestException
+
+logger = logging.getLogger(__name__)
 
 
 def get_helm_versions(registry: str, chart: str, min_version: str | None = None) -> list[str]:
@@ -48,18 +49,20 @@ def get_helm_versions(registry: str, chart: str, min_version: str | None = None)
                 ["crane", "ls", registry.replace("oci://", "") + "/" + chart],
                 capture_output=True,
                 text=True,
+                timeout=60,
             )
             if result.returncode == 0:
                 versions = [v.strip() for v in result.stdout.strip().split("\n") if v.strip()]
         except FileNotFoundError:
-            print(f"  Warning: crane not found, cannot list OCI versions for {chart}")
+            logger.warning("crane not found, cannot list OCI versions for %s", chart)
             return []
     else:
         # HTTP registry - use helm search or index.yaml
         try:
+            session = get_http_session()
             # Fetch the index.yaml
             index_url = f"{registry.rstrip('/')}/index.yaml"
-            response = requests.get(index_url, timeout=30)
+            response = session.get(index_url, timeout=60)
             response.raise_for_status()
 
             index = yaml.safe_load(response.text)
@@ -70,8 +73,8 @@ def get_helm_versions(registry: str, chart: str, min_version: str | None = None)
                 if version:
                     versions.append(version)
 
-        except Exception as e:
-            print(f"  Error fetching Helm index: {e}")
+        except RequestException as e:
+            logger.error("Error fetching Helm index: %s", e)
             return []
 
     # Filter by minimum version if specified
@@ -87,20 +90,15 @@ def get_helm_versions(registry: str, chart: str, min_version: str | None = None)
 def get_github_versions(repo: str, min_version: str | None = None) -> list[str]:
     """Get all available releases for a GitHub repo."""
     versions = []
+    session = get_http_session()
 
     try:
         # Use GitHub API to list releases
         url = f"https://api.github.com/repos/{repo}/releases"
-        headers = {}
-
-        # Use token if available
-        token = os.environ.get("GITHUB_TOKEN")
-        if token:
-            headers["Authorization"] = f"token {token}"
 
         page = 1
         while True:
-            response = requests.get(f"{url}?page={page}&per_page=100", headers=headers, timeout=30)
+            response = session.get(f"{url}?page={page}&per_page=100", timeout=60)
             response.raise_for_status()
 
             releases = response.json()
@@ -118,8 +116,8 @@ def get_github_versions(repo: str, min_version: str | None = None) -> list[str]:
             if page > 20:
                 break
 
-    except Exception as e:
-        print(f"  Error fetching GitHub releases: {e}")
+    except RequestException as e:
+        logger.error("Error fetching GitHub releases: %s", e)
         return []
 
     # Filter by minimum version if specified
@@ -174,7 +172,7 @@ def extract_version(source: dict, version: str, output_dir: Path) -> int:
     source_type = source_copy["type"]
     name = source_copy["name"]
 
-    print(f"  Extracting {name} {version}...")
+    logger.debug("Extracting %s %s...", name, version)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         work_dir = Path(tmpdir)
@@ -186,17 +184,17 @@ def extract_version(source: dict, version: str, output_dir: Path) -> int:
             elif source_type == "github":
                 crd_files = extract_github_crds(source_copy, work_dir)
             else:
-                print(f"    Unknown source type: {source_type}")
+                logger.error("Unknown source type: %s", source_type)
                 return 0
 
             if not crd_files:
-                print("    No CRD files found")
+                logger.debug("No CRD files found")
                 return 0
 
             # Parse CRDs
             crds = parse_crds_from_files(crd_files)
             if not crds:
-                print("    No CRDs parsed")
+                logger.debug("No CRDs parsed")
                 return 0
 
             # Convert to JSON schemas with provenance tracking
@@ -210,7 +208,7 @@ def extract_version(source: dict, version: str, output_dir: Path) -> int:
             return schema_count
 
         except Exception as e:
-            print(f"    Error: {e}")
+            logger.error("Error extracting %s %s: %s", name, version, e)
             return 0
 
 
@@ -221,7 +219,7 @@ def backfill_source(
     name = source["name"]
     source_type = source["type"]
 
-    print(f"\nBackfilling: {name}")
+    logger.info("Backfilling: %s", name)
 
     # Discover all versions
     if source_type == "helm":
@@ -229,10 +227,10 @@ def backfill_source(
     elif source_type == "github":
         versions = get_github_versions(source["repo"], min_version)
     else:
-        print(f"  Unsupported source type: {source_type}")
+        logger.error("Unsupported source type: %s", source_type)
         return {"name": name, "versions_found": 0, "versions_processed": 0, "schemas_extracted": 0}
 
-    print(f"  Found {len(versions)} versions")
+    logger.debug("Found %d versions", len(versions))
 
     if not versions:
         return {"name": name, "versions_found": 0, "versions_processed": 0, "schemas_extracted": 0}
@@ -240,7 +238,7 @@ def backfill_source(
     # Limit versions if specified
     if max_versions:
         versions = versions[:max_versions]
-        print(f"  Processing {len(versions)} versions (limited)")
+        logger.debug("Processing %d versions (limited)", len(versions))
 
     # Extract each version
     total_schemas = 0
@@ -264,32 +262,43 @@ def main():
     parser.add_argument("--source", help="Specific source to backfill")
     parser.add_argument("--all", action="store_true", help="Backfill all sources")
     parser.add_argument("--output", default="schemas", help="Output directory")
-    parser.add_argument("--sources-file", default="sources.yaml", help="Sources config file")
+    parser.add_argument("--sources-dir", default="sources", help="Sources directory")
     parser.add_argument("--min-version", help="Minimum version to include")
     parser.add_argument("--max-versions", type=int, help="Maximum versions to process per source")
     parser.add_argument("--parallel", type=int, default=1, help="Parallel workers (use with caution)")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
+
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+    )
 
     if not args.source and not args.all:
         parser.error("Either --source or --all must be specified")
 
-    sources_config = load_sources(args.sources_file)
+    sources_dir = Path(args.sources_dir)
+    if not sources_dir.exists():
+        logger.error("Sources directory not found: %s", sources_dir)
+        sys.exit(1)
+
+    sources = load_sources(sources_dir)
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     results = []
 
     if args.all:
-        sources_to_process = sources_config.get("sources", [])
+        sources_to_process = sources
     else:
-        source = get_source_by_name(sources_config, args.source)
+        source = get_source_by_name(sources, args.source)
         if not source:
-            print(f"Source not found: {args.source}")
+            logger.error("Source not found: %s", args.source)
             sys.exit(1)
         sources_to_process = [source]
 
-    print(f"Backfilling {len(sources_to_process)} sources...")
+    logger.info("Backfilling %d sources...", len(sources_to_process))
 
     if args.parallel > 1:
         with ThreadPoolExecutor(max_workers=args.parallel) as executor:
@@ -304,20 +313,29 @@ def main():
             results.append(backfill_source(source, output_dir, args.min_version, args.max_versions))
 
     # Summary
-    print("\n" + "=" * 60)
-    print("BACKFILL SUMMARY")
-    print("=" * 60)
+    logger.info("=" * 60)
+    logger.info("BACKFILL SUMMARY")
+    logger.info("=" * 60)
 
     total_versions = sum(r["versions_found"] for r in results)
     total_processed = sum(r["versions_processed"] for r in results)
     total_schemas = sum(r["schemas_extracted"] for r in results)
+    failed_sources = [r["name"] for r in results if r["schemas_extracted"] == 0 and r["versions_found"] > 0]
 
     for r in results:
-        print(
-            f"  {r['name']}: {r['versions_processed']}/{r['versions_found']} versions, {r['schemas_extracted']} schemas"
+        logger.info(
+            "  %s: %d/%d versions, %d schemas",
+            r["name"],
+            r["versions_processed"],
+            r["versions_found"],
+            r["schemas_extracted"],
         )
 
-    print(f"\nTotal: {total_processed}/{total_versions} versions, {total_schemas} schemas")
+    logger.info("Total: %d/%d versions, %d schemas", total_processed, total_versions, total_schemas)
+
+    if failed_sources:
+        logger.error("Failed sources (%d): %s", len(failed_sources), ", ".join(failed_sources))
+        sys.exit(1)
 
 
 if __name__ == "__main__":

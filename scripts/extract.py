@@ -17,19 +17,23 @@ Usage:
 """
 
 import argparse
+import logging
 import re
 import sys
 import tempfile
 from pathlib import Path
 
-import requests
 import yaml
 from common import (
     SafeLoaderWithTags,
     crd_to_jsonschema,
+    get_http_session,
     parse_crds_from_files,
     write_schema,
 )
+from requests import RequestException
+
+logger = logging.getLogger(__name__)
 
 
 def load_sources(sources_dir: Path) -> list[dict]:
@@ -161,18 +165,18 @@ def extract_helm_crds(source: dict, work_dir: Path) -> list[Path]:
         values_file.write_text(yaml.dump(values))
         cmd.extend(["--values", str(values_file)])
 
-    print(f"  Running: {' '.join(cmd)}")
+    logger.debug("Running: %s", " ".join(cmd))
 
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
 
     if result.returncode != 0:
-        print(f"  Error running helm template: {result.stderr}")
+        logger.error("Error running helm template: %s", result.stderr)
         return []
 
     rendered = result.stdout
 
     if not rendered.strip():
-        print("  No output from helm template")
+        logger.warning("No output from helm template")
         return []
 
     # Parse the rendered output and filter for CRDs
@@ -182,11 +186,11 @@ def extract_helm_crds(source: dict, work_dir: Path) -> list[Path]:
             if doc and doc.get("kind") == "CustomResourceDefinition":
                 crd_docs.append(doc)
     except yaml.YAMLError as e:
-        print(f"  Error parsing helm template output: {e}")
+        logger.error("Error parsing helm template output: %s", e)
         return []
 
     if not crd_docs:
-        print("  No CRDs found in rendered output")
+        logger.warning("No CRDs found in rendered output")
         return []
 
     # Write CRDs to a single file
@@ -194,33 +198,26 @@ def extract_helm_crds(source: dict, work_dir: Path) -> list[Path]:
     with open(crd_file, "w") as f:
         yaml.dump_all(crd_docs, f)
 
-    print(f"  Found {len(crd_docs)} CRDs")
+    logger.debug("Found %d CRDs", len(crd_docs))
     return [crd_file]
 
 
 def extract_github_crds(source: dict, work_dir: Path) -> list[Path]:
     """Extract CRDs from GitHub release assets or directories."""
-    import os
-
     repo = source["repo"]
     version = source["version"]
     assets = source.get("assets", [])
     crd_path = source.get("crd_path")
 
     crd_files = []
-
-    # Build headers for GitHub API
-    headers = {}
-    token = os.environ.get("GITHUB_TOKEN")
-    if token:
-        headers["Authorization"] = f"token {token}"
+    session = get_http_session()
 
     # If crd_path is specified, discover all YAML files in that directory
     if crd_path:
-        print(f"  Discovering CRDs in {crd_path}...")
-        discovered = discover_github_yaml_files(repo, version, crd_path, headers)
+        logger.debug("Discovering CRDs in %s...", crd_path)
+        discovered = discover_github_yaml_files(repo, version, crd_path)
         assets = assets + discovered
-        print(f"  Found {len(discovered)} CRD files")
+        logger.debug("Found %d CRD files", len(discovered))
 
     for asset in assets:
         # Handle both direct filenames and paths
@@ -231,10 +228,10 @@ def extract_github_crds(source: dict, work_dir: Path) -> list[Path]:
             # Release asset
             url = f"https://github.com/{repo}/releases/download/{version}/{asset}"
 
-        print(f"  Fetching: {url}")
+        logger.debug("Fetching: %s", url)
 
         try:
-            response = requests.get(url, timeout=30, headers=headers)
+            response = session.get(url, timeout=60)
             response.raise_for_status()
 
             # Save to work directory
@@ -243,21 +240,22 @@ def extract_github_crds(source: dict, work_dir: Path) -> list[Path]:
             filepath.write_text(response.text)
             crd_files.append(filepath)
 
-        except requests.RequestException as e:
-            print(f"  Error fetching {asset}: {e}")
+        except RequestException as e:
+            logger.error("Error fetching %s: %s", asset, e)
 
     return crd_files
 
 
-def discover_github_yaml_files(repo: str, version: str, path: str, headers: dict) -> list[str]:
+def discover_github_yaml_files(repo: str, version: str, path: str) -> list[str]:
     """Recursively discover all YAML files in a GitHub directory."""
     yaml_files = []
     path = path.rstrip("/")
+    session = get_http_session()
 
     api_url = f"https://api.github.com/repos/{repo}/contents/{path}?ref={version}"
 
     try:
-        response = requests.get(api_url, headers=headers, timeout=30)
+        response = session.get(api_url, timeout=60)
         response.raise_for_status()
         contents = response.json()
 
@@ -265,10 +263,10 @@ def discover_github_yaml_files(repo: str, version: str, path: str, headers: dict
             if item["type"] == "file" and (item["name"].endswith(".yaml") or item["name"].endswith(".yml")):
                 yaml_files.append(item["path"])
             elif item["type"] == "dir":
-                yaml_files.extend(discover_github_yaml_files(repo, version, item["path"], headers))
+                yaml_files.extend(discover_github_yaml_files(repo, version, item["path"]))
 
-    except requests.RequestException as e:
-        print(f"  Error listing {path}: {e}")
+    except RequestException as e:
+        logger.error("Error listing %s: %s", path, e)
 
     return yaml_files
 
@@ -277,22 +275,23 @@ def extract_url_crds(source: dict, work_dir: Path) -> list[Path]:
     """Extract CRDs from direct URLs."""
     url = source["url"]
     version = source["version"]
+    session = get_http_session()
 
     # Replace {version} placeholder
     url = url.replace("{version}", version)
 
-    print(f"  Fetching: {url}")
+    logger.debug("Fetching: %s", url)
 
     try:
-        response = requests.get(url, timeout=30)
+        response = session.get(url, timeout=60)
         response.raise_for_status()
 
         filepath = work_dir / "crd.yaml"
         filepath.write_text(response.text)
         return [filepath]
 
-    except requests.RequestException as e:
-        print(f"  Error fetching URL: {e}")
+    except RequestException as e:
+        logger.error("Error fetching URL: %s", e)
         return []
 
 
@@ -301,7 +300,7 @@ def extract_source(source: dict, output_dir: Path) -> int:
     name = source["name"]
     source_type = source["type"]
 
-    print(f"\nExtracting: {name} (type: {source_type})")
+    logger.info("Extracting: %s (type: %s)", name, source_type)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         work_dir = Path(tmpdir)
@@ -314,16 +313,16 @@ def extract_source(source: dict, output_dir: Path) -> int:
         elif source_type == "url":
             crd_files = extract_url_crds(source, work_dir)
         else:
-            print(f"  Unknown source type: {source_type}")
+            logger.error("Unknown source type: %s", source_type)
             return 0
 
         if not crd_files:
-            print("  No CRD files found")
+            logger.warning("No CRD files found")
             return 0
 
         # Parse CRDs
         crds = parse_crds_from_files(crd_files)
-        print(f"  Found {len(crds)} CRD definitions")
+        logger.debug("Found %d CRD definitions", len(crds))
 
         # Get source metadata for provenance tracking
         source_name = source["name"]
@@ -346,36 +345,52 @@ def main():
     parser.add_argument("--all", action="store_true", help="Extract all sources")
     parser.add_argument("--output", default="schemas", help="Output directory")
     parser.add_argument("--sources-dir", default="sources", help="Sources directory")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
+
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+    )
 
     if not args.source and not args.all:
         parser.error("Either --source or --all must be specified")
 
     sources_dir = Path(args.sources_dir)
     if not sources_dir.exists():
-        print(f"Sources directory not found: {sources_dir}")
+        logger.error("Sources directory not found: %s", sources_dir)
         sys.exit(1)
 
     sources = load_sources(sources_dir)
-    print(f"Loaded {len(sources)} sources")
+    logger.info("Loaded %d sources", len(sources))
 
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     total_schemas = 0
+    failed_sources = []
 
     if args.all:
         for source in sources:
-            total_schemas += extract_source(source, output_dir)
+            count = extract_source(source, output_dir)
+            if count == 0:
+                failed_sources.append(source["name"])
+            total_schemas += count
     else:
         source = get_source_by_name(sources, args.source)
         if not source:
-            print(f"Source not found: {args.source}")
+            logger.error("Source not found: %s", args.source)
             sys.exit(1)
         total_schemas = extract_source(source, output_dir)
+        if total_schemas == 0:
+            failed_sources.append(source["name"])
 
-    print(f"\nTotal schemas extracted: {total_schemas}")
+    logger.info("Total schemas extracted: %d", total_schemas)
+
+    if failed_sources:
+        logger.error("Failed sources (%d): %s", len(failed_sources), ", ".join(failed_sources))
+        sys.exit(1)
 
 
 if __name__ == "__main__":
