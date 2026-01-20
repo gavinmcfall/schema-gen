@@ -150,6 +150,14 @@ Contributions welcome! The main ways to contribute:
 - [kubesearch.dev](https://kubesearch.dev) - Community deployment discovery
 - [home-operations](https://github.com/home-operations) - Community support
 
+## ☕ Support
+
+If you find this project helpful, consider supporting my work:
+
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20Me-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/gavinmcfall)
+
+---
+
 ## License
 
 Apache 2.0 - see [LICENSE](LICENSE) for details.
